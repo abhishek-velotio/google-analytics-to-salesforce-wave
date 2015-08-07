@@ -3,5 +3,6 @@
   "description": "Integration Google ANanlytics and Salesforce Ananlytics",
   "repository": "https://github.com/Cervello/ga2sa",
   "keywords": ["salesforce", "google-analitics", "playframework"],
-  "addons": ["heroku-postgresql"]
+  "addons": ["heroku-postgresql"],
+  "success_url": "/signin"
 }
