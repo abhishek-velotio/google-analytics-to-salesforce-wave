@@ -1,0 +1,6 @@
+{
+  "name": "GA2SA Project",
+  "description": "Integration Google ANanlytics and Salesforce Ananlytics",
+  "repository": "https://github.com/Cervello/cervello-internal-projects/tree/master/GA2SA/Codebase",
+  "keywords": ["salesforce", "google-analitics", "playframework"]
+}

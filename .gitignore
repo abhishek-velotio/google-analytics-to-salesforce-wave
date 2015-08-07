@@ -1,0 +1,16 @@
+node_modules
+activator
+activator.bat
+activator-launch*.jar
+bin
+target
+.settings/
+logs/
+.project
+.classpath
+tmp
+dist
+.cache
+project/project
+project/target
+package.json
