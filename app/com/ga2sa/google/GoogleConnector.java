@@ -32,13 +32,14 @@ public class GoogleConnector {
 	private static String redirectURL;
 	
 	private static GoogleAuthorizationCodeFlow getFlow(GoogleAnalyticsProfile profile)  {
-		redirectURL = Play.isProd() ? profile.getRedirectUris()[1] : profile.getRedirectUris()[0];
+//		redirectURL = Play.isProd() ? profile.getRedirectUris()[1] : profile.getRedirectUris()[0];
+		String[] uris = profile.getRedirectUris().split(";");
+		redirectURL = uris.length > 0 ? (Play.isProd() ? uris[1] : uris[0]) : null;
 		return new GoogleAuthorizationCodeFlow
 			.Builder(HTTP_TRANSPORT, JSON_FACTORY, profile.getClientId(), profile.getClientSecret(), Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY))
 			.setAccessType("offline")
 			.setApprovalPrompt("force")
 			.build();
-		
 	}
 	
 	public static String getAuthURL(GoogleAnalyticsProfile profile) {

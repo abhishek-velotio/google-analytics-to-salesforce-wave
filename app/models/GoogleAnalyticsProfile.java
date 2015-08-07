@@ -14,13 +14,18 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
+//@TypeDef (
+//   name = "userTypesArray",
+//   defaultForType = ArrayUserType.class,
+//   typeClass = ArrayUserType.class
+//)
 
 /**
  * The persistent class for the google_analytics_profiles database table.
@@ -79,8 +84,8 @@ public class GoogleAnalyticsProfile implements Serializable {
 	
 	@NotNull
 	@Column(name="redirect_uris")
-	@Type(type="com.ga2sa.hibernate.types.ArrayUserType")
-	private String [] redirectUris;
+//	@Type(type="userTypesArray")
+	private String redirectUris;
 	
 	@NotNull
 	@NotEmpty
@@ -171,11 +176,11 @@ public class GoogleAnalyticsProfile implements Serializable {
 		this.name = name;
 	}
 
-	public String [] getRedirectUris() {
+	public String getRedirectUris() {
 		return this.redirectUris;
 	}
 
-	public void setRedirectUris(String [] redirectUris) {
+	public void setRedirectUris(String redirectUris) {
 		this.redirectUris = redirectUris;
 	}
 

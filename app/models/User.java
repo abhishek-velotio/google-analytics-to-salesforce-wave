@@ -46,15 +46,20 @@ public class User implements Serializable {
 	@Column(name="email_address")
 	private String emailAddress;
 	
+	@NotEmpty
+	@NotNull
 	@Column(name="first_name")
 	private String firstName;
 	
 	@Column(name="is_active")
+	@NotNull
 	private Boolean isActive;
 	
 	@Column(name="last_login_date_time")
 	private Timestamp lastLoginDateTime;
-
+	
+	@NotEmpty
+	@NotNull
 	@Column(name="last_name")
 	private String lastName;
 	
