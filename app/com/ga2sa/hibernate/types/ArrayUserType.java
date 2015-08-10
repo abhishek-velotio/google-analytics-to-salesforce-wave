@@ -17,6 +17,7 @@ import org.hibernate.usertype.UserType;
  * @author Igor Ivarov
  * @editor Sergey Legostaev
  */
+@Deprecated
 public class ArrayUserType implements UserType {
 
 	/** Constante contenant le type SQL "Array".
