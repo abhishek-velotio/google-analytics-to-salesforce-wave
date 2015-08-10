@@ -22,5 +22,9 @@ public class SessionManager extends Controller {
 	public static void remove(String id) {
 		session().remove(id);
 	}
+	
+	public static void clear() {
+		session().clear();
+	}
 
 }

@@ -15,6 +15,7 @@ import play.mvc.Http.Cookie;
 import com.ga2sa.helpers.forms.LoginForm;
 
 import controllers.CookieManager;
+import controllers.SessionManager;
 /**
  * 
  * Class for manage application security. Responsible for authentication and authorization users. 
@@ -35,7 +36,8 @@ public class ApplicationSecurity {
 			if (user.getIsActive()) {
 				if (PasswordManager.checkPassword(loginForm.getPassword(), user.getPassword())) {				
 					final String sessionId = UUID.randomUUID().toString();
-					CookieManager.set(SESSION_ID_KEY, sessionId, true);
+					SessionManager.set(SESSION_ID_KEY, sessionId);
+//					CookieManager.set(SESSION_ID_KEY, sessionId, true);
 					SessionDAO.save(new Session(sessionId, user.getId()));
 					return true;
 				} else {
@@ -47,8 +49,9 @@ public class ApplicationSecurity {
 	}
 	
 	public static String getSessionId() {
-		Cookie cookie = CookieManager.get(SESSION_ID_KEY);
-		return cookie == null ? null : cookie.value();
+//		Cookie cookie = CookieManager.get(SESSION_ID_KEY);
+//		return cookie == null ? null : cookie.value();
+		return SessionManager.get(SESSION_ID_KEY);
 	}
 	
 	public static Session getCurrentSession() {
@@ -74,10 +77,16 @@ public class ApplicationSecurity {
 	}
 	
 	public static void logout() {
-		Cookie cookie = CookieManager.get(SESSION_ID_KEY);
-		if (cookie != null && cookie.value() != null) {
-			SessionDAO.deleteById(cookie.value());
-			CookieManager.remove(SESSION_ID_KEY, true);
+//		Cookie cookie = CookieManager.get(SESSION_ID_KEY);
+//		if (cookie != null && cookie.value() != null) {
+//			SessionDAO.deleteById(cookie.value());
+//			CookieManager.remove(SESSION_ID_KEY, true);
+//		}
+		final String sessionId = getSessionId();
+		if (sessionId != null) {
+			SessionDAO.deleteById(sessionId);
+			SessionManager.clear();
 		}
+		
 	}
 }
