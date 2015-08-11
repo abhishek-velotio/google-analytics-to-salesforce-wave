@@ -19,14 +19,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
-//@TypeDef (
-//   name = "userTypesArray",
-//   defaultForType = ArrayUserType.class,
-//   typeClass = ArrayUserType.class
-//)
-
 /**
  * The persistent class for the google_analytics_profiles database table.
  * @author Igor Ivarov
@@ -84,7 +76,6 @@ public class GoogleAnalyticsProfile implements Serializable {
 	
 	@NotNull
 	@Column(name="redirect_uris")
-//	@Type(type="userTypesArray")
 	private String redirectUris;
 	
 	@NotNull

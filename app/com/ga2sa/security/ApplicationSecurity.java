@@ -38,7 +38,11 @@ public class ApplicationSecurity {
 					final String sessionId = UUID.randomUUID().toString();
 					SessionManager.set(SESSION_ID_KEY, sessionId);
 //					CookieManager.set(SESSION_ID_KEY, sessionId, true);
-					SessionDAO.save(new Session(sessionId, user.getId()));
+					try {
+						SessionDAO.save(new Session(sessionId, user.getId()));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					return true;
 				} else {
 					Logger.debug("Password is not correct.");
