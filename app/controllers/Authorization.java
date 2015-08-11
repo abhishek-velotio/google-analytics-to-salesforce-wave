@@ -12,7 +12,7 @@ import com.ga2sa.helpers.forms.LoginForm;
 import com.ga2sa.security.Access;
 import com.ga2sa.security.ApplicationSecurity;
 /**
- * Class for user authorization to the application.
+ * Class for user authorization to the application and Google.
  * 
  * 
  * @author Igor Ivarov
@@ -22,6 +22,11 @@ public class Authorization extends Controller {
 	
 	private static Form<LoginForm> loginForm = Form.form(LoginForm.class);
 	
+	/**
+	 * method for user authentication
+	 * 
+	 * @return if user exists redirect to dashboard page else update login page
+	 */
 	public static Result ga2saSignIn() {
 		if(request().method().equals("POST")) {
 			Form<LoginForm> bindedForm = loginForm.bindFromRequest();
@@ -31,11 +36,23 @@ public class Authorization extends Controller {
 		return ok(views.html.pages.auth.signin.render());
 	}
 	
+	/**
+	 * user logout
+	 * 
+	 * @return redirected to login page
+	 */
+	
 	@Access
 	public static Result ga2saSignOut() {
 		ApplicationSecurity.logout();
 		return redirect(routes.Authorization.ga2saSignIn());
 	}
+	
+	/**
+	 * method for login to Google Analytics
+	 * 
+	 * @return login result
+	 */
 	
 	@Access
 	public static Result googleSignIn() {
@@ -46,7 +63,6 @@ public class Authorization extends Controller {
 		GoogleAnalyticsProfile profile = (GoogleAnalyticsProfile) Cache.get(GoogleAnalyticsProfileDAO.CACHE_PROFILE_PREFIX + profileId);
 
 		GoogleConnector.exchangeCode(profile, code);
-		
 		return ok(views.html.pages.auth.googleAuthComplete.render());
 		
 	}

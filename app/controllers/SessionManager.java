@@ -3,7 +3,7 @@ package controllers;
 import play.mvc.Controller;
 
 /**
- * 
+ * Class for session manage
  * 
  * 
  * @author Igor Ivarov

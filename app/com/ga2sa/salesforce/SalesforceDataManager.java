@@ -7,8 +7,7 @@ import java.nio.charset.CodingErrorAction;
 
 import models.SalesforceAnalyticsProfile;
 
-import org.apache.commons.io.FilenameUtils;
-
+import com.google.common.io.Files;
 import com.sforce.dataset.loader.DatasetLoader;
 import com.sforce.dataset.loader.DatasetLoaderException;
 import com.sforce.dataset.util.DatasetUtils;
@@ -25,7 +24,7 @@ public class SalesforceDataManager {
 	
 	public static void uploadData(SalesforceAnalyticsProfile profile, File report) throws Exception {
 				
-		String dataset = FilenameUtils.removeExtension(report.getName());
+		String dataset = Files.getNameWithoutExtension(report.getName());
 	    String datasetLabel = null;
 	    String app = profile.getApplicationName();
 	    String username = profile.getUsername();

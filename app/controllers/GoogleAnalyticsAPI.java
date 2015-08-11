@@ -1,21 +1,16 @@
 package controllers;
 
-import models.GoogleAnalyticsProfile;
-import models.Job;
-import models.dao.GoogleAnalyticsProfileDAO;
-import play.cache.Cache;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.MimeTypes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ga2sa.google.GoogleAnalyticsDataManager;
-import com.ga2sa.google.GoogleConnector;
-import com.ga2sa.google.Report;
 import com.ga2sa.security.Access;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.ga2sa.security.ApplicationSecurity;
 /**
- * 
+ * Controller class for work with Google Analytics Profile, this class uses in Job creation page. 
  * 
  * 
  * @author Igor Ivarov
@@ -24,66 +19,65 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 @Access
 public class GoogleAnalyticsAPI extends Controller {
 		
-	private static GoogleCredential getCredetial(String profileId) {
-		String cacheId = GoogleConnector.CACHE_CREDENTIAL_PREFIX + profileId;
-		GoogleCredential credential = (GoogleCredential)Cache.get(cacheId);
-		if (credential == null) {
-			GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
-			credential = GoogleConnector.getCredentials(profile);
-			Cache.set(cacheId, credential);
-		}
-		return credential;
-	}
 	
+	
+	/**
+	 * Get all accounts for selected Google Analytics Profile.
+	 * @param Google Analytics Profile Id from application database
+	 * @return json with result
+	 */
 	public static Result getAccounts(String profileId) {
-		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getAccounts(getCredetial(profileId))).get("items");
+		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getAccounts(ApplicationSecurity.getGoogleCredential(profileId))).get("items");
 		if (result == null) result = Json.newObject();
-		return ok(result).as("application/json");
+		return ok(result).as(MimeTypes.JAVASCRIPT());
 	}
 	
+	/**
+	 * Get all properties from Google Analytics Profile
+	 * 
+	 * @param Google Analytics Profile Id from application database
+	 * @param  Google Analytics Account Id from Google Analytics Profile
+	 * @return json with result
+	 */
 	public static Result getProperties(String profileId, String accountId) {
-		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getProperties(getCredetial(profileId), accountId)).get("items");
+		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getProperties(ApplicationSecurity.getGoogleCredential(profileId), accountId)).get("items");
 		if (result == null) result = Json.newObject();
-		return ok(result).as("application/json");
+		return ok(result).as(MimeTypes.JAVASCRIPT());
 	}
 	
+	/**
+	 * Get all profiles for selected account and property from Google Analytics Profile
+	 * 
+	 * @param Google Analytics Profile Id from application database
+	 * @param Google Analytics Account Id from Google Analytics Profile
+	 * @param Google Analytics Property Id from Google Analytics Profile
+	 * @return json with result
+	 */
 	public static Result getProfiles(String profileId, String accountId, String propertyId) {
-		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getProfiles(getCredetial(profileId), accountId, propertyId)).get("items");
+		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getProfiles(ApplicationSecurity.getGoogleCredential(profileId), accountId, propertyId)).get("items");
 		if (result == null) result = Json.newObject();
-		return ok(result).as("application/json");
+		return ok(result).as(MimeTypes.JAVASCRIPT());
 	}
 	
+	/**
+	 * Get all dimensions for selected Google Analytics profile.
+	 * @param Google Analytics Profile Id from Google Analytics Profile
+	 * @return json with result
+	 */
 	public static Result getDimensions(String profileId) {
-		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getDimensions(getCredetial(profileId)));
+		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getDimensions(ApplicationSecurity.getGoogleCredential(profileId)));
 		if (result == null) result = Json.newObject();
-		return ok(result).as("application/json");
+		return ok(result).as(MimeTypes.JAVASCRIPT());
 	}
-	
+	/**
+	 * Get all metrics for selected Google Analytics profile.
+	 * @param Google Analytics Profile Id from Google Analytics Profile
+	 * @return json with result
+	 */
 	public static Result getMetrics(String profileId) {
-		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getMetrics(getCredetial(profileId)));
+		JsonNode result = Json.toJson(GoogleAnalyticsDataManager.getMetrics(ApplicationSecurity.getGoogleCredential(profileId)));
 		if (result == null) result = Json.newObject();
-		return ok(result).as("application/json");
+		return ok(result).as(MimeTypes.JAVASCRIPT());
 	}
 	
-	public static Report getReport(Job job) throws Exception {
-		
-		String nameReport = job.getName();
-		String profileId = job.getGoogleAnalyticsProfile().getId().toString();
-		String properties = job.getGoogleAnalyticsProperties();
-		
-		Report report = null;
-		
-		GoogleCredential credential = getCredetial(profileId);
-		
-		JsonNode metrics = Json.toJson(GoogleAnalyticsDataManager.getMetrics(credential));
-		JsonNode dimensions = Json.toJson(GoogleAnalyticsDataManager.getDimensions(credential));
-		
-		try {
-			report = new Report( nameReport, GoogleAnalyticsDataManager.getReport(credential, properties), metrics, dimensions);
-		} catch (Exception exception) {
-			throw exception;
-		}
-		
-		return report;
-	}
 }

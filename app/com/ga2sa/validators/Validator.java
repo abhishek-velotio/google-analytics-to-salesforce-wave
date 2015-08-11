@@ -16,7 +16,14 @@ import javax.validation.Validation;
  */
 public class Validator {
 	
-	public static <T> Map<String,String> validate2(T object) {
+	/**
+	 * Common method for validate DB object
+	 * 
+	 * @param DB object
+	 * @return map with fields and errors
+	 */
+	
+	public static <T> Map<String,String> validate(T object) {
 		Map<String,String> result = new HashMap<String,String>();
 		if (object == null) {
 			result.put("object", "Not Found");

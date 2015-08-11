@@ -15,7 +15,7 @@ import com.ga2sa.security.Access;
 import com.ga2sa.utils.JsonUtil;
 /**
  * 
- * 
+ * Controller class for work with dashboard page
  * 
  * @author Igor Ivarov
  * @editor Sergey Legostaev
@@ -25,9 +25,14 @@ public class Dashboard extends Controller {
 	
 	private static Map<String, JsonNode> params = new HashMap<String, JsonNode>();
 	
+	/**
+	 * get all data for creation jobs, insert these data to json and return into page
+	 * 
+	 * @return page
+	 */
+	
 	public static Result index() {
 		params.clear();
-		
 		
 		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
 		JsonNode salesforceProfiles = Json.toJson(SalesforceAnalyticsProfileDAO.getProfiles());

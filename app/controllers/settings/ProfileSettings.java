@@ -14,6 +14,10 @@ import com.ga2sa.security.Access;
  */
 @Access
 public class ProfileSettings extends Controller {
+	
+	/**
+	 * Method for saving updated user's info.
+	 */
 		
 	@Transactional
 	public static Result update(String userId) {

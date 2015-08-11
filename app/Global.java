@@ -20,8 +20,11 @@ import com.ga2sa.security.UserGroup;
  **/
 
 public class Global extends GlobalSettings {
-	
-	public void createDefaultAdmin() {
+	/**
+	 * Method for creation default admin user, user will be created if admin does not exist yet. 
+	 * This method was implemented for fast deploy to Heroku instance (Heroku Button)
+	 */
+	private void createDefaultAdmin() {
 		Logger.info("Creation default user.");
 		User user = UserDAO.getUserByUsername("admin");
 		if (user == null) {
@@ -46,7 +49,10 @@ public class Global extends GlobalSettings {
 		}
 	}
 	
-	
+	/**
+	 * Method for change application settings. On start application will be update default time zone, 
+	 * create default admin user and start background jobs if they exist.
+	 */
 	
 	@Override
 	public void onStart(Application app) {

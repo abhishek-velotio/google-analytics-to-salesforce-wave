@@ -13,6 +13,11 @@ import com.ga2sa.security.Access;
 @Access
 public class Application extends Controller {
 	
+	/**
+	 * redirect to dashbord page
+	 * 
+	 * @return
+	 */
 	public static Result index() {
 		return redirect(routes.Dashboard.index());
 	}

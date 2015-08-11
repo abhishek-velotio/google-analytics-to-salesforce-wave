@@ -19,6 +19,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 
 public class AccessAction extends Action<Access> {
+	
+	/**
+	 * Method is executed every time when try to open a page of application, if a user has not access to the page the user will get error message. 
+	 * If user was not authorized this request will be redirected to login page. 
+	 */
 
 	@Override
 	public Promise<Result> call(Context ctx) throws Throwable {

@@ -6,6 +6,8 @@ import models.GoogleAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
 import play.Logger;
 import play.cache.Cache;
+import play.db.jpa.Transactional;
+import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -13,7 +15,6 @@ import play.twirl.api.MimeTypes;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ga2sa.google.GoogleConnector;
-import com.ga2sa.helpers.Callback;
 import com.ga2sa.security.Access;
 import com.ga2sa.security.UserGroup;
 import com.ga2sa.validators.Validator;
@@ -29,31 +30,36 @@ public class GoogleAnalyticsSettings extends Controller {
 	
 	private static final String PROFILE_EXISTS =  "Profile already exists";
 	
+	@Transactional
 	public static Result get(String profileId) {
 		GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
 		return ok(Json.toJson(profile));
 	}
 	
+	@Transactional
 	public static Result add() {
 		GoogleAnalyticsProfile object = Json.fromJson(request().body().asJson(), GoogleAnalyticsProfile.class);
-		return commonAction(object, new Callback<GoogleAnalyticsProfile>() {
+		
+		return commonAction(object, new Callback0() {
 			@Override
-			public void action() throws Exception {
+			public void invoke() throws Throwable {
 				GoogleAnalyticsProfileDAO.save(object);
 			}
 		});
 	}
 	
+	@Transactional
 	public static Result delete(String profileId) {
 		GoogleAnalyticsProfileDAO.delete(GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId)));
 		return ok();
 	}
 	
+	@Transactional
 	public static Result update(String profileId) {
 		GoogleAnalyticsProfile object = Json.fromJson(request().body().asJson(), GoogleAnalyticsProfile.class);
-		return commonAction(object, new Callback<GoogleAnalyticsProfile>() {
+		return commonAction(object, new Callback0() {
 			@Override
-			public void action() throws Exception {
+			public void invoke() throws Throwable {
 				GoogleAnalyticsProfileDAO.update(object);
 			}
 		});
@@ -88,13 +94,13 @@ public class GoogleAnalyticsSettings extends Controller {
 		return ok(Json.toJson(profile));
 	}
 	
-	private static Result commonAction(GoogleAnalyticsProfile object, Callback<GoogleAnalyticsProfile> callback) {
-		Map<String, String> validateResult = Validator.validate2(object);
+	private static Result commonAction(GoogleAnalyticsProfile object, Callback0 callback) {
+		Map<String, String> validateResult = Validator.validate(object);
 		if (validateResult.isEmpty()) {
 			try {
-				callback.action();
+				callback.invoke();
 				return ok(Json.toJson(object)).as(MimeTypes.JAVASCRIPT());
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Logger.debug(PROFILE_EXISTS);
 				validateResult.put("name", PROFILE_EXISTS);
 			}

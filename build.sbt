@@ -24,8 +24,16 @@ libraryDependencies ++= Seq(
   "com.edulify" 			%% "play-hikaricp" 						% "2.0.4",
   "javax.el" 				% "javax.el-api" 						% "3.0.0",
   "org.glassfish.web" 		% "javax.el" 							% "2.2.6",
-  "org.apache.openjpa" 		% "openjpa-persistence" 				% "2.3.0",
-  "org.mindrot"				% "jbcrypt" 							% "0.3m"
+  //"org.apache.openjpa" 		% "openjpa-persistence" 				% "2.3.0",
+  "org.mindrot"				% "jbcrypt" 							% "0.3m",
+  //datasetutil dependencies
+  "com.force.api" 			% "force-wsc" 							% "32.0.0",
+  "com.force.api"			% "force-partner-api" 					% "32.0.0",
+  "commons-io" 				% "commons-io" 							% "2.4",
+ "org.slf4j" % "slf4j-log4j12" % "1.7.12",
+ "org.apache.commons" % "commons-compress" % "1.9",
+ "org.apache.httpcomponents" % "httpclient" % "4.5",
+ "org.apache.httpcomponents" % "httpmime" % "4.5"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)

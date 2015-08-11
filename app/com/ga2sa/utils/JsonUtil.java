@@ -9,13 +9,19 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * 
- * 
+ * Class for work with json
  * 
  * @author Igor Ivarov
  * @editor Sergey Legostaev
  */
 public class JsonUtil {
 	
+	/**
+	 * Method for exclude fields from json object, it's need to use separate logic for client side and server side.
+	 * @param source json object
+	 * @param excluded fields 
+	 * @return json object with excluded fields
+	 */
 	public static JsonNode excludeFields(JsonNode source, Collection<String> fields) {
 		
 		JsonNode result = null;

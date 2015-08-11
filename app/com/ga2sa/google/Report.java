@@ -8,15 +8,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
+import models.Job;
+
+
+//import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.Play;
+import play.libs.Json;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ga2sa.security.ApplicationSecurity;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.analytics.model.GaData;
 import com.google.api.services.analytics.model.GaData.ColumnHeaders;
+import com.google.common.io.Files;
 
 /**
  * 
@@ -63,9 +70,6 @@ public class Report {
 		this.dateColumns = new ArrayList<Integer>();
 		
 		for (ColumnHeaders item : data.getColumnHeaders()) {
-			
-			
-			
 			if (item.getColumnType().equals("DIMENSION")) {
 				dimensions.forEach(
 						(dimension) -> {
@@ -87,7 +91,7 @@ public class Report {
 			
 		}
 		
-		this.data = data.getRows();
+		this.data = data == null ? null : data.getRows();
 	}
 
 	public File toCSV() {
@@ -103,22 +107,23 @@ public class Report {
 
 			bw.write(header);
 			bw.newLine();
-			
-			this.data.forEach((row) -> {
-				
-				// formatting all date columns
-				this.dateColumns.forEach((indexColumn) -> {
-					row.set(indexColumn, convertToIsoDate(row.get(indexColumn)));
+			if (data != null) {
+				this.data.forEach((row) -> {
+					
+					// formatting all date columns
+					this.dateColumns.forEach((indexColumn) -> {
+						row.set(indexColumn, convertToIsoDate(row.get(indexColumn)));
+					});
+					
+					try {
+						bw.write(StringUtils.join(row.toArray(), ","));
+						bw.newLine();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 				});
-				
-				try {
-					bw.write(StringUtils.join(row.toArray(), ","));
-					bw.newLine();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			});
+			}
 			
 			bw.flush();
 			bw.close();
@@ -140,7 +145,8 @@ public class Report {
 		
 		try {
 			
-			FileUtils.writeByteArrayToFile(csv, prevCSV);
+			Files.write(prevCSV, csv);
+			//Files.writeByteArrayToFile(csv, prevCSV);
 			
 			BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
 			
@@ -177,5 +183,27 @@ public class Report {
 		String month = gaDate.substring(4, 6);
 		String day = gaDate.substring(6, 8);
 		return year + "-" + month + "-" + day;
+	}
+	
+	public static Report getReport(Job job) throws Exception {
+		
+		String nameReport = job.getName();
+		String profileId = job.getGoogleAnalyticsProfile().getId().toString();
+		String properties = job.getGoogleAnalyticsProperties();
+		
+		Report report = null;
+		
+		GoogleCredential credential = ApplicationSecurity.getGoogleCredential(profileId);
+		
+		JsonNode metrics = Json.toJson(GoogleAnalyticsDataManager.getMetrics(credential));
+		JsonNode dimensions = Json.toJson(GoogleAnalyticsDataManager.getDimensions(credential));
+		
+		try {
+			report = new Report( nameReport, GoogleAnalyticsDataManager.getReport(credential, properties), metrics, dimensions);
+		} catch (Exception exception) {
+			throw exception;
+		}
+		
+		return report;
 	}
 }

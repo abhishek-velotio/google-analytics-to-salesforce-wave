@@ -8,12 +8,12 @@ import models.User;
 import models.dao.UserDAO;
 import play.Logger;
 import play.db.jpa.Transactional;
+import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.MimeTypes;
 
-import com.ga2sa.helpers.Callback;
 import com.ga2sa.security.Access;
 import com.ga2sa.security.ApplicationSecurity;
 import com.ga2sa.security.PasswordManager;
@@ -37,9 +37,9 @@ public class UsersSettings extends Controller {
 		user.setPassword(PasswordManager.encryptPassword(user.getPassword()));
 		user.setRecordCreatedBy(ApplicationSecurity.getCurrentUser().getId());
 		user.setRecordCreatedDateTime(new Timestamp(new Date().getTime()));
-		return commonAction(user, new Callback<User>() {
+		return commonAction(user, new Callback0() {
 			@Override
-			public void action() throws Exception {
+			public void invoke() throws Throwable {
 				UserDAO.save(user);
 			}
 		});
@@ -56,21 +56,21 @@ public class UsersSettings extends Controller {
 	@Transactional
 	public static Result update(String profileId) {
 		User user = Json.fromJson(request().body().asJson(), User.class);
-		return commonAction(user, new Callback<User>() {
+		return commonAction(user, new Callback0() {
 			@Override
-			public void action() throws Exception {
+			public void invoke() throws Throwable {
 				UserDAO.update(user);
 			}
 		});
 	}
 	
-	private static Result commonAction(User object, Callback<User> callback) {
-		Map<String, String> validateResult = Validator.validate2(object);
+	private static Result commonAction(User object, Callback0 callback) {
+		Map<String, String> validateResult = Validator.validate(object);
 		if (validateResult.isEmpty()) {
 			try {
-				callback.action();
+				callback.invoke();
 				return ok(Json.toJson(object)).as(MimeTypes.JAVASCRIPT());
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Logger.debug(USER_EXISTS);
 				validateResult.put("username", USER_EXISTS);
 			}

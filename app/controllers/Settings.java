@@ -18,7 +18,7 @@ import com.ga2sa.security.ApplicationSecurity;
 import com.ga2sa.security.UserGroup;
 /**
  * 
- * 
+ * Controller for menu header
  * 
  * @author Igor Ivarov
  * @editor Sergey Legostaev
@@ -31,6 +31,12 @@ public class Settings extends Controller {
 	public static Result index() {
 		return redirect(routes.Settings.profile());
 	}
+	
+	/**
+	 * method opens page with profile for current user
+	 * 
+	 * @return profiled for current user
+	 */
 	
 	@Access
 	public static Result profile() {
@@ -46,6 +52,11 @@ public class Settings extends Controller {
 		return ok(views.html.pages.settings.index.render("profile", params));
 	}
 	
+	/**
+	 *  method opens page with list of users
+	 * 
+	 * @return list of users
+	 */
 	@Access(allowFor = UserGroup.ADMIN)
 	public static Result users() {
 		params.clear();
@@ -56,7 +67,11 @@ public class Settings extends Controller {
 		
 		return ok(views.html.pages.settings.index.render("users", params));
 	}
-	
+	/**
+	 * method opens page with list of GA profiles
+	 * 
+	 * @return list of GA profiles
+	 */
 	@Access(allowFor = UserGroup.ADMIN)
 	public static Result ga() {
 		params.clear();
@@ -68,6 +83,11 @@ public class Settings extends Controller {
 		return ok(views.html.pages.settings.index.render("ga", params));
 	}
 	
+	/**
+	 * method opens page with list of Salesforce profiles
+	 * 
+	 * @return list of salesforce profiles
+	 */
 	@Access(allowFor = UserGroup.ADMIN)
 	public static Result sa() {
 		params.clear();

@@ -14,7 +14,14 @@ import play.Logger;
 public class PasswordManager {
 	
 	public static final String PASSWORD_TMP = "password";
-
+	
+	/**
+	 * Method for compare plain password and encrypted, this method uses for check password when user try to login.
+	 * 
+	 * @param plainPassword
+	 * @param encryptedPassword
+	 * @return true or false
+	 */
 	public static boolean checkPassword(String plainPassword, String encryptedPassword) {
 		try {
 			return BCrypt.checkpw(plainPassword, encryptedPassword);
@@ -23,6 +30,13 @@ public class PasswordManager {
 		}
 		return false;
 	}
+	
+	/**
+	 * Encrypt password use default setting for BCrypt
+	 * 
+	 * @param plain password
+	 * @return encrypted password
+	 */
 	
 	public static String encryptPassword(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());

@@ -18,7 +18,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.analytics.AnalyticsScopes;
 /**
  * 
- * 
+ * Class for manage connections to GA
  * 
  * @author Igor Ivarov
  * @editor Sergey Legostaev
@@ -31,6 +31,13 @@ public class GoogleConnector {
 	
 	private static String redirectURL;
 	
+	
+	/**
+	 * Method for selecting redirection url, if application was started on local pc will be used first url from list.
+	 * 
+	 * @param GA profile
+	 * @return
+	 */
 	private static GoogleAuthorizationCodeFlow getFlow(GoogleAnalyticsProfile profile)  {
 //		redirectURL = Play.isProd() ? profile.getRedirectUris()[1] : profile.getRedirectUris()[0];
 		String[] uris = profile.getRedirectUris().split(",");
@@ -42,10 +49,21 @@ public class GoogleConnector {
 			.build();
 	}
 	
+	/**
+	 * Get redirect url from GA profile
+	 * 
+	 * @param GA profile
+	 * @return redirect url
+	 */
 	public static String getAuthURL(GoogleAnalyticsProfile profile) {
 		return getFlow(profile).newAuthorizationUrl().setRedirectUri(redirectURL).toURI().toString();
 	}
 	
+	/**
+	 * Execute code from redirected url that was got from GA profile 
+	 * @param profile
+	 * @param authorizationCode
+	 */
 	public static void exchangeCode(GoogleAnalyticsProfile profile, String authorizationCode)  {
 		
 		try {
@@ -57,6 +75,11 @@ public class GoogleConnector {
 		}
 	}
 	
+	/**
+	 * Update GA profile in database, changed connected flag to true value
+	 * @param profile
+	 * @param credential
+	 */
 	private static void storeCredentials(GoogleAnalyticsProfile profile, Credential credential) {
 		
 		profile.setAccessToken(credential.getAccessToken());
@@ -70,8 +93,12 @@ public class GoogleConnector {
 		}
 	}
 	
+	/**
+	 * Get Google Credential for GA profile
+	 * @param GA profile
+	 * @return Google Credential
+	 */
 	public static GoogleCredential getCredentials(GoogleAnalyticsProfile profile) {
-		
 		GoogleCredential credential = new GoogleCredential.Builder()
 	    	.setTransport(HTTP_TRANSPORT)
 	    	.setJsonFactory(JSON_FACTORY)

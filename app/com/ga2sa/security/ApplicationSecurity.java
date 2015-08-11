@@ -5,16 +5,19 @@ package com.ga2sa.security;
 
 import java.util.UUID;
 
+import models.GoogleAnalyticsProfile;
 import models.Session;
 import models.User;
+import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SessionDAO;
 import models.dao.UserDAO;
 import play.Logger;
-import play.mvc.Http.Cookie;
+import play.cache.Cache;
 
+import com.ga2sa.google.GoogleConnector;
 import com.ga2sa.helpers.forms.LoginForm;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
-import controllers.CookieManager;
 import controllers.SessionManager;
 /**
  * 
@@ -27,7 +30,12 @@ import controllers.SessionManager;
 public class ApplicationSecurity {
 	
 	public static final String SESSION_ID_KEY = "session_id";
-	
+	/**
+	 * Method for authenticate user in the application.
+	 * 
+	 * @param loginForm from Login page
+	 * @return true or false
+	 */
 	public static Boolean authenticate(LoginForm loginForm) {
 		User user = UserDAO.getUserByUsername(loginForm.getUsername());
 		if (user == null) {
@@ -52,16 +60,32 @@ public class ApplicationSecurity {
 		return false;
 	}
 	
+	/**
+	 * Method for getting session id from Application session
+	 * 
+	 * 
+	 * @return true or false
+	 */
 	public static String getSessionId() {
 //		Cookie cookie = CookieManager.get(SESSION_ID_KEY);
 //		return cookie == null ? null : cookie.value();
 		return SessionManager.get(SESSION_ID_KEY);
 	}
 	
+	/**
+	 * Method for getting Session object from database for current session
+	 * 
+	 * @return Session
+	 */
 	public static Session getCurrentSession() {
 		return SessionDAO.getSession(getSessionId());
 	}
 	
+	/**
+	 * Get current user that loggined in the application
+	 * 
+	 * @return User
+	 */
 	public static User getCurrentUser() {
 	
 		final String sessionId = getSessionId();
@@ -75,11 +99,19 @@ public class ApplicationSecurity {
 		return session == null ? null : UserDAO.getUserById(session.getUserId());
 	}
 	
+	/**
+	 * Check admin role for current user
+	 * 
+	 * @return true or false
+	 */
 	public static boolean isAdmin() {
 		User user = getCurrentUser();
 		return user == null ? false : user.getRole().equals("ADMIN");
 	}
 	
+	/**
+	 * Method for logout from application
+	 */
 	public static void logout() {
 //		Cookie cookie = CookieManager.get(SESSION_ID_KEY);
 //		if (cookie != null && cookie.value() != null) {
@@ -91,6 +123,23 @@ public class ApplicationSecurity {
 			SessionDAO.deleteById(sessionId);
 			SessionManager.clear();
 		}
-		
+	}
+	
+	/**
+	 * Get Google Credential from cache for current user
+	 * 
+	 * @param Google Analytics Profile Id from database
+	 * 
+	 * @return Google Credential from Google Analytics Profile
+	 */
+	public static GoogleCredential getGoogleCredential(String profileId) {
+		final String cacheId = GoogleConnector.CACHE_CREDENTIAL_PREFIX + profileId;
+		GoogleCredential credential = (GoogleCredential)Cache.get(cacheId);
+		if (credential == null) {
+			GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
+			credential = GoogleConnector.getCredentials(profile);
+			Cache.set(cacheId, credential);
+		}
+		return credential;
 	}
 }

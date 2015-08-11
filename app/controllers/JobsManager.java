@@ -2,7 +2,6 @@ package controllers;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import models.GoogleAnalyticsProfile;
@@ -25,7 +24,7 @@ import com.ga2sa.security.ApplicationSecurity;
 import com.ga2sa.validators.Validator;
 /**
  * 
- * 
+ * Class for manage jobs
  * 
  * @author Igor Ivarov
  * @editor Sergey Legostaev
@@ -33,6 +32,11 @@ import com.ga2sa.validators.Validator;
 @Access
 public class JobsManager extends Controller {
 	
+	/**
+	 * method creates job form json that was requested from page
+	 * 
+	 * @return action result
+	 */
 	public static Result create () {
 		
 		JsonNode requestData = request().body().asJson();
@@ -56,7 +60,7 @@ public class JobsManager extends Controller {
 		
 		if (!requestData.get("includePreviousData").isNull()) job.setIncludePreviousData(requestData.get("includePreviousData").asBoolean());
 		
-		Map<String, String> validateResult = Validator.validate2(job);
+		Map<String, String> validateResult = Validator.validate(job);
 		
 		if (validateResult.isEmpty()) {
 			try {

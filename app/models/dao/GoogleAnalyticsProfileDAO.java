@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.GoogleAnalyticsProfile;
-
-import org.postgresql.util.PSQLException;
-
 import play.db.jpa.JPA;
-import play.db.jpa.Transactional;
 /**
  * 
  * DAO class for work with Google Analytics Profile entity

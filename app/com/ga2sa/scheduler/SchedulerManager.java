@@ -23,6 +23,10 @@ import akka.actor.UntypedActor;
  */
 public class SchedulerManager extends UntypedActor {
 	
+	/**
+	 * Method for handle of message for actor. For start all jobs need to send 'start' work, for update status for all jobs need to send "update" word
+	 * 
+	 */
 	@Override
 	public void onReceive(Object obj) throws Exception {
 		

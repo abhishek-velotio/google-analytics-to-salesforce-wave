@@ -20,5 +20,11 @@ import play.mvc.With;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Access {
+	
+	/**
+	 * Parameter for set which user role has access to method
+	 * 
+	 * @return
+	 */
 	UserGroup allowFor() default UserGroup.USER;
 }
