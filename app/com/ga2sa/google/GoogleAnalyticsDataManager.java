@@ -36,11 +36,8 @@ public class GoogleAnalyticsDataManager {
 	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	
-//	private static Analytics analytics;
 	
 	private static Analytics getAnalytics(GoogleCredential credential) {
-//		if (analytics == null) analytics = new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
-//		return analytics;
 		return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
 	}
 	

@@ -39,7 +39,6 @@ public class GoogleConnector {
 	 * @return
 	 */
 	private static GoogleAuthorizationCodeFlow getFlow(GoogleAnalyticsProfile profile)  {
-//		redirectURL = Play.isProd() ? profile.getRedirectUris()[1] : profile.getRedirectUris()[0];
 		String[] uris = profile.getRedirectUris().split(",");
 		redirectURL = uris.length > 0 ? (Play.isProd() ? uris[1] : uris[0]) : null;
 		return new GoogleAuthorizationCodeFlow

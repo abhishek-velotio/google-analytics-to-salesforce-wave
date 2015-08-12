@@ -7,8 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import models.Job;
+
+
 
 
 //import org.apache.commons.io.FileUtils;
@@ -63,32 +66,61 @@ public class Report {
 		this.name = name;
 	}
 
-	public Report(String name, GaData data, JsonNode metrics, JsonNode dimensions) {
-
+//	public Report(String name, GaData data, JsonNode metrics, JsonNode dimensions) {
+//
+//		this.name = name;
+//		this.headers = new ArrayList<String>();
+//		this.dateColumns = new ArrayList<Integer>();
+//		if (data != null) {
+//			for (ColumnHeaders item : data.getColumnHeaders()) {
+//				if (item.getColumnType().equals("DIMENSION")) {
+//					dimensions.forEach(
+//							(dimension) -> {
+//								if (dimension.get("id").asText().equals(item.getName())) 
+//									this.headers.add(dimension.get("uiName").asText());
+//							}
+//					);
+//				} else {
+//					metrics.forEach(
+//							(metric) -> {
+//								if (metric.get("id").asText().equals(item.getName())) 
+//									this.headers.add(metric.get("uiName").asText());
+//							}
+//					);
+//				}
+//			
+//				// Save index date column for formatting in CSV file
+//				if (item.getName().equals("ga:date")) this.dateColumns.add(data.getColumnHeaders().indexOf(item));
+//			
+//			}
+//		}
+//		
+//		this.data = data == null ? null : data.getRows();
+//		
+//	}
+	
+	public Report(String name, GaData data, List<Map<String, String>> metrics, List<Map<String, String>> dimensions) {
 		this.name = name;
 		this.headers = new ArrayList<String>();
 		this.dateColumns = new ArrayList<Integer>();
-		
-		for (ColumnHeaders item : data.getColumnHeaders()) {
-			if (item.getColumnType().equals("DIMENSION")) {
-				dimensions.forEach(
-						(dimension) -> {
-							if (dimension.get("id").asText().equals(item.getName())) 
-								this.headers.add(dimension.get("uiName").asText());
-						}
-				);
-			} else {
-				metrics.forEach(
-						(metric) -> {
-							if (metric.get("id").asText().equals(item.getName())) 
-								this.headers.add(metric.get("uiName").asText());
-						}
-				);
+		if (data != null) {
+			for (ColumnHeaders item : data.getColumnHeaders()) {
+				if (item.getColumnType().equals("DIMENSION")) {
+					dimensions.forEach(dimension -> {
+								if (dimension.get("id").equals(item.getName())) 
+									this.headers.add(dimension.get("uiName"));
+							});
+				} else {
+					metrics.forEach(metric -> {
+								if (metric.get("id").equals(item.getName())) 
+									this.headers.add(metric.get("uiName"));
+							});
+				}
+			
+				// Save index date column for formatting in CSV file
+				if (item.getName().equals("ga:date")) this.dateColumns.add(data.getColumnHeaders().indexOf(item));
+			
 			}
-			
-			// Save index date column for formatting in CSV file
-			if (item.getName().equals("ga:date")) this.dateColumns.add(data.getColumnHeaders().indexOf(item));
-			
 		}
 		
 		this.data = data == null ? null : data.getRows();
@@ -149,23 +181,24 @@ public class Report {
 			//Files.writeByteArrayToFile(csv, prevCSV);
 			
 			BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
-			
-			this.data.forEach((row) -> {
-				
-				// formatting all date columns
-				this.dateColumns.forEach((indexColumn) -> {
-					row.set(indexColumn, convertToIsoDate(row.get(indexColumn)));
+			if (data != null) {
+				this.data.forEach((row) -> {
+					
+					// formatting all date columns
+					this.dateColumns.forEach((indexColumn) -> {
+						row.set(indexColumn, convertToIsoDate(row.get(indexColumn)));
+					});
+					
+					try {
+						bw.write(StringUtils.join(row.toArray(), ","));
+						Logger.debug("# " + StringUtils.join(row.toArray(), ","));
+						bw.newLine();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 				});
-				
-				try {
-					bw.write(StringUtils.join(row.toArray(), ","));
-					Logger.debug("# " + StringUtils.join(row.toArray(), ","));
-					bw.newLine();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			});
+			}
 			
 			bw.flush();
 			bw.close();
@@ -186,24 +219,13 @@ public class Report {
 	}
 	
 	public static Report getReport(Job job) throws Exception {
-		
-		String nameReport = job.getName();
-		String profileId = job.getGoogleAnalyticsProfile().getId().toString();
-		String properties = job.getGoogleAnalyticsProperties();
-		
-		Report report = null;
+		final String nameReport = job.getName();
+		final String profileId = job.getGoogleAnalyticsProfile().getId().toString();
+		final String properties = job.getGoogleAnalyticsProperties();
 		
 		GoogleCredential credential = ApplicationSecurity.getGoogleCredential(profileId);
 		
-		JsonNode metrics = Json.toJson(GoogleAnalyticsDataManager.getMetrics(credential));
-		JsonNode dimensions = Json.toJson(GoogleAnalyticsDataManager.getDimensions(credential));
-		
-		try {
-			report = new Report( nameReport, GoogleAnalyticsDataManager.getReport(credential, properties), metrics, dimensions);
-		} catch (Exception exception) {
-			throw exception;
-		}
-		
-		return report;
+		return new Report( nameReport, GoogleAnalyticsDataManager.getReport(credential, properties), 
+				GoogleAnalyticsDataManager.getMetrics(credential), GoogleAnalyticsDataManager.getDimensions(credential));
 	}
 }
