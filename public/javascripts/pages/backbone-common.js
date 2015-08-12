@@ -135,7 +135,8 @@ $(function () {
 		events : {
 	      'hidden.bs.modal' : 'teardown',
 	      'shown.bs.modal'	: 'showComplete',
-	      'click .button_type_save' : 'save'
+	      'click .button_type_save' : 'save',
+	      'click .button_type_cancel, .close' : 'destroy'
 	    },
 
 		initialize : function (options) {
@@ -156,11 +157,13 @@ $(function () {
 	    },
 
 	    teardown : function() {
-	    	this.$el.data('modal', null);
+	    	//this.$el.data('modal', null);
+	    	this.destroy();
 	    },
 	    
 	    save : function () {
 	    	this.$el.modal('hide');
+	    	//this.destroy();
 	    },
 		
 		render : function () {
@@ -168,8 +171,17 @@ $(function () {
 				title : this.options.title
 			}));
 			this.$el.modal({show:false});
+		},
+		
+		destroy : function() {
+			// COMPLETELY UNBIND THE VIEW
+		    this.undelegateEvents();
+		    this.$el.removeData().unbind(); 
+		    // Remove view from DOM
+		    this.remove();  
+		    Backbone.View.prototype.remove.call(this);
 		}
-	
+	    
 	});
 	
 	Views.Alert = Backbone.View.extend({
