@@ -1,4 +1,4 @@
-package com.ga2sa.security;
+package models;
 /**
  * 
  * List of user groups

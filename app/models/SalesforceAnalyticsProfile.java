@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 /**
@@ -28,11 +27,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name="salesforce_analytics_profiles")
 @NamedQuery(name="SalesforceAnalyticsProfile.findAll", query="SELECT s FROM SalesforceAnalyticsProfile s ORDER BY s.id ASC")
-@JsonIgnoreProperties(ignoreUnknown = true, value = {
-		"password", 
-		"username", 
-		"applicationName"
-})
 public class SalesforceAnalyticsProfile implements Serializable {
 	private static final long serialVersionUID = 1L;
 

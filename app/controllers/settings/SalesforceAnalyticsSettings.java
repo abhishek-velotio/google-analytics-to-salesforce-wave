@@ -3,6 +3,7 @@ package controllers.settings;
 import java.util.Map;
 
 import models.SalesforceAnalyticsProfile;
+import models.UserGroup;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import play.Logger;
 import play.db.jpa.Transactional;
@@ -13,7 +14,6 @@ import play.mvc.Result;
 import play.twirl.api.MimeTypes;
 
 import com.ga2sa.security.Access;
-import com.ga2sa.security.UserGroup;
 import com.ga2sa.validators.Validator;
 /**
  * 

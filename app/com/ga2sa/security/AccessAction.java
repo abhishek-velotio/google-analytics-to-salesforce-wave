@@ -1,6 +1,7 @@
 package com.ga2sa.security;
 
 import models.User;
+import models.UserGroup;
 import play.libs.F;
 import play.libs.F.Promise;
 import play.libs.Json;
@@ -29,7 +30,7 @@ public class AccessAction extends Action<Access> {
 	public Promise<Result> call(Context ctx) throws Throwable {
 		User user = ApplicationSecurity.getCurrentUser();
 		if (user == null) return F.Promise.pure((Result) redirect(controllers.routes.Authorization.ga2saSignIn()));
-		if (user.getRole().equalsIgnoreCase(UserGroup.ADMIN.name())) return delegate.call(ctx);
+		if (user.role.equals(UserGroup.ADMIN)) return delegate.call(ctx);
 		
 		UserGroup userGroup = configuration.allowFor();
 		

@@ -3,11 +3,13 @@
  */
 package com.ga2sa.security;
 
+import java.util.Date;
 import java.util.UUID;
 
 import models.GoogleAnalyticsProfile;
 import models.Session;
 import models.User;
+import models.UserGroup;
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SessionDAO;
 import models.dao.UserDAO;
@@ -41,13 +43,15 @@ public class ApplicationSecurity {
 		if (user == null) {
 			Logger.error("User not found ");
 		} else {
-			if (user.getIsActive()) {
-				if (PasswordManager.checkPassword(loginForm.getPassword(), user.getPassword())) {				
+			if (user.isActive) {
+				if (PasswordManager.checkPassword(loginForm.getPassword(), user.password)) {				
 					final String sessionId = UUID.randomUUID().toString();
 					SessionManager.set(SESSION_ID_KEY, sessionId);
 //					CookieManager.set(SESSION_ID_KEY, sessionId, true);
 					try {
-						SessionDAO.save(new Session(sessionId, user.getId()));
+						user.lastLoginDateTime = new Date();
+						UserDAO.update(user);
+						SessionDAO.save(new Session(sessionId, user.id));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -106,7 +110,7 @@ public class ApplicationSecurity {
 	 */
 	public static boolean isAdmin() {
 		User user = getCurrentUser();
-		return user == null ? false : user.getRole().equals("ADMIN");
+		return user == null ? false : user.role.equals(UserGroup.ADMIN);
 	}
 	
 	/**

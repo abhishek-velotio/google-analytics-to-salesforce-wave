@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.GoogleAnalyticsProfile;
 import models.Job;
+import models.JobStatus;
 import models.SalesforceAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.JobDAO;
@@ -50,7 +51,7 @@ public class JobsManager extends Controller {
 		job.setSalesforceAnalyticsProfile(saProfile);
 		job.setGoogleAnalyticsProperties(requestData.get("googleAnalyticsProperties").toString());
 		job.setUser(ApplicationSecurity.getCurrentUser());
-		job.setStatus("PENDING");
+		job.setStatus(JobStatus.PENDING);
 		
 		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
 		

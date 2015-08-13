@@ -4,14 +4,23 @@
              version="2.0">
              
     <persistence-unit name="defaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <non-jta-data-source>DefaultDS</non-jta-data-source>
+        
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.generate_statistics" value="false"/>
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
+        	<property name="eclipselink.ddl-generation.output-mode" value="database"/>
+        	<property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+        	<property name="eclipselink.logging.level" value="FINE"/>
+        	<property name="eclipselink.target-database" value="PostgreSQL"/>
+        	<property name="eclipselink.logging.connection" value="true"/>
+        	<property name="eclipselink.logging.timestamp" value="true"/>
+<!--             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/> -->
+<!--             <property name="hibernate.hbm2ddl.auto" value="update"/> -->
+<!--             <property name="hibernate.generate_statistics" value="false"/> -->
+<!--             <property name="hibernate.show_sql" value="true" /> -->
+<!--             <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" /> -->
 <!--             <property name="hibernate.id.new_generator_mappings" value="true"/> -->
         </properties>
     </persistence-unit>

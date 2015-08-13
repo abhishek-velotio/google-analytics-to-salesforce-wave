@@ -1,17 +1,14 @@
 package models;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -34,14 +31,14 @@ import com.ga2sa.utils.JsonUtil;
  */
 @Entity
 @Table(name="jobs")
-@NamedQuery(name="Job.findAll", query="SELECT j FROM Job j ORDER BY j.id ASC")
-public class Job implements Serializable {
+@NamedQuery(name="Job.findAll", query="SELECT j FROM Job j ORDER BY j.created DESC")
+public class Job extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name="JOBS_ID_GENERATOR", sequenceName="JOBS_ID_SEQ")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="JOBS_ID_GENERATOR")
-	private Long id;
+//	@Id
+//	@SequenceGenerator(name="JOBS_ID_GENERATOR", sequenceName="JOBS_ID_SEQ")
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="JOBS_ID_GENERATOR")
+//	private Long id;
 
 	@Column(name="end_time")
 	private Timestamp endTime;
@@ -63,9 +60,9 @@ public class Job implements Serializable {
 	@Column(name="next_start_time")
 	private Timestamp nextStartTime;
 	
-	@NotEmpty
 	@NotNull
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private JobStatus status;
 	
 	@Column(name="repeat_period")
 	private String repeatPeriod;
@@ -147,11 +144,11 @@ public class Job implements Serializable {
 		this.nextStartTime = nextStartTime;
 	}
 
-	public String getStatus() {
+	public JobStatus getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(JobStatus status) {
 		this.status = status;
 	}
 
@@ -215,7 +212,7 @@ public class Job implements Serializable {
 	
 	@JsonProperty(value="user")
 	public String getUserId() {
-		return this.user.getUsername();
+		return this.user.username;
 	}
 
 }

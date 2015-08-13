@@ -1,18 +1,18 @@
 package models;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -26,181 +26,63 @@ import com.ga2sa.security.PasswordManager;
 
 /**
  * The persistent class for the users database table.
+ * 
  * @author Igor Ivarov
  * @editor Sergey Legostaev 
  */
 @Entity
 @Table(name="users", uniqueConstraints=@UniqueConstraint(columnNames = { "username" }))
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u ORDER BY u.id ASC")
-public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class User extends BaseEntity {
 
-	@Id
-	@SequenceGenerator(name="USERS_ID_GENERATOR", sequenceName="USERS_ID_SEQ")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USERS_ID_GENERATOR")
-	private Long id;
+//	@Id
+//	@SequenceGenerator(name="USERS_ID_GENERATOR", sequenceName="USERS_ID_SEQ")
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USERS_ID_GENERATOR")
+//	public Long id;
 
 	@NotEmpty
 	@NotNull
 	@Email
 	@Column(name="email_address")
-	private String emailAddress;
+	public String emailAddress;
 	
 	@NotEmpty
 	@NotNull
 	@Column(name="first_name")
-	private String firstName;
+	public String firstName;
 	
 	@Column(name="is_active")
 	@NotNull
-	private Boolean isActive;
+	public Boolean isActive;
 	
 	@Column(name="last_login_date_time")
-	private Timestamp lastLoginDateTime;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date lastLoginDateTime;
 	
 	@NotEmpty
 	@NotNull
 	@Column(name="last_name")
-	private String lastName;
+	public String lastName;
 	
 	@NotEmpty
 	@NotNull
-	private String password;
+	public String password;
 	
-	@NotNull
-	@Column(name="record_created_by")
-	private Long recordCreatedBy;
-	
-	@NotNull
-	@Column(name="record_created_date_time")
-	private Timestamp recordCreatedDateTime;
-	
-	@Column(name="record_modified_by")
-	private Long recordModifiedBy;
-	
-	@Column(name="record_modified_date_time")
-	private Timestamp recordModifiedDateTime;
-
-	@NotEmpty
-	@NotNull
-	private String role;
+	@Enumerated(EnumType.STRING)
+	public UserGroup role;
 	
 	@NotEmpty
 	@NotNull
-	private String username;
+	public String username;
 	
 	//bi-directional many-to-one association to Job
 	@JsonIgnore
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", fetch = FetchType.LAZY)
 	private List<Job> jobs;
 
 	public User() {
 	}
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getEmailAddress() {
-		return this.emailAddress;
-	}
-
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	public String getFirstName() {
-		return this.firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public Boolean getIsActive() {
-		return this.isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public Timestamp getLastLoginDateTime() {
-		return this.lastLoginDateTime;
-	}
-
-	public void setLastLoginDateTime(Timestamp lastLoginDateTime) {
-		this.lastLoginDateTime = lastLoginDateTime;
-	}
-
-	public String getLastName() {
-		return this.lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getPassword() {
-		return this.password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Long getRecordCreatedBy() {
-		return this.recordCreatedBy;
-	}
-
-	public void setRecordCreatedBy(Long recordCreatedBy) {
-		this.recordCreatedBy = recordCreatedBy;
-	}
-
-	public Timestamp getRecordCreatedDateTime() {
-		return this.recordCreatedDateTime;
-	}
-
-	public void setRecordCreatedDateTime(Timestamp recordCreatedDateTime) {
-		this.recordCreatedDateTime = recordCreatedDateTime;
-	}
-
-	public Long getRecordModifiedBy() {
-		return this.recordModifiedBy;
-	}
-
-	public void setRecordModifiedBy(Long recordModifiedBy) {
-		this.recordModifiedBy = recordModifiedBy;
-	}
-
-	public Timestamp getRecordModifiedDateTime() {
-		return this.recordModifiedDateTime;
-	}
-
-	public void setRecordModifiedDateTime(Timestamp recordModifiedDateTime) {
-		this.recordModifiedDateTime = recordModifiedDateTime;
-	}
-
-	public String getRole() {
-		return this.role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public String getUsername() {
-		return this.username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
 	@JsonProperty("password")
 	private String defaultPassword () {
 		return PasswordManager.PASSWORD_TMP;
@@ -214,18 +96,12 @@ public class User implements Serializable {
 		this.jobs = jobs;
 	}
 
-	public Job addJob(Job job) {
+	public void addJob(Job job) {
 		getJobs().add(job);
-		job.setUser(this);
-
-		return job;
 	}
 
-	public Job removeJob(Job job) {
+	public void removeJob(Job job) {
 		getJobs().remove(job);
-		job.setUser(null);
-
-		return job;
 	}
-
+	
 }

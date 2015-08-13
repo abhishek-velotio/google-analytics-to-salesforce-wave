@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.User;
+import models.UserGroup;
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import models.dao.UserDAO;
@@ -15,7 +16,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ga2sa.security.Access;
 import com.ga2sa.security.ApplicationSecurity;
-import com.ga2sa.security.UserGroup;
 /**
  * 
  * Controller for menu header

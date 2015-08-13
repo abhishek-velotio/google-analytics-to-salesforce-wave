@@ -1,5 +1,6 @@
 package controllers;
 
+import play.Logger;
 import play.mvc.Controller;
 
 /**
@@ -12,7 +13,12 @@ import play.mvc.Controller;
 public class SessionManager extends Controller {
 	
 	public static String get(String id) {
-		return session(id);
+		try {
+			return session(id);
+		} catch (RuntimeException e) {
+			Logger.debug("There is no HTTP Context available from here.");
+		}
+		return null;
 	}
 	
 	public static void set(String id, String value) {

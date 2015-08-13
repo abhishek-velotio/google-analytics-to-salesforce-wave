@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 
 import models.User;
+import models.UserGroup;
 import models.dao.UserDAO;
 import play.Logger;
 import play.db.jpa.Transactional;
@@ -17,7 +18,6 @@ import play.twirl.api.MimeTypes;
 import com.ga2sa.security.Access;
 import com.ga2sa.security.ApplicationSecurity;
 import com.ga2sa.security.PasswordManager;
-import com.ga2sa.security.UserGroup;
 import com.ga2sa.validators.Validator;
 /**
  * 
@@ -34,9 +34,7 @@ public class UsersSettings extends Controller {
 	@Transactional
 	public static Result add() {
 		User user = Json.fromJson(request().body().asJson(), User.class);
-		user.setPassword(PasswordManager.encryptPassword(user.getPassword()));
-		user.setRecordCreatedBy(ApplicationSecurity.getCurrentUser().getId());
-		user.setRecordCreatedDateTime(new Timestamp(new Date().getTime()));
+		user.password = PasswordManager.encryptPassword(user.password);
 		return commonAction(user, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
@@ -56,6 +54,11 @@ public class UsersSettings extends Controller {
 	@Transactional
 	public static Result update(String profileId) {
 		User user = Json.fromJson(request().body().asJson(), User.class);
+		if (user.id != null && user.password.equals(PasswordManager.PASSWORD_TMP)) {
+			User sourceUser = UserDAO.getUserById(user.id);
+			user.password = sourceUser.password;
+		}
+		
 		return commonAction(user, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {

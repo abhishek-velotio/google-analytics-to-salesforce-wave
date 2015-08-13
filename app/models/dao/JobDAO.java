@@ -3,6 +3,7 @@ package models.dao;
 import java.util.List;
 
 import models.Job;
+import models.JobStatus;
 import play.db.jpa.JPA;
 /**
  * 
@@ -33,7 +34,7 @@ public class JobDAO extends BaseDAO<Job> {
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<Job>() {
 				public Job apply () {
-					return (Job) JPA.em().createQuery("select j from Job j ORDER BY j.id DESC", Job.class).setMaxResults(1).getSingleResult();
+					return (Job) JPA.em().createQuery("select j from Job j ORDER BY j.created DESC", Job.class).setMaxResults(1).getSingleResult();
 				}
 			});
 		} catch (Throwable e) {
@@ -48,7 +49,7 @@ public class JobDAO extends BaseDAO<Job> {
 				@SuppressWarnings("unchecked")
 				public List<Job> apply () {
 					return (List<Job>) JPA.em().createQuery("select j from Job j where j.status = :status or j.repeatPeriod <> null")
-							.setParameter("status", "PENDING").getResultList();
+							.setParameter("status", JobStatus.PENDING).getResultList();
 				}
 			});
 		} catch (Throwable e) {

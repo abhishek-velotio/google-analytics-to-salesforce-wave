@@ -1,7 +1,5 @@
 package models.dao;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -11,7 +9,6 @@ import play.Logger;
 import play.db.jpa.JPA;
 
 import com.ga2sa.security.ApplicationSecurity;
-import com.ga2sa.security.PasswordManager;
 /**
  * 
  * DAO class for work with user entity.
@@ -42,7 +39,7 @@ public class UserDAO extends BaseDAO<User> {
 			return JPA.withTransaction(new play.libs.F.Function0<List<User>>() {
 				public List<User> apply () {
 					return JPA.em().createQuery("select u from User u where u.id <> :id ORDER BY u.id ASC", User.class)
-							.setParameter("id", currentUser.getId()).getResultList();
+							.setParameter("id", currentUser.id).getResultList();
 				}
 			});
 		} catch (Throwable e) {
@@ -89,24 +86,6 @@ public class UserDAO extends BaseDAO<User> {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public static void update(User changedUser) throws Exception {
-		
-		User user = getUserById(changedUser.getId());
-		
-		user.setUsername(changedUser.getUsername());
-		user.setEmailAddress(changedUser.getEmailAddress());
-		user.setFirstName(changedUser.getFirstName());
-		user.setLastName(changedUser.getLastName());
-		user.setRole(changedUser.getRole());
-		user.setRecordModifiedBy(ApplicationSecurity.getCurrentUser().getId());
-		user.setRecordModifiedDateTime(new Timestamp(new Date().getTime()));
-		
-		if (changedUser.getIsActive() != null) user.setIsActive(changedUser.getIsActive());
-		if (!changedUser.getPassword().equals(PasswordManager.PASSWORD_TMP)) user.setPassword(PasswordManager.encryptPassword(changedUser.getPassword()));
-		
-		BaseDAO.update(user);
 	}
 
 }

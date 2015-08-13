@@ -1,8 +1,7 @@
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.TimeZone;
 
 import models.User;
+import models.UserGroup;
 import models.dao.UserDAO;
 import play.Application;
 import play.GlobalSettings;
@@ -11,7 +10,6 @@ import akka.actor.ActorRef;
 
 import com.ga2sa.scheduler.Scheduler;
 import com.ga2sa.security.PasswordManager;
-import com.ga2sa.security.UserGroup;
 
 /**
  * Load global settings and initialization of scheduled jobs 
@@ -29,15 +27,13 @@ public class Global extends GlobalSettings {
 		User user = UserDAO.getUserByUsername("admin");
 		if (user == null) {
 			user = new User();
-			user.setUsername("admin");
-			user.setFirstName("admin");
-			user.setLastName("admin");
-			user.setEmailAddress("ga2sa@mycervello.com");
-			user.setRecordCreatedDateTime(Timestamp.from(Instant.now()));
-			user.setIsActive(true);
-			user.setRecordCreatedBy(0l);
-			user.setPassword(PasswordManager.encryptPassword("cervello"));
-			user.setRole(UserGroup.ADMIN.name());
+			user.username = "admin";
+			user.firstName = "admin";
+			user.lastName = "admin";
+			user.emailAddress = "ga2sa@mycervello.com";
+			user.isActive = true;
+			user.password = PasswordManager.encryptPassword("cervello");
+			user.role = UserGroup.ADMIN;
 			try {
 				UserDAO.save(user);
 				Logger.info("Default user has been created.");

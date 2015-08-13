@@ -3,6 +3,7 @@ package controllers.settings;
 import java.util.Map;
 
 import models.GoogleAnalyticsProfile;
+import models.UserGroup;
 import models.dao.GoogleAnalyticsProfileDAO;
 import play.Logger;
 import play.cache.Cache;
@@ -16,7 +17,6 @@ import play.twirl.api.MimeTypes;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ga2sa.google.GoogleConnector;
 import com.ga2sa.security.Access;
-import com.ga2sa.security.UserGroup;
 import com.ga2sa.validators.Validator;
 /**
  * 

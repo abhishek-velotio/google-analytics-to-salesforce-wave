@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import models.GoogleAnalyticsReport;
 import models.Job;
+import models.JobStatus;
 import models.dao.GoogleAnalyticsReportDAO;
 import models.dao.JobDAO;
 import play.Logger;
@@ -80,7 +81,7 @@ public class BackgroundJob extends UntypedActor{
 					
 					job.setGoogleAnalyticsProperties(node.toString());
 					
-					csvReport = Report.getReport(job).addToCSV(previousReport.getData());
+					csvReport = Report.getReport(job).addToCSV(previousReport.data);
 				
 				} else {
 					csvReport = Report.getReport(job).toCSV();
@@ -94,7 +95,7 @@ public class BackgroundJob extends UntypedActor{
 			try {
 				if (job.isRepeated() && job.needIncludePreviousData() && previousReport != null) {
 //					previousReport.setData(IOUtils.toByteArray(Files.asByteSource(csvReport).openStream()));
-					previousReport.setData(Files.toByteArray(csvReport));
+					previousReport.data = Files.toByteArray(csvReport);
 					GoogleAnalyticsReportDAO.update(previousReport);
 				} else {
 //					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.getId(), IOUtils.toByteArray(Files.asByteSource(csvReport).openStream())));
@@ -102,7 +103,7 @@ public class BackgroundJob extends UntypedActor{
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
-				job.setStatus("FAIL");
+				job.setStatus(JobStatus.FAIL);
 				job.setErrors(e1.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -110,10 +111,10 @@ public class BackgroundJob extends UntypedActor{
 			
 			try {
 				SalesforceDataManager.uploadData(job.getSalesforceAnalyticsProfile(), csvReport);
-				job.setStatus("OK");			
+				job.setStatus(JobStatus.OK);			
 			} catch (Exception e) {
 				e.printStackTrace();
-				job.setStatus("FAIL");
+				job.setStatus(JobStatus.FAIL);
 				job.setErrors(e.getMessage());
 			}
 			

@@ -32,7 +32,7 @@ public class SalesforceDataManager {
 	    String token = null;
 	    String sessionId = null;
 	    String endpoint = null;
-	    String action = null;
+	    //String action = null;
 	    String inputFile = report.getAbsolutePath();
 	    String uploadFormat = "csv";
 	    CodingErrorAction codingErrorAction = CodingErrorAction.REPORT;   
@@ -40,18 +40,11 @@ public class SalesforceDataManager {
 	    String Operation = "Overwrite";
 	    boolean useBulkAPI = false;
 	    
-	    PartnerConnection partnerConnection = null;
-	    
 	    try {
-	    	partnerConnection = DatasetUtils.login(0, username, password, token, endpoint, sessionId, true);
-        } catch (ConnectionException | MalformedURLException e) {
-        	throw new ConnectionException();
-        }
-	    
-	    try {
+	    	PartnerConnection partnerConnection = DatasetUtils.login(0, username, password, token, endpoint, sessionId, true);
 	    	DatasetLoader.uploadDataset(inputFile, uploadFormat, codingErrorAction, fileCharset, dataset, app, datasetLabel, Operation, useBulkAPI, partnerConnection, System.out);
-	    } catch (DatasetLoaderException e) {
-	    	throw new DatasetLoaderException(e.getMessage());
+	    } catch (ConnectionException | MalformedURLException | DatasetLoaderException e) {
+	    	throw new Exception(e.getMessage());
 	    }
 		
 	}

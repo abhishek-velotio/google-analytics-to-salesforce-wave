@@ -64,6 +64,6 @@ public class BaseDAO<T> {
 				    
 			if (t instanceof PSQLException) throw new Exception((PSQLException) t);
 		}
-		
 	}
+	
 }

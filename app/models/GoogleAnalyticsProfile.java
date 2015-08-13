@@ -28,13 +28,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="google_analytics_profiles")
 @NamedQuery(name="GoogleAnalyticsProfile.findAll", query="SELECT g FROM GoogleAnalyticsProfile g ORDER BY g.id ASC")
-public class GoogleAnalyticsProfile implements Serializable {
+public class GoogleAnalyticsProfile extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR", sequenceName="GOOGLE_ANALYTICS_PROFILES_ID_SEQ")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR")
-	private Integer id;
+//	@Id
+//	@SequenceGenerator(name="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR", sequenceName="GOOGLE_ANALYTICS_PROFILES_ID_SEQ")
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR")
+//	private Integer id;
 	
 	@NotNull
 	@NotEmpty
@@ -103,11 +103,11 @@ public class GoogleAnalyticsProfile implements Serializable {
 	public GoogleAnalyticsProfile() {
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
