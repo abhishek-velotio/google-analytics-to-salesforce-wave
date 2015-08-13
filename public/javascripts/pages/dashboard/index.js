@@ -320,7 +320,7 @@ $(function () {
 	    
 	    successSaving : function (model, response) {
 	    	this.model.trigger('change');
-			Collections.Jobs.add(this.model);
+			Collections.Jobs.add(this.model, { at: 0 });
 			
 			$('.content__main').prepend(new Views.Alert({
 				typeAlert : 'success',
