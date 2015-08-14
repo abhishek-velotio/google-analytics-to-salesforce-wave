@@ -20,7 +20,8 @@ GET		/dashboard									controllers.Dashboard.index()
 
 # Job
 
-POST	/job										controllers.JobsManager.create()	
+POST	/job										controllers.JobsManager.create()
+GET		/jobs										controllers.JobsManager.jobs()		
 
 # Settings
 

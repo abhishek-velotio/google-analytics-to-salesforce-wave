@@ -61,20 +61,28 @@ public class JobsManager extends Controller {
 		
 		if (!requestData.get("includePreviousData").isNull()) job.setIncludePreviousData(requestData.get("includePreviousData").asBoolean());
 		
-		Map<String, String> validateResult = Validator.validate(job);
-		
+		Map<String, String> validateResult = validate(job);
 		if (validateResult.isEmpty()) {
 			try {
 				JobDAO.save(job);
+				Scheduler.getInstance().tell(job, ActorRef.noSender());
+				return ok(Json.toJson(job)).as(MimeTypes.JAVASCRIPT());
 			} catch (Exception e) {
 				Logger.debug(e.getMessage());
-				validateResult.put("name", "Job already exists");
+				validateResult.put("error", e.getMessage());
 			}
-			
-			Scheduler.getInstance().tell("update", ActorRef.noSender());
-			return ok(Json.toJson(job)).as(MimeTypes.JAVASCRIPT());
 		}
 		return badRequest(Json.toJson(validateResult)).as(MimeTypes.JAVASCRIPT());
 		
+	}
+	
+	public static Result jobs() {
+		return ok(Json.toJson(JobDAO.getJobs())).as(MimeTypes.JAVASCRIPT());
+	}
+	
+	private static Map<String, String> validate(Job job) {
+		Map<String, String> validateResult = Validator.validate(job);
+		if (JobDAO.isExist(job)) validateResult.put("name", "Job already exists");
+		return validateResult;
 	}
 }

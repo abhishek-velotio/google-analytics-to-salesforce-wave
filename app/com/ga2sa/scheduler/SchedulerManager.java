@@ -42,6 +42,10 @@ public class SchedulerManager extends UntypedActor {
 					this.update();
 					break;
 			}
+			
+		} else if (obj instanceof Job) {
+			Logger.debug("******* START NEW JOB *******"); 
+			update((Job) obj);
 		} else {
 			unhandled(obj);
 		}
@@ -54,6 +58,13 @@ public class SchedulerManager extends UntypedActor {
 		
 		Calendar currentDate = Calendar.getInstance();
 		
+		runJob(job, currentDate);
+		
+	}
+	
+	private void update(Job job) {
+		Logger.debug("JOB   " + job.getName());
+		Calendar currentDate = Calendar.getInstance();
 		runJob(job, currentDate);
 		
 	}

@@ -15,8 +15,13 @@
 	@views.html.components.backbone.templates.common()
 	@views.html.components.backbone.templates.dashboard()
 	<script>
+		$.blockUI.defaults.message = 'Please wait...';
+		$.blockUI.defaults.centerY = 0; 
+		$.blockUI.defaults.css = { top: '10px', left: '', right: '10px' , 'background-color': 'white', 'z-index' : 1100};
+		
 		$(function () {
-	
+			$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+			
 			if (!window.Models) window.Models = {};
 			if (!window.Collections) window.Collections = {};
 			if (!window.Views) window.Views = {};
@@ -32,8 +37,8 @@
 			Collections.Jobs = new Backbone.Collection([], {
 				model : Models.Job
 			});
-			
-			Collections.Jobs.reset(@Html(Json.stringify(params.get("jobs"))));
+			Collections.Jobs.url = '/jobs';
+			Collections.Jobs.fetch();
 			
 			// configuration google profiles
 			

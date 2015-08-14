@@ -36,11 +36,11 @@ public class Dashboard extends Controller {
 		
 		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
 		JsonNode salesforceProfiles = Json.toJson(SalesforceAnalyticsProfileDAO.getProfiles());
-		JsonNode jobs = Json.toJson(JobDAO.getJobs());
+		//JsonNode jobs = Json.toJson(JobDAO.getJobs());
 
 		params.put("googleProfiles", JsonUtil.excludeFields(googleProfiles, GoogleAnalyticsProfileDAO.privateFields));
 		params.put("salesforceProfiles", JsonUtil.excludeFields(salesforceProfiles, SalesforceAnalyticsProfileDAO.privateFields));
-		params.put("jobs", jobs);
+		//params.put("jobs", jobs);
 
 		return ok(views.html.pages.dashboard.index.render(params));
 	}

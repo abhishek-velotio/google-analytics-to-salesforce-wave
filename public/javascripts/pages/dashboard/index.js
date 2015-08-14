@@ -299,6 +299,23 @@ $(function () {
 		}
 	});
 	
+	Views.Refresh = Backbone.View.extend({
+		className : 'button button_type_refresh btn btn-primary',
+		tagName : 'button',
+		popup : null,
+		events : {'click': 'refresh'},
+		initialize : function () {
+			_.bindAll(this, 'render');
+			this.render();
+		},
+		refresh : function() {
+			Collections.Jobs.fetch()
+		},
+		render : function () {
+			this.$el.html('<i class="fa fa-refresh"></i>');
+		}
+	});
+	
 	Views.JobSettings = Views.Modal.extend({
 		
 		initialize : function (options) {
@@ -320,8 +337,8 @@ $(function () {
 	    
 	    successSaving : function (model, response) {
 	    	this.model.trigger('change');
-			Collections.Jobs.add(this.model, { at: 0 });
-			
+			//Collections.Jobs.add(this.model, { at: 0 });
+	    	Collections.Jobs.fetch()
 			$('.content__main').prepend(new Views.Alert({
 				typeAlert : 'success',
 				title : 'Success',
@@ -658,9 +675,9 @@ $(function () {
 	});
 	
 	var addJob = new Views.AddJob();
+	var refreshButton = new Views.Refresh();
 	
-	$('.content__main').append(addJob.el);
-	$('.content__main').append(jobs.el);
+	$('.content__main').append(addJob.el).append(refreshButton.el).append(jobs.el);
 	
 	
 });

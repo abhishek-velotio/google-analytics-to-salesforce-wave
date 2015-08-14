@@ -30,6 +30,20 @@ public class JobDAO extends BaseDAO<Job> {
 		return null;
 	}
 	
+	public static boolean isExist(Job job) {
+		try {
+			return JPA.withTransaction(new play.libs.F.Function0<Boolean>() {
+				public Boolean apply () {
+					return JPA.em().createQuery("select j from Job j where j.name = :name", Job.class)
+							.setParameter("name", job.getName()).getResultList().size() != 0;
+				}
+			});
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static Job getLastJob() {
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<Job>() {
