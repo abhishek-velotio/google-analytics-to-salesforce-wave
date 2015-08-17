@@ -1,5 +1,8 @@
 package models.dao;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.postgresql.util.PSQLException;
 
 import play.db.jpa.JPA;
@@ -13,6 +16,23 @@ import play.db.jpa.JPA;
  */
 
 public class BaseDAO<T> {
+	
+	public static <T> Long getCount(Class<T> clazz) {
+		try {
+			return JPA.withTransaction(new play.libs.F.Function0<Long>() {
+			    public Long apply() {
+			    	CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+			    	CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+			    	cq.select(cb.count(cq.from(clazz)));
+			    	return JPA.em().createQuery(cq).getSingleResult();
+			    }
+			});
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0l;
+	}
 	
 	public static <T> void save(T object) throws Exception {
 		try {

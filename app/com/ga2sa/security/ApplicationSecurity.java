@@ -49,8 +49,8 @@ public class ApplicationSecurity {
 					SessionManager.set(SESSION_ID_KEY, sessionId);
 //					CookieManager.set(SESSION_ID_KEY, sessionId, true);
 					try {
-						user.lastLoginDateTime = new Date();
-						UserDAO.update(user);
+//						user.lastLoginDateTime = new Date();
+//						UserDAO.update(user);
 						SessionDAO.save(new Session(sessionId, user.id));
 					} catch (Exception e) {
 						e.printStackTrace();

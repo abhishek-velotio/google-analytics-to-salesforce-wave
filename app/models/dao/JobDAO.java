@@ -2,8 +2,15 @@ package models.dao;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+
 import models.Job;
 import models.JobStatus;
+import models.dao.filters.BaseFilter;
+import models.dao.filters.BaseFilter.OrderType;
 import play.db.jpa.JPA;
 /**
  * 
@@ -16,12 +23,30 @@ import play.db.jpa.JPA;
 
 public class JobDAO extends BaseDAO<Job> {
 	
+	
 	public static List<Job> getJobs() {
+		return getJobs(null);
+	}
+	
+	public static List<Job> getJobs(final BaseFilter filter) {
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<List<Job>>() {
-				@SuppressWarnings("unchecked")
+				@SuppressWarnings({ "unchecked" })
 				public List<Job> apply () {
-					return (List<Job>) JPA.em().createNamedQuery("Job.findAll").getResultList();
+					if (filter == null) {
+						return JPA.em().createNamedQuery("Job.findAll").getResultList();
+					} else {
+						CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+						CriteriaQuery<Job> cq = cb.createQuery(Job.class);
+						Root<Job> c = cq.from(Job.class);
+						cq.select(c);
+						Path<Job> orderBy = c.get(filter.orderBy.orElse(BaseFilter.DEFAULT_ORDER_BY));
+						OrderType orderType = filter.orderType.orElse(OrderType.desc);
+						cq.orderBy(orderType.equals(OrderType.asc) ? cb.asc(orderBy) : cb.desc(orderBy));
+						return JPA.em().createQuery(cq)
+								.setFirstResult(filter.offset.orElse(BaseFilter.DEFAULT_OFFSET))
+								.setMaxResults(filter.count.orElse(BaseFilter.DEFAULT_COUNT)).getResultList();
+					}
 				}
 			});
 		} catch (Throwable e) {

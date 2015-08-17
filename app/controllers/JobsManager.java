@@ -3,6 +3,7 @@ package controllers;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 import models.GoogleAnalyticsProfile;
 import models.Job;
@@ -11,6 +12,9 @@ import models.SalesforceAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.JobDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
+import models.dao.filters.BaseFilter;
+import models.dao.filters.BaseFilter.OrderType;
+import models.dao.filters.JobFilter;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -76,8 +80,16 @@ public class JobsManager extends Controller {
 		
 	}
 	
-	public static Result jobs() {
-		return ok(Json.toJson(JobDAO.getJobs())).as(MimeTypes.JAVASCRIPT());
+	public static Result countJobs() {
+		Long count  = JobDAO.getCount(Job.class);
+		return ok(count.toString());
+	}
+	
+	public static Result jobs(Integer count, Integer page, String orderBy, String orderType) {
+		BaseFilter filter = count == null && page == null && orderBy == null && orderType == null 
+				? null : new JobFilter(Optional.ofNullable(count), Optional.ofNullable(page), Optional.ofNullable(orderBy), 
+											Optional.ofNullable(orderType == null ? null : OrderType.valueOf(orderType)));
+		return ok(Json.toJson(JobDAO.getJobs(filter))).as(MimeTypes.JAVASCRIPT());
 	}
 	
 	private static Map<String, String> validate(Job job) {

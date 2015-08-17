@@ -21,7 +21,8 @@ GET		/dashboard									controllers.Dashboard.index()
 # Job
 
 POST	/job										controllers.JobsManager.create()
-GET		/jobs										controllers.JobsManager.jobs()		
+GET		/jobs										controllers.JobsManager.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)		
+GET		/jobs/count									controllers.JobsManager.countJobs()
 
 # Settings
 
