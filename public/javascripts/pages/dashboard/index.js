@@ -660,6 +660,8 @@ $(function () {
 			Views.Table.prototype.render.call(this);
 			
 			this.collection.each(function (job) {
+				$(this.$el.find('thead th')[5]).addClass('table_align_center');
+
 				this.$el
 					.find('tbody')
 					.append(new Views.Job({ model: job }).el);
@@ -671,7 +673,7 @@ $(function () {
 	
 	var jobs = new Views.Jobs({ 
 		collection  : Collections.Jobs,
-		classes 	: 'jobs table_align_center'
+		classes 	: 'jobs'
 	});
 	
 	var addJob = new Views.AddJob();

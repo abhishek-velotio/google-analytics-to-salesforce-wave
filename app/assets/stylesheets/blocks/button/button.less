@@ -1,12 +1,16 @@
 .button {}
-.button_type_add, .button_type_refresh {
+
+.button_type_add {
 	margin-bottom: 10px;
 	margin-right: 2px;
 }
+.button_type_refresh {
+	float:right;
+}
 
 .btn-primary {
-	background-color: @sub-color;
-	border-color: darken(@sub-color, 10%);
+	background-color: @btn-color;
+	border-color: darken(@btn-color, 10%);
 }
 
 .btn-primary:hover, 
@@ -15,6 +19,6 @@
 .btn-primary:active, 
 .btn-primary.active, 
 .open>.dropdown-toggle.btn-primary {
-	background-color: darken(@sub-color, 10%);
-	border-color: darken(@sub-color, 20%);
+	background-color: darken(@btn-color, 5%);
+	border-color: darken(@btn-color, 5%);
 }
