@@ -1,4 +1,8 @@
-This is your new Play application
+Google Analytics to Salesforce Wave is a Heroku hosted web application that takes your website performance from Google Analytics and loads it into Salesforce Analytics Cloud. All you need to do is define the data set you want and run the process to load Analytics Cloud.  Once the data set is created you can build Lenses and Dashboards to gain further insights about your website performance.    
+
+
+
+Deployment Instrutions
 =================================
 
 This file will be packaged with your application, when using `activator dist`.
