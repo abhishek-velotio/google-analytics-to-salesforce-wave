@@ -44,9 +44,11 @@ public abstract class BaseEntity implements Serializable {
 	public Date modified;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	public User createdBy;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	public User modifiedBy;
 	
 	@Version
