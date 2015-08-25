@@ -26,6 +26,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -51,6 +52,7 @@ public class SalesforceAnalyticsProfile implements Serializable {
 	@NotNull
 	@NotEmpty
 	@Column(name="application_name")
+	@Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Not allow special characters, including spaces")
 	private String applicationName;
 	
 	@NotNull

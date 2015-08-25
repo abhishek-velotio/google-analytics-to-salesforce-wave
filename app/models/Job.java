@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
@@ -58,6 +59,7 @@ public class Job extends BaseEntity {
 	
 	@NotEmpty
 	@NotNull
+	@Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Not allow special characters, including spaces")
 	private String name;
 	
 	private String errors;
