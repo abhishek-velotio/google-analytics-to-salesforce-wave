@@ -15,11 +15,15 @@
 		<%= new Date(startTime).toLocaleString("en-US") %> 
 	</td>
 	<td class='job__status job__status_type_<%= status.toLowerCase() %> table__cell' 
-		<% if (status === 'FAIL') { %> style='cursor : pointer;' title="<%= errors %>" onclick="alert(this.title == '' ? 'No error message' : this.title )" <% } %>">
+		<% if (status === 'FAIL' || status === 'CANCELED') { %> style='cursor : pointer;' title="<%= errors %>" onclick="alert(this.title == '' ? 'No error message' : this.title )" <% } %>">
 	</td>
 	<td class='job__user table__cell'> 
 		<%= user %> 
 	</td>
+	<td class='job__action table__cell table__cell_type_action'> 
+		<% if (status === 'PENDING') { %> <button class='job__cancel-btn btn btn-sm btn-info'>Cancel</button> <% } %>
+		<% if (status !== 'PENDING') { %> <button class='job__delete-btn btn btn-sm btn-danger'>Delete</button>  <% } %>
+	</td>	
 </script>
 
 <script type="text/template" id="scheduler">

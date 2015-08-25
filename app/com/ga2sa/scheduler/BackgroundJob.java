@@ -55,7 +55,9 @@ public class BackgroundJob extends UntypedActor{
 	public void onReceive(Object obj) throws Exception {
 		if (obj instanceof Job) {
 			
-			Job job = (Job) obj;
+			Job job = JobDAO.findById(((Job) obj).id);
+			
+			if (job.getStatus().equals(JobStatus.CANCELED)) return;
 			
 			File csvReport = null;
 			

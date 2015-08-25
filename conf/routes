@@ -21,6 +21,8 @@ GET		/dashboard									controllers.Dashboard.index()
 # Job
 
 POST	/job										controllers.JobsManager.create()
+DELETE	/job/:id									controllers.JobsManager.delete(id : Long)
+POST	/job/cancel/:id								controllers.JobsManager.cancel(id : Long)
 GET		/jobs										controllers.JobsManager.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)		
 GET		/jobs/count									controllers.JobsManager.countJobs()
 

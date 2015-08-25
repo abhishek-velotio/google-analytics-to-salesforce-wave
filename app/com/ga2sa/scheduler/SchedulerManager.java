@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import models.Job;
+import models.JobStatus;
 import models.dao.JobDAO;
 import play.Logger;
 import play.libs.Akka;
@@ -82,13 +83,9 @@ public class SchedulerManager extends UntypedActor {
 	}
 
 	private void start() {
-		
 		List<Job> jobs = JobDAO.getJobsForScheduler();
-		
 		Calendar currentDate = Calendar.getInstance();
-		
-		jobs.forEach((job) -> runJob(job, currentDate));
-
+		jobs.forEach(job -> runJob(job, currentDate));
 	}
 	
 	private void runJob(Job job, Calendar currentDate) {

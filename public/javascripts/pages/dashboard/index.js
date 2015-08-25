@@ -321,7 +321,8 @@ $(function () {
 			this.render();
 		},
 		refresh : function() {
-			Collections.Jobs.fetch()
+			Collections.Jobs.fetch();
+			this.render();
 		},
 		render : function () {
 			this.$el.html('<i class="fa fa-refresh"></i>');
@@ -650,11 +651,35 @@ $(function () {
 		
 		model : Models.Job,
 		
+		events : {
+			'click .job__cancel-btn' 		: 'cancel',
+			'click .job__delete-btn' 		: 'delete'
+		},
+		
 		template : _.template($("#job").html()),
 		
 		initialize : function () {
 			_.bindAll(this, 'render');
 			this.render();
+		},
+		
+		cancel : function() {
+			$.ajax({
+				method : 'post',
+				url : "/job/cancel/" + this.model.get('id'),
+				context: this
+			}).done(function (data) {
+				console.log(data);
+				this.model.set(data);
+				this.render();
+			});
+		},
+		
+		delete : function () {
+			this.model.collection.remove(this.model);
+			this.model.destroy();
+			this.$el.remove();
+			return this;
 		},
 		
 		render : function () {
@@ -665,7 +690,7 @@ $(function () {
 	
 	Views.Jobs = Views.Table.extend({
 		
-		headers : [ "ID", "Name", "Google Profile", "Salesforce Profile", "Start date", "Status", "User" ],
+		headers : [ "ID", "Name", "Google Profile", "Salesforce Profile", "Start date", "Status", "User", "Actions" ],
 		
 		render : function () {
 			

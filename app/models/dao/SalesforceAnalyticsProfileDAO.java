@@ -53,7 +53,8 @@ public class SalesforceAnalyticsProfileDAO extends BaseDAO<SalesforceAnalyticsPr
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<SalesforceAnalyticsProfile>() {
 				public SalesforceAnalyticsProfile apply () {
-					return (SalesforceAnalyticsProfile) JPA.em().createQuery("select gap from SalesforceAnalyticsProfile gap where gap.name = :name", SalesforceAnalyticsProfile.class).setParameter("name", name).getSingleResult();
+					return (SalesforceAnalyticsProfile) JPA.em().createQuery("select gap from SalesforceAnalyticsProfile gap where gap.name = :name", SalesforceAnalyticsProfile.class)
+							.setParameter("name", name).getSingleResult();
 				}
 			});
 		} catch (Throwable e) {
@@ -67,7 +68,8 @@ public class SalesforceAnalyticsProfileDAO extends BaseDAO<SalesforceAnalyticsPr
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<SalesforceAnalyticsProfile>() {
 				public SalesforceAnalyticsProfile apply () {
-					return (SalesforceAnalyticsProfile) JPA.em().createQuery("select gap from SalesforceAnalyticsProfile gap where gap.id = :id", SalesforceAnalyticsProfile.class).setParameter("id", profileId).getSingleResult();
+					return (SalesforceAnalyticsProfile) JPA.em().createQuery("select gap from SalesforceAnalyticsProfile gap where gap.id = :id", SalesforceAnalyticsProfile.class)
+							.setParameter("id", profileId).getSingleResult();
 				}
 			});
 		} catch (Throwable e) {

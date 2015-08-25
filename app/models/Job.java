@@ -49,11 +49,6 @@ import com.ga2sa.utils.JsonUtil;
 public class Job extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-//	@Id
-//	@SequenceGenerator(name="JOBS_ID_GENERATOR", sequenceName="JOBS_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="JOBS_ID_GENERATOR")
-//	private Long id;
-
 	@Column(name="end_time")
 	private Timestamp endTime;
 	

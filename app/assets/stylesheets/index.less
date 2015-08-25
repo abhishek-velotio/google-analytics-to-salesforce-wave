@@ -9,6 +9,20 @@
 @content-bgcolor:#fafafa;
 
 @btn-color:#08afd1;
+.content {
+	height: 100%;
+	position: relative;
+	overflow-y: auto;
+	padding: 20px;
+	background-color: @content-bgcolor;
+}
+
+.content__header {
+	margin: 0 0 20px 0;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+	font-size: 24px;
+}
 .button {}
 
 .button_type_add {
@@ -34,20 +48,6 @@
 	border-color: darken(@btn-color, 5%);
 }
 
-.content {
-	height: 100%;
-	position: relative;
-	overflow-y: auto;
-	padding: 20px;
-	background-color: @content-bgcolor;
-}
-
-.content__header {
-	margin: 0 0 20px 0;
-	border-bottom: 1px solid #ddd;
-	padding-bottom: 10px;
-	font-size: 24px;
-}
 .form-group .select2{
 	width: 100% !important;
 }
@@ -122,6 +122,10 @@
 
 .job__status_type_fail:after {
 	background: #ed1515;
+}
+
+.job__status_type_canceled:after {
+	background: #F7A900;
 }
 .main {
 	width: 100%;

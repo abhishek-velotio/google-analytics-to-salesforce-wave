@@ -38,11 +38,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class GoogleAnalyticsProfile extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-//	@Id
-//	@SequenceGenerator(name="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR", sequenceName="GOOGLE_ANALYTICS_PROFILES_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR")
-//	private Integer id;
-	
 	@NotNull
 	@NotEmpty
 	@URL

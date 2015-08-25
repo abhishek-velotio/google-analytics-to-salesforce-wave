@@ -48,10 +48,7 @@ import com.ga2sa.security.PasswordManager;
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u ORDER BY u.id ASC")
 public class User extends BaseEntity {
 
-//	@Id
-//	@SequenceGenerator(name="USERS_ID_GENERATOR", sequenceName="USERS_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USERS_ID_GENERATOR")
-//	public Long id;
+	private static final long serialVersionUID = 1L;
 
 	@NotEmpty
 	@NotNull
