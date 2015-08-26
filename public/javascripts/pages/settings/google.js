@@ -202,7 +202,7 @@ $(function() {
 		save : function () {
 			
 			var data = this.$el.find('.profile-settings__form').serializeObject();
-	    	data.redirectUris = data.redirectUris.replace('\r\n', ',');
+	    	//data.redirectUris = data.redirectUris.replace('\r\n', ',');
 			
 			this.model.set(data, { silent : true });
 	    	

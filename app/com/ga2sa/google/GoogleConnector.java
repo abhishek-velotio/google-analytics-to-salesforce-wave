@@ -18,7 +18,7 @@ import java.util.Collections;
 
 import models.GoogleAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
-import play.Play;
+import play.mvc.Http;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -29,6 +29,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.analytics.AnalyticsScopes;
+
+import controllers.routes;
 /**
  * 
  * Class for manage connections to GA
@@ -42,7 +44,7 @@ public class GoogleConnector {
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	public static final String CACHE_CREDENTIAL_PREFIX = "cache_credential_";
 	
-	private static String redirectURL;
+	public static final String redirectURL = routes.Authorization.googleSignIn().absoluteURL(Http.Context.current().request());
 	
 	
 	/**
@@ -52,8 +54,8 @@ public class GoogleConnector {
 	 * @return
 	 */
 	private static GoogleAuthorizationCodeFlow getFlow(GoogleAnalyticsProfile profile)  {
-		String[] uris = profile.getRedirectUris().split(",");
-		redirectURL = uris.length > 0 ? (Play.isProd() ? uris[1] : uris[0]) : null;
+//		String[] uris = profile.getRedirectUris().split(",");
+//		redirectURL = uris.length > 0 ? (Play.isProd() ? uris[1] : uris[0]) : null;
 		return new GoogleAuthorizationCodeFlow
 			.Builder(HTTP_TRANSPORT, JSON_FACTORY, profile.getClientId(), profile.getClientSecret(), Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY))
 			.setAccessType("offline")

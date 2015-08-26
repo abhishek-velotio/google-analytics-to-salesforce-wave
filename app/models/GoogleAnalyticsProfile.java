@@ -76,9 +76,9 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 	@NotEmpty
 	private String name;
 	
-	@NotNull
-	@Column(name="redirect_uris")
-	private String redirectUris;
+//	@NotNull
+//	@Column(name="redirect_uris")
+//	private String redirectUris;
 	
 	@NotNull
 	@NotEmpty
@@ -169,13 +169,13 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getRedirectUris() {
-		return this.redirectUris;
-	}
-
-	public void setRedirectUris(String redirectUris) {
-		this.redirectUris = redirectUris;
-	}
+//	public String getRedirectUris() {
+//		return this.redirectUris;
+//	}
+//
+//	public void setRedirectUris(String redirectUris) {
+//		this.redirectUris = redirectUris;
+//	}
 
 	public String getTokenUri() {
 		return this.tokenUri;

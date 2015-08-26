@@ -669,7 +669,6 @@ $(function () {
 				url : "/job/cancel/" + this.model.get('id'),
 				context: this
 			}).done(function (data) {
-				console.log(data);
 				this.model.set(data);
 				this.render();
 			});
