@@ -1,3 +1,15 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
 $(function () {
 	var Models 		= window.Models;
 	var Collections	= window.Collections;
@@ -259,7 +271,7 @@ $(function () {
 	/* POPUP */
 
 	Views.JobPopup = Views.Modal.extend({
-		
+	
 		initialize : function (options) {
 			Views.Modal.prototype.initialize.call(this, options);
 			_.bindAll(this, 'render', 'successSaving', 'errorSaving');
@@ -683,11 +695,34 @@ $(function () {
 		
 		model : Models.Job,
 		
+		events : {
+			'click .job__cancel-btn' 		: 'cancel',
+			'click .job__delete-btn' 		: 'delete'
+		},
+		
 		template : _.template($("#job").html()),
 		
 		initialize : function () {
 			_.bindAll(this, 'render');
 			this.render();
+		},
+		
+		cancel : function() {
+			$.ajax({
+				method : 'post',
+				url : "/job/cancel/" + this.model.get('id'),
+				context: this
+			}).done(function (data) {
+				this.model.set(data);
+				this.render();
+			});
+		},
+		
+		delete : function () {
+			this.model.collection.remove(this.model);
+			this.model.destroy();
+			this.$el.remove();
+			return this;
 		},
 		
 		render : function () {
@@ -698,7 +733,7 @@ $(function () {
 	
 	Views.Jobs = Views.Table.extend({
 		
-		headers : [ "ID", "Name", "Google Profile", "Salesforce Profile", "Start date", "Status", "User" ],
+		headers : [ "ID", "Name", "Google Profile", "Salesforce Profile", "Start date", "Status", "User", "Actions" ],
 		
 		render : function () {
 			
