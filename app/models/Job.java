@@ -62,7 +62,33 @@ public class Job extends BaseEntity {
 	@NotEmpty
 	@NotNull
 	@Column(name="google_analytics_properties")
+	@Deprecated
 	private String googleAnalyticsProperties;
+	
+	@Column(name="ga_profile")
+	@JsonProperty(value = "googleAnalyticsProperties-analyticsProfile")
+	public String gaProfile;
+	
+	@Column(name="ga_dimensions")
+	@JsonProperty(value = "googleAnalyticsProperties-dimensions")
+	public String gaDimensions;
+	
+	@Column(name="ga_metrics")
+	@JsonProperty(value = "googleAnalyticsProperties-metrics")
+	public String gaMetrics;
+	
+	@Column(name="ga_start_date")
+	@JsonProperty(value = "googleAnalyticsProperties-startDate")
+	public String startDate;
+	
+	@Column(name="ga_end_date")
+	@JsonProperty(value = "googleAnalyticsProperties-endDate")
+	public String endDate;
+	
+	@Column(name="ga_sorting")
+	@JsonProperty(value = "googleAnalyticsProperties-sorting")
+	public String sorting;
+	
 	
 	@Column(name="start_time")
 	private Timestamp startTime;
