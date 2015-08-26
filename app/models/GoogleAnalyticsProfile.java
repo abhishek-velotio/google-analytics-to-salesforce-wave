@@ -1,16 +1,23 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
 package models;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -31,11 +38,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class GoogleAnalyticsProfile extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-//	@Id
-//	@SequenceGenerator(name="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR", sequenceName="GOOGLE_ANALYTICS_PROFILES_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GOOGLE_ANALYTICS_PROFILES_ID_GENERATOR")
-//	private Integer id;
-	
 	@NotNull
 	@NotEmpty
 	@URL
@@ -74,9 +76,9 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 	@NotEmpty
 	private String name;
 	
-	@NotNull
-	@Column(name="redirect_uris")
-	private String redirectUris;
+//	@NotNull
+//	@Column(name="redirect_uris")
+//	private String redirectUris;
 	
 	@NotNull
 	@NotEmpty
@@ -167,13 +169,13 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getRedirectUris() {
-		return this.redirectUris;
-	}
-
-	public void setRedirectUris(String redirectUris) {
-		this.redirectUris = redirectUris;
-	}
+//	public String getRedirectUris() {
+//		return this.redirectUris;
+//	}
+//
+//	public void setRedirectUris(String redirectUris) {
+//		this.redirectUris = redirectUris;
+//	}
 
 	public String getTokenUri() {
 		return this.tokenUri;

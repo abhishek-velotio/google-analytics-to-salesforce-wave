@@ -1,3 +1,16 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 package models;
 
 import java.sql.Timestamp;
@@ -11,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
@@ -35,24 +49,44 @@ import com.ga2sa.utils.JsonUtil;
 public class Job extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-//	@Id
-//	@SequenceGenerator(name="JOBS_ID_GENERATOR", sequenceName="JOBS_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="JOBS_ID_GENERATOR")
-//	private Long id;
-
 	@Column(name="end_time")
 	private Timestamp endTime;
 	
 	@NotEmpty
 	@NotNull
+	@Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Not allow special characters, including spaces")
 	private String name;
 	
 	private String errors;
 	
-	@NotEmpty
-	@NotNull
 	@Column(name="google_analytics_properties")
+	@Deprecated
 	private String googleAnalyticsProperties;
+	
+	@Column(name="ga_profile")
+	@JsonProperty(value = "googleAnalyticsProperties-analyticsProfile")
+	public String gaProfile;
+	
+	@Column(name="ga_dimensions")
+	@JsonProperty(value = "googleAnalyticsProperties-dimensions")
+	public String gaDimensions;
+	
+	@Column(name="ga_metrics")
+	@JsonProperty(value = "googleAnalyticsProperties-metrics")
+	public String gaMetrics;
+	
+	@Column(name="ga_start_date")
+	@JsonProperty(value = "googleAnalyticsProperties-startDate")
+	public String startDate;
+	
+	@Column(name="ga_end_date")
+	@JsonProperty(value = "googleAnalyticsProperties-endDate")
+	public String endDate;
+	
+	@Column(name="ga_sorting")
+	@JsonProperty(value = "googleAnalyticsProperties-sorting")
+	public String sorting;
+	
 	
 	@Column(name="start_time")
 	private Timestamp startTime;

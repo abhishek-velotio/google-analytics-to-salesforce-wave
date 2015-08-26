@@ -1,3 +1,16 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 package controllers;
 
 import java.sql.Timestamp;
@@ -36,6 +49,8 @@ import com.ga2sa.validators.Validator;
  */
 @Access
 public class JobsManager extends Controller {
+	
+	private static final String NOT_FOUND = "Object not found";
 	
 	/**
 	 * method creates job form json that was requested from page
@@ -96,5 +111,31 @@ public class JobsManager extends Controller {
 		Map<String, String> validateResult = Validator.validate(job);
 		if (JobDAO.isExist(job)) validateResult.put("name", "Job already exists");
 		return validateResult;
+	}
+	
+	public static Result cancel(Long id) throws Exception {
+		if (id != null)  {
+			Job job = JobDAO.findById(id);
+			if (job != null) {
+				if (job.getStatus().equals(JobStatus.PENDING) == false) return badRequest("Job already completed.");
+				job.setStatus(JobStatus.CANCELED);
+				job.setErrors("Job has been canceled.");
+				JobDAO.update(job);
+				return ok(Json.toJson(job));
+			}
+		}
+		return notFound(NOT_FOUND);
+	}
+	
+	public static Result delete(Long id) {
+		if (id != null)  {
+			Job job = JobDAO.findById(id);
+			if (job != null) {
+				if (job.getStatus().equals(JobStatus.PENDING)) return badRequest("Job has pending status now and can not be deleted.");
+				JobDAO.delete(job);
+				return ok();
+			}
+		}
+		return notFound(NOT_FOUND);
 	}
 }

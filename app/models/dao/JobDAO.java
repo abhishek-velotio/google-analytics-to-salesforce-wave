@@ -1,3 +1,16 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 package models.dao;
 
 import java.util.List;
@@ -22,6 +35,20 @@ import play.db.jpa.JPA;
  */
 
 public class JobDAO extends BaseDAO<Job> {
+	
+	public static Job findById(Long id) {
+		try {
+			return JPA.withTransaction(new play.libs.F.Function0<Job>() {
+				public Job apply () {
+					return (Job) JPA.em().createQuery("select j from Job j where j.id = :id", Job.class)
+							.setParameter("id", id).getSingleResult();
+				}
+			});
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	
 	public static List<Job> getJobs() {

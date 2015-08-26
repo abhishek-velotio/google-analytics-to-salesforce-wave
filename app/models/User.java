@@ -1,3 +1,16 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 package models;
 
 import java.util.Date;
@@ -35,10 +48,7 @@ import com.ga2sa.security.PasswordManager;
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u ORDER BY u.id ASC")
 public class User extends BaseEntity {
 
-//	@Id
-//	@SequenceGenerator(name="USERS_ID_GENERATOR", sequenceName="USERS_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USERS_ID_GENERATOR")
-//	public Long id;
+	private static final long serialVersionUID = 1L;
 
 	@NotEmpty
 	@NotNull

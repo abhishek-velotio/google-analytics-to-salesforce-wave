@@ -1,3 +1,16 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 package com.ga2sa.google;
 
 import java.io.BufferedWriter;
@@ -11,17 +24,12 @@ import java.util.Map;
 
 import models.Job;
 
-
-
-
 //import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.Play;
-import play.libs.Json;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ga2sa.security.ApplicationSecurity;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.analytics.model.GaData;

@@ -1,3 +1,15 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
 package com.ga2sa.scheduler;
 
 import java.io.File;
@@ -43,7 +55,9 @@ public class BackgroundJob extends UntypedActor{
 	public void onReceive(Object obj) throws Exception {
 		if (obj instanceof Job) {
 			
-			Job job = (Job) obj;
+			Job job = JobDAO.findById(((Job) obj).id);
+			
+			if (job.getStatus().equals(JobStatus.CANCELED)) return;
 			
 			File csvReport = null;
 			

@@ -1,8 +1,19 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
 package models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -18,13 +29,6 @@ import javax.persistence.Table;
 public class GoogleAnalyticsReport extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-//	@SequenceGenerator(name="GOOGLE_ANALYTICS_REPORTS_ID_GENERATOR", sequenceName="GOOGLE_ANALYTICS_REPORT_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GOOGLE_ANALYTICS_REPORTS_ID_GENERATOR")
-//	private Integer id;
-//	@GeneratedValue(strategy = GenerationType.AUTO)
-//	public Long id;
-	
 	public byte[] data;
 
 	@Column(name="job_id")

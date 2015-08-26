@@ -48,7 +48,7 @@
   	</div>
 	<div class="form-group">
     	<label for="redirect-uris">Redirect Uris</label>
-    	<textarea class="form-control" id="redirect-uris" name="redirectUris" rows="4"><%= redirectUris.replace(",", "\r\n") %></textarea>
-		<span id="redirect-uris-help" class="help-block">Each URL must be located on a separate line. Also don't forgot add '/google_signin' to the end of URL, for example http://localhost/google_signin</span>  	
+    	<textarea class="form-control" id="redirect-uris" name="redirectUris" rows="4" readonly>@com.ga2sa.google.GoogleConnector.redirectURL</textarea>
+		<span id="redirect-uris-help" class="help-block">Each URL must be located on a separate line. Also don't forgot add '/google_signin' to the end of URL, for example http://localhost/google_signin</span>
 </div>
 </script>

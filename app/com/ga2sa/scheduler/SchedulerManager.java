@@ -1,3 +1,15 @@
+/**
+ * This document is a part of the source code and related artifacts
+ * for GA2SA, an open source code for Google Analytics to 
+ * Salesforce Analytics integration.
+ *
+ * Copyright © 2015 Cervello Inc.,
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
 package com.ga2sa.scheduler;
 
 import java.sql.Timestamp;
@@ -6,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import models.Job;
+import models.JobStatus;
 import models.dao.JobDAO;
 import play.Logger;
 import play.libs.Akka;
@@ -70,13 +83,9 @@ public class SchedulerManager extends UntypedActor {
 	}
 
 	private void start() {
-		
 		List<Job> jobs = JobDAO.getJobsForScheduler();
-		
 		Calendar currentDate = Calendar.getInstance();
-		
-		jobs.forEach((job) -> runJob(job, currentDate));
-
+		jobs.forEach(job -> runJob(job, currentDate));
 	}
 	
 	private void runJob(Job job, Calendar currentDate) {
