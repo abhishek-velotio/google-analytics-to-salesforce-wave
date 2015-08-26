@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import models.GoogleAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
+import play.Play;
 import play.mvc.Http;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -44,7 +45,7 @@ public class GoogleConnector {
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	public static final String CACHE_CREDENTIAL_PREFIX = "cache_credential_";
 	
-	public static final String redirectURL = routes.Authorization.googleSignIn().absoluteURL(Http.Context.current().request());
+	public static final String redirectURL = routes.Authorization.googleSignIn().absoluteURL(Play.isProd(), Http.Context.current()._requestHeader());
 	
 	
 	/**
