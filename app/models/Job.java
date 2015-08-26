@@ -59,8 +59,6 @@ public class Job extends BaseEntity {
 	
 	private String errors;
 	
-	@NotEmpty
-	@NotNull
 	@Column(name="google_analytics_properties")
 	@Deprecated
 	private String googleAnalyticsProperties;
