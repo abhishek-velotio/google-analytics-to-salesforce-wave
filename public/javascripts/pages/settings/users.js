@@ -15,7 +15,7 @@ $(function() {
 			this.collection.each(function (profile) {
 				this.$el
 					.find('tbody')
-					.append(new Views.Profile({ model: profile }).el);
+					.append(new Views.ProfileRow({ model: profile }).el);
 			}, this);
 			
 			return this;
@@ -23,7 +23,7 @@ $(function() {
 		
 	});
 	
-	Views.Profile = Backbone.View.extend({
+	Views.ProfileRow = Backbone.View.extend({
 		
 		tagName : 'tr',
 		
@@ -126,33 +126,66 @@ $(function() {
 	    	
 	    	return formattedData;
 	    },
-	    
-	    highlightErrors : function (errors) {
-	    	
-	    	this.$el.find('.profile-settings__form .form-group').removeClass('has-warning');
-	    	
-	    	_.each(errors, function (message, field) {
-    			this.$el.find('.profile-settings__form ' + '[name="' + field  + '"]' ).closest('.form-group').addClass('has-warning');
-    		}, this);
-	    	
-	    	this.$el.find('.profile-settings__form .form-group[class*="has-"]:first-child .form-control').focus();
-	    },
+
+		bindings: {
+			'[name=username]': {
+				observe: 'username',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=emailAddress]': {
+				observe: 'emailAddress',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=firstName]': {
+				observe: 'firstName',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=lastName]': {
+				observe: 'lastName',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=password]': {
+				observe: 'password',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=role]': {
+				observe: 'role',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=isActive]': {
+				observe: 'isActive',
+				setOptions: {
+					validate: true
+				}
+			}
+		},
 	    
 	    successSaving : function (model, response) {
-	    	
-	    	this.$el.find('.button_type_save').removeAttr('disabled');
-	    	
+			$('.content__main').prepend(new Views.Alert({
+				typeAlert : 'success',
+				title : '',
+				text  : 'Data saved successfully.'
+			}).el);
+
 	    	this.model.trigger('change');
 			Collections.Users.add(this.model);
 			Views.Modal.prototype.save.call(this);
 		},
 		
 		errorSaving : function (model, response) {
-			
-			this.$el.find('.button_type_save').removeAttr('disabled');
-			
-			var errors = JSON.parse(response.responseText);
-			this.highlightErrors(errors);
+			this.highlightErrors(JSON.parse(response.responseText));
 		},
 		
 		save : function () {
@@ -162,12 +195,10 @@ $(function() {
 			this.model.set(data, { silent : true });
 	    	
 	    	if (this.model.isValid(true)) {
-	    		if (this.model.hasChanged() || this.model.isNew()) {
+//	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
 	    			this.$el.find('.button_type_save').attr('disabled', true);
-	    		}
-	    	} else {
-	    		this.highlightErrors(this.model.validate());	
+//	    		}
 	    	}
 	    	
 		},
@@ -178,11 +209,11 @@ $(function() {
 	    },
 		
 		render : function () {
-			
 			Views.Modal.prototype.render.call(this);
-			
+
 			this.$el.find('.modal-body').append(new Views.UserProfileForm({ model : this.model }).el);
-			
+			this.stickit();
+			formState(this);
 			return this;
 		}
 	});

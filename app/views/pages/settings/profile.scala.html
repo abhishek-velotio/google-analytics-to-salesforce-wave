@@ -5,6 +5,7 @@
 <h1 class="content__header">Manage Profile</h1>
 <section class="content__main"></section>
 
+@views.html.components.backbone.templates.common()
 @views.html.components.backbone.templates.profileSettings()
 
 <script>
@@ -21,22 +22,18 @@
 			urlRoot : '/profile',
 			defaults : @Html(Json.stringify(params.get("user"))),
 			validation : {
-				username : {
-					required : true
-				},
-				
-				emailAddress : {
-					required : true
-				},
-				
 				firstName : {
 					required : true
 				},
-				
 				lastName : {
 					required : true
 				},
-				
+				username : {
+					required : true
+				},
+				emailAddress : {
+					required : true
+				},
 				password : {
 					required : true
 				}

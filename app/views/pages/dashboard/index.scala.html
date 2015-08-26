@@ -28,7 +28,9 @@
 			
 			var Models 		= window.Models,
 				Collections = window.Collections;
+
 			
+			// job and jobs list
 			
 			Models.Job = Backbone.Model.extend({
 				urlRoot : '/job'
@@ -39,8 +41,9 @@
 			});
 			Collections.Jobs.url = '/jobs';
 			Collections.Jobs.fetch();
-			
-			// configuration google profiles
+
+
+			// google profiles list
 			
 			Models.GoogleProfile = Backbone.Model.extend({
 				urlRoot : '/google/profile'
@@ -49,11 +52,10 @@
 			Collections.GoogleProfiles = new Backbone.Collection([], {
 				model : Models.GoogleProfile
 			});
-			
 			Collections.GoogleProfiles.reset(@Html(Json.stringify(params.get("googleProfiles"))));
 			
 			
-			// configuration salesforce profiles
+			// salesforce profiles list
 			
 			Models.SalesforceProfile = Backbone.Model.extend({
 				urlRoot : '/salesforce/profile'
@@ -62,7 +64,6 @@
 			Collections.SalesforceProfiles = new Backbone.Collection([], {
 				model : Models.SalesforceProfile
 			});
-			
 			Collections.SalesforceProfiles.reset(@Html(Json.stringify(params.get("salesforceProfiles"))));
 
 		});

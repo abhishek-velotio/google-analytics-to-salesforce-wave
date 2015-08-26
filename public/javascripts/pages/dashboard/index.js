@@ -5,15 +5,15 @@ $(function () {
 	
 	var jobSettings = null;
 	var job 		= null;
+
 	
-	/* POPUP JOB SETTINGS */
+	/* MODEL */
 	
 	Models.JobSettings = Backbone.Model.extend({
 		urlRoot : '/job',
 		defaults : {
 			googleAnalyticsProfile : null,
-			salesforceAnalyticsProfile : null,
-			googleAnalyticsProperties : null
+			salesforceAnalyticsProfile : null
 		},
 		
 		validation : {
@@ -23,29 +23,32 @@ $(function () {
 			googleAnalyticsProfile : {
 				required : true
 			},
-			salesforceAnalyticsProfile : {
+			googleAnalyticsProperties_analyticsProfile : {
 				required : true
 			},
-			'googleAnalyticsProperties.analyticsProfile' : {
-				required : true
-			},
-			'googleAnalyticsProperties.dimensions' : {
+			googleAnalyticsProperties_dimensions : {
 				required : true,
 				limit : 7
 			},
-			'googleAnalyticsProperties.metrics' : {
+			googleAnalyticsProperties_metrics : {
 				required : true,
 				limit : 10
 			},
-			'googleAnalyticsProperties.startDate' : {
+			googleAnalyticsProperties_startDate : {
 				required : true
 			},
-			'googleAnalyticsProperties.endDate' : {
+			googleAnalyticsProperties_endDate : {
+				required : true
+			},
+			salesforceAnalyticsProfile : {
 				required : true
 			}
 		}
 	});
-	
+
+
+	/* FORM COMPONENTS */
+
 	Views.Accounts = Views.DependSelect.extend({
 		
 		initialize : function (options) {
@@ -251,72 +254,11 @@ $(function () {
 		}
 		
 	});
-	
-	Views.AddJob = Backbone.View.extend({
-		
-		className : 'button button_type_add btn btn-primary',
-		
-		tagName : 'button',
-		
-		events: {
-			'click' : 'openSettings',
-		},
-		
-		initialize : function () {
-			_.bindAll(this, 'render');
-			this.render();
-		},
-		
-		popup : null,
-		
-		openSettings : function () {
-			
-			if (Collections.GoogleProfiles.isEmpty() || Collections.SalesforceProfiles.isEmpty()) {
-				BootstrapDialog.alert({
-		            title: 'Error',
-		            message: "You don't have google or salesforce profiles",
-		            type: BootstrapDialog.TYPE_DANGER,
-		        });
-				return;
-			}
-			
-			job = new Models.JobSettings();
-			
-			this.popup = new Views.JobSettings({ 
-					id   	: 'job-settings',
-					title 	: 'Create job',
-					classes : 'job-settings',
-					model 	: job
-			});
-			
-			this.popup.show();
-			
-			return this;
-		},
-		
-		render : function () {
-			this.$el.html("Add job");
-		}
-	});
-	
-	Views.Refresh = Backbone.View.extend({
-		className : 'button button_type_refresh btn btn-primary',
-		tagName : 'button',
-		popup : null,
-		events : {'click': 'refresh'},
-		initialize : function () {
-			_.bindAll(this, 'render');
-			this.render();
-		},
-		refresh : function() {
-			Collections.Jobs.fetch()
-		},
-		render : function () {
-			this.$el.html('<i class="fa fa-refresh"></i>');
-		}
-	});
-	
-	Views.JobSettings = Views.Modal.extend({
+
+
+	/* POPUP */
+
+	Views.JobPopup = Views.Modal.extend({
 		
 		initialize : function (options) {
 			Views.Modal.prototype.initialize.call(this, options);
@@ -324,17 +266,58 @@ $(function () {
 			Backbone.Validation.bind(this);
 		},
 		
-	    highlightErrors : function (errors) {
-	    	
-	    	this.$el.find('.job-settings__form .form-group').removeClass('has-warning');
-	    	
-	    	_.each(errors, function (message, field) {
-    			this.$el.find('.job-settings__form ' + '[name="' + field  + '"]' ).closest('.form-group').addClass('has-warning');
-    		}, this);
-	    	
-	    	this.$el.find('.job-settings__form .form-group[class*="has-"]:first-child .form-control').focus();
-	    },
-	    
+		bindings: {
+			'[name=name]': {
+				observe: 'name',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=googleAnalyticsProfile]': {
+				observe: 'googleAnalyticsProfile',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=googleAnalyticsProperties_analyticsProfile]': {
+				observe: 'googleAnalyticsProperties_analyticsProfile',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=googleAnalyticsProperties_dimensions]': {
+				observe: 'googleAnalyticsProperties_dimensions',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=googleAnalyticsProperties_metrics]': {
+				observe: 'googleAnalyticsProperties_metrics',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=googleAnalyticsProperties_startDate]': {
+				observe: 'googleAnalyticsProperties_startDate',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=googleAnalyticsProperties_endDate]': {
+				observe: 'googleAnalyticsProperties_endDate',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=salesforceAnalyticsProfile]': {
+				observe: 'salesforceAnalyticsProfile',
+				setOptions: {
+					validate: true
+				}
+			}
+		},
+
+
 	    successSaving : function (model, response) {
 	    	this.model.trigger('change');
 			//Collections.Jobs.add(this.model, { at: 0 });
@@ -356,63 +339,58 @@ $(function () {
 		
 		format : function (data) {
 
-			var startTime;
+			var type = $('.job-settings__scheduler .nav li.active a').attr('href').replace('#', ''),
+				startTime;
 			
-			switch (data.type) {
+			switch (type) {
 				case "delayed": 
-					startTime = !!(data.delayStart) ? moment(data.delayStart).valueOf() : null;
+					data.startTime = !!(data.delayStart) ? moment(data.delayStart).valueOf() : null;
 					break;
 				case "repeated": 
-					startTime = !!(data.repeatStart) ? moment(data.repeatStart).valueOf() : null;
+					data.startTime = !!(data.repeatStart) ? moment(data.repeatStart).valueOf() : null;
 					break;
 				default : 
-					startTime = null; 
+					data.startTime = null; 
 					break;
 			}
 			
-			return {
+			return data;
+/*			return {
 				name : data.name.trim(),
 	    		googleAnalyticsProfile : Number(data.googleProfile),
 				salesforceAnalyticsProfile : Number(data.salesforceProfile),
 				googleAnalyticsProperties : {
-					analyticsProfile : data["googleAnalyticsProperties.analyticsProfile"],
-					dimensions : data["googleAnalyticsProperties.dimensions"],
-					metrics : data["googleAnalyticsProperties.metrics"],
-					startDate : data["googleAnalyticsProperties.startDate"],
-					endDate : data["googleAnalyticsProperties.endDate"],
-					sort : data["googleAnalyticsProperties.sorting"] || ""
+					analyticsProfile : data["googleAnalyticsProperties_analyticsProfile"],
+					dimensions : data["googleAnalyticsProperties_dimensions"],
+					metrics : data["googleAnalyticsProperties_metrics"],
+					startDate : data["googleAnalyticsProperties_startDate"],
+					endDate : data["googleAnalyticsProperties_endDate"],
+					sort : data["googleAnalyticsProperties_sorting"] || ""
 				},
 				'startTime' : startTime,
 				repeatPeriod : (data.type === 'repeated') ? data.period : null,
 				includePreviousData : (data.type === 'repeated') ? !!(data.previousData) : null
-			}
+			}*/
 		},
 		
 		save : function () {
-			
-			var data = $('.job-settings__form').serializeObject();
-			data.type = $('.job-settings__scheduler .nav li.active a').attr('href').replace('#', '');
-	    	
-			this.model.set(this.format(data), { silent : true });
-			
-			console.log(this.model);
+			this.model.set(this.format($('.job-settings__form').serializeObject()), { silent : true });
 	    	
 	    	if (this.model.isValid(true)) {
-	    		if (this.model.hasChanged() || this.model.isNew()) {
+//	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
 	    			Views.Modal.prototype.save.call(this);
-	    		}
-	    	} else {
-	    		this.highlightErrors(this.model.validate());	
+//	    		}
 	    	}
 		},
 		
 		render : function () {
-			
 			Views.Modal.prototype.render.call(this);
-			
 			this.$el.find('.modal-body').append(new Views.JobForm().el);
-			
+
+			this.stickit();
+			formState(this);
+
 			return this;
 		}
 	});
@@ -432,13 +410,11 @@ $(function () {
 		},
 		
 		parseRelativeDate : function (relativeDate) {
-			
 			switch (relativeDate) {
 				case 'today' : return moment()
 				case 'yesterday' : return moment().subtract(1, 'day');
 				default : return moment().subtract(Number(relativeDate.replace("days ago", "").trim()), 'days');
 			}
-		
 		},
 		
 		parseInputDate : function (inputDate) {
@@ -470,21 +446,21 @@ $(function () {
 			});
 			
 			this.EndDateView = new Views.Input({
-				_id 		 	: 'googleAnalyticsProperties.endDate',
+				_id 		 	: 'googleAnalyticsProperties_endDate',
 				title 	 		: 'End date',
 				type			: 'text',
 				classes			: 'job-settings__end-date col-xs-6',
 			});
 			
 			this.StartDateView = new Views.Input({
-				_id 		 	: 'googleAnalyticsProperties.startDate',
+				_id 		 	: 'googleAnalyticsProperties_startDate',
 				title 	 		: 'Start date',
 				type			: 'text',
 				classes			: 'job-settings__start-date col-xs-6',
 			});
 			
 			this.MetricsView = new Views.Keys({
-				_id 		 	: 'googleAnalyticsProperties.metrics',
+				_id 		 	: 'googleAnalyticsProperties_metrics',
 				title 	 		: 'Metrics',
 				classes			: 'job-settings__metrics col-xs-12',
 				multiple 		: true,
@@ -495,7 +471,7 @@ $(function () {
 			});
 			
 			this.DimensionsView = new Views.Keys({
-				_id 		 	: 'googleAnalyticsProperties.dimensions',
+				_id 		 	: 'googleAnalyticsProperties_dimensions',
 				title 	 		: 'Dimensions',
 				classes			: 'job-settings__dimensions col-xs-12',
 				multiple 		: true,
@@ -506,7 +482,7 @@ $(function () {
 			});
 			
 			this.AnalyticsProfilesView = new Views.AnalyticsProfiles({
-				_id 		 	: 'googleAnalyticsProperties.analyticsProfile',
+				_id 		 	: 'googleAnalyticsProperties_analyticsProfile',
 				title 	 		: 'Analytics Profile',
 				classes			: 'job-settings__analytics-profile col-xs-4',
 				multiple 		: false,
@@ -555,7 +531,7 @@ $(function () {
 			});
 			
 			this.Sorter = new Views.Sorter({
-				_id 		 	: 'googleAnalyticsProperties.sorting',
+				_id 		 	: 'googleAnalyticsProperties_sorting',
 				title 	 		: 'Sorting',
 				classes			: 'job-settings__sorting col-xs-12',
 				multiple 		: true,
@@ -625,12 +601,81 @@ $(function () {
 		}
 		
 	});
+
+
+
+
+	/* BUTTONS */
+
+	Views.AddJobButton = Backbone.View.extend({
+		
+		className : 'button button_type_add btn btn-primary',
+		
+		tagName : 'button',
+		
+		events: {
+			'click' : 'openSettings',
+		},
+		
+		initialize : function () {
+			_.bindAll(this, 'render');
+			this.render();
+		},
+		
+		popup : null,
+		
+		openSettings : function () {
+			
+			if (Collections.GoogleProfiles.isEmpty() || Collections.SalesforceProfiles.isEmpty()) {
+				BootstrapDialog.alert({
+		            title: 'Error',
+		            message: "You don't have google or salesforce profiles",
+		            type: BootstrapDialog.TYPE_DANGER,
+		        });
+				return;
+			}
+			
+			job = new Models.JobSettings();
+			
+			this.popup = new Views.JobPopup({ 
+					id   	: 'job-settings',
+					title 	: 'Create job',
+					classes : 'job-settings',
+					model 	: job
+			});
+			
+			this.popup.show();
+			
+			return this;
+		},
+		
+		render : function () {
+			this.$el.html("Add job");
+		}
+	});
 	
-	
+	Views.RefreshButton = Backbone.View.extend({
+		className : 'button button_type_refresh btn btn-primary',
+		tagName : 'button',
+		popup : null,
+		events : {'click': 'refresh'},
+		initialize : function () {
+			_.bindAll(this, 'render');
+			this.render();
+		},
+		refresh : function() {
+			Collections.Jobs.fetch()
+		},
+		render : function () {
+			this.$el.html('<i class="fa fa-refresh"></i>');
+		}
+	});
+
+
+
 	/* JOBS TABLE */
-	
-	
-	Views.Job = Backbone.View.extend({
+
+	Views.JobRow = Backbone.View.extend({
 		
 		tagName : 'tr',
 		
@@ -664,7 +709,7 @@ $(function () {
 
 				this.$el
 					.find('tbody')
-					.append(new Views.Job({ model: job }).el);
+					.append(new Views.JobRow({ model: job }).el);
 			}, this);
 			
 			return this;
@@ -676,10 +721,10 @@ $(function () {
 		classes 	: 'jobs'
 	});
 	
-	var addJob = new Views.AddJob();
-	var refreshButton = new Views.Refresh();
+	var addJob = new Views.AddJobButton();
+	var refreshButton = new Views.RefreshButton();
 	
-	$('.content__main').append(addJob.el).append(refreshButton.el).append(jobs.el);
+	$('.content__main').append(refreshButton.el).append(addJob.el).append(jobs.el);
 	
 	
 });

@@ -209,6 +209,10 @@ $(function () {
 })
 
 
+Backbone.Validation.configure({
+    forceUpdate: true
+});
+
 _.extend(Backbone.Validation.validators, {
 	limit: function(value, attr, customValue, model) {
 		if(value && value.length > customValue){
@@ -216,3 +220,40 @@ _.extend(Backbone.Validation.validators, {
 		}
 	}
 });
+
+_.extend(Backbone.Validation.callbacks, {
+    valid: function (view, attr, selector) {
+//console.log('VALID: '+attr);
+		if (view.model.hasChanged(attr)) {
+			hideError(view.$('[name="' + attr + '"]'));
+			formState(view);
+		}
+    },
+    invalid: function (view, attr, error, selector) {
+//console.dir(view.model);
+//console.log('INVALID: '+attr);
+		if (view.model.hasChanged(attr)) {
+			showError(view.$('[name="' + attr + '"]'), error);
+			formState(view);
+		}
+	}
+});
+
+function showError(el, message) {
+	$group = el.closest('.form-group');
+	$group.addClass('has-error');
+
+	if ($group.find('.help-block').size() > 0)
+		$group.find('.help-block').html(message);
+	else
+		$('<span>', {'class':'help-block'}).html(message).appendTo($group);
+}
+function hideError(el) {
+	$group = el.closest('.form-group');
+	$group.removeClass('has-error');
+	$group.find('.help-block').remove();
+}
+
+function formState(view) {
+	view.$el.find('.button_type_save').prop('disabled', !(view.model.isValid() && view.model.hasChanged()) );
+}

@@ -15,7 +15,7 @@ $(function() {
 			this.collection.each(function (profile) {
 				this.$el
 					.find('tbody')
-					.append(new Views.Profile({ model: profile }).el);
+					.append(new Views.ProfileRow({ model: profile }).el);
 			}, this);
 			
 			return this;
@@ -23,7 +23,7 @@ $(function() {
 		
 	});
 	
-	Views.Profile = Backbone.View.extend({
+	Views.ProfileRow = Backbone.View.extend({
 		
 		tagName : 'tr',
 		
@@ -156,49 +156,92 @@ $(function() {
 			_.bindAll(this, 'render', 'successSaving', 'errorSaving');
 			Backbone.Validation.bind(this);
 		},
-		
-	    highlightErrors : function (errors) {
-	    	
-	    	this.$el.find('.profile-settings__form .form-group').removeClass('has-warning');
-	    	
-	    	_.each(errors, function (message, field) {
-    			this.$el.find('.profile-settings__form ' + '[name="' + field  + '"]' ).closest('.form-group').addClass('has-warning');
-    		}, this);
-	    	
-	    	this.$el.find('.profile-settings__form .form-group[class*="has-"]:first-child .form-control').focus();
-	    },
+
+		bindings: {
+			'[name=name]': {
+				observe: 'name',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=authProviderX509CertUrl]': {
+				observe: 'authProviderX509CertUrl',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=authUri]': {
+				observe: 'authUri',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=clientEmail]': {
+				observe: 'clientEmail',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=clientId]': {
+				observe: 'clientId',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=clientSecret]': {
+				observe: 'clientSecret',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=clientX509CertUrl]': {
+				observe: 'clientX509CertUrl',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=redirectUris]': {
+				observe: 'redirectUris',
+				setOptions: {
+					validate: true
+				}
+			},
+			'[name=tokenUri]': {
+				observe: 'tokenUri',
+				setOptions: {
+					validate: true
+				}
+			}
+		},
 	    
 	    successSaving : function (model, response) {
-	    	
-	    	this.$el.find('.button_type_save').removeAttr('disabled');
-	    	
+			$('.content__main').prepend(new Views.Alert({
+				typeAlert : 'success',
+				title : '',
+				text  : 'Data saved successfully.'
+			}).el);
+
 	    	this.model.trigger('change');
 			Collections.Profiles.add(this.model);
 			Views.Modal.prototype.save.call(this);
 		},
 		
 		errorSaving : function (model, response) {
-			
-			this.$el.find('.button_type_save').removeAttr('disabled');
-			
-			var errors = JSON.parse(response.responseText);
-			this.highlightErrors(errors);
+			this.highlightErrors(JSON.parse(response.responseText));
 		},
 		
 		save : function () {
 			
 			var data = this.$el.find('.profile-settings__form').serializeObject();
-	    	data.redirectUris = data.redirectUris.replace('\r\n', ',');
+		    	data.redirectUris = data.redirectUris.replace('\r\n', ',');
 			
 			this.model.set(data, { silent : true });
 	    	
 	    	if (this.model.isValid(true)) {
-	    		if (this.model.hasChanged() || this.model.isNew()) {
+//	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
 	    			this.$el.find('.button_type_save').attr('disabled', true);
-	    		}
-	    	} else {
-	    		this.highlightErrors(this.model.validate());	
+//	    		}
 	    	}
 
 		},
@@ -209,11 +252,11 @@ $(function() {
 	    },
 		
 		render : function () {
-			
 			Views.Modal.prototype.render.call(this);
-			
+
 			this.$el.find('.modal-body').append(new Views.GoogleProfileForm({ model : this.model }).el);
-			
+			this.stickit();
+			formState(this);
 			return this;
 		}
 	});

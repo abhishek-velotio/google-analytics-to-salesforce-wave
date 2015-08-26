@@ -51,7 +51,10 @@
 
 <script type="text/template" id="alert">
  	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	<strong><%= title%>!</strong> <%= text %>
+	<% if (title) { %>
+	    <strong><%= title%></strong> 
+	<% } %>
+	<%= text %>
 </script>
 
 <script src='@routes.Assets.at("javascripts/pages/backbone-common.js")'></script>
