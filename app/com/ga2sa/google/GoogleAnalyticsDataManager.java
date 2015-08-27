@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.Job;
+
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -146,11 +148,39 @@ public class GoogleAnalyticsDataManager {
 	 * Get report from GA
 	 * 
 	 * @param Google Credential
+	 * @param Job
+	 * @return GA report
+	 * @throws IOException 
+	 * @throws Exception
+	 */
+	public static GaData getReport(GoogleCredential credential, Job job) throws IOException {
+		if (job != null) { 
+			Get query = getAnalytics(credential).data().ga().get(
+				"ga:" + job.gaProfile,
+				job.gaStartDate,
+				job.gaEndDate,
+				job.gaMetrics
+			).setDimensions(job.gaDimensions);
+			
+			if (!job.gaSorting.isEmpty()) {
+				query.setSort(job.gaSorting);
+			}
+			
+			return query.execute();
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * Get report from GA
+	 * 
+	 * @param Google Credential
 	 * @param googleAnalyticsProperties
 	 * @return GA report
 	 * @throws Exception
 	 */
-
+	@Deprecated
 	public static GaData getReport(GoogleCredential credential, String googleAnalyticsProperties) throws Exception {
 		if (googleAnalyticsProperties != null) { 
 			JsonNode params = Json.parse(googleAnalyticsProperties);

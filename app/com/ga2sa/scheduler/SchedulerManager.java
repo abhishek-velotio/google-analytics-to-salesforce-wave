@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import models.Job;
-import models.JobStatus;
 import models.dao.JobDAO;
 import play.Logger;
 import play.libs.Akka;

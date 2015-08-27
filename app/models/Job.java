@@ -35,7 +35,11 @@ import play.libs.Json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ga2sa.utils.ArrayToStringDeserializer;
 import com.ga2sa.utils.JsonUtil;
+import com.ga2sa.utils.StringToArraySerializer;
 
 
 /**
@@ -64,28 +68,34 @@ public class Job extends BaseEntity {
 	private String googleAnalyticsProperties;
 	
 	@Column(name="ga_profile")
-	@JsonProperty(value = "googleAnalyticsProperties-analyticsProfile")
+	@JsonProperty(value = "googleAnalyticsProperties_analyticsProfile")
 	public String gaProfile;
 	
 	@Column(name="ga_dimensions")
-	@JsonProperty(value = "googleAnalyticsProperties-dimensions")
+	@JsonProperty(value = "googleAnalyticsProperties_dimensions")
+	@JsonDeserialize(using = ArrayToStringDeserializer.class)
+	@JsonSerialize(using = StringToArraySerializer.class)
 	public String gaDimensions;
 	
 	@Column(name="ga_metrics")
-	@JsonProperty(value = "googleAnalyticsProperties-metrics")
+	@JsonProperty(value = "googleAnalyticsProperties_metrics")
+	@JsonDeserialize(using = ArrayToStringDeserializer.class)
+	@JsonSerialize(using = StringToArraySerializer.class)
 	public String gaMetrics;
 	
 	@Column(name="ga_start_date")
-	@JsonProperty(value = "googleAnalyticsProperties-startDate")
-	public String startDate;
+	@JsonProperty(value = "googleAnalyticsProperties_startDate")
+	public String gaStartDate;
 	
 	@Column(name="ga_end_date")
-	@JsonProperty(value = "googleAnalyticsProperties-endDate")
-	public String endDate;
+	@JsonProperty(value = "googleAnalyticsProperties_endDate")
+	public String gaEndDate;
 	
 	@Column(name="ga_sorting")
-	@JsonProperty(value = "googleAnalyticsProperties-sorting")
-	public String sorting;
+	@JsonProperty(value = "googleAnalyticsProperties_sorting")
+	@JsonDeserialize(using = ArrayToStringDeserializer.class)
+	@JsonSerialize(using = StringToArraySerializer.class)
+	public String gaSorting;
 	
 	
 	@Column(name="start_time")

@@ -72,7 +72,7 @@ public class BackgroundJob extends UntypedActor{
 					
 				if (job.needIncludePreviousData() && previousReport != null) {
 					
-					JsonNode changedProperties = Json.parse(job.getGoogleAnalyticsProperties());
+//					JsonNode changedProperties = Json.parse(job.getGoogleAnalyticsProperties());
 					
 					Calendar startDateForReport = Calendar.getInstance();
 					Calendar endDateForReport = Calendar.getInstance();
@@ -80,7 +80,8 @@ public class BackgroundJob extends UntypedActor{
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 					
 					try {
-						endDateForReport.setTime(sdf.parse(changedProperties.get("endDate").asText()));
+//						endDateForReport.setTime(sdf.parse(changedProperties.get("endDate").asText()));
+						endDateForReport.setTime(sdf.parse(job.gaEndDate));
 						startDateForReport.setTime(endDateForReport.getTime());
 						startDateForReport.add(Calendar.DATE, 1);
 					} catch (ParseException e) {
@@ -89,12 +90,14 @@ public class BackgroundJob extends UntypedActor{
 					
 					endDateForReport.add(timeUnit, duration);
 					
-					ObjectNode node = (ObjectNode) changedProperties;
-					node.set("startDate", new TextNode(sdf.format(startDateForReport.getTime())));
-					node.set("endDate", new TextNode(sdf.format(endDateForReport.getTime())));
+//					ObjectNode node = (ObjectNode) changedProperties;
+//					node.set("startDate", new TextNode(sdf.format(startDateForReport.getTime())));
+//					node.set("endDate", new TextNode(sdf.format(endDateForReport.getTime())));
 					
-					job.setGoogleAnalyticsProperties(node.toString());
+//					job.setGoogleAnalyticsProperties(node.toString());
 					
+					job.gaStartDate = sdf.format(startDateForReport.getTime());
+					job.gaEndDate = sdf.format(endDateForReport.getTime());
 					csvReport = Report.getReport(job).addToCSV(previousReport.data);
 				
 				} else {

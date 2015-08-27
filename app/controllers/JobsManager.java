@@ -68,7 +68,7 @@ public class JobsManager extends Controller {
 		job.setName(requestData.get("name").textValue());
 		job.setGoogleAnalyticsProfile(gaProfile);
 		job.setSalesforceAnalyticsProfile(saProfile);
-		job.setGoogleAnalyticsProperties(requestData.get("googleAnalyticsProperties").toString());
+//		job.setGoogleAnalyticsProperties(requestData.get("googleAnalyticsProperties").toString());
 		job.setUser(ApplicationSecurity.getCurrentUser());
 		job.setStatus(JobStatus.PENDING);
 		
