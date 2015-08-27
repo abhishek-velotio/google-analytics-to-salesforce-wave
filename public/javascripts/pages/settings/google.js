@@ -214,12 +214,6 @@ $(function() {
 					validate: true
 				}
 			},
-			'[name=redirectUris]': {
-				observe: 'redirectUris',
-				setOptions: {
-					validate: true
-				}
-			},
 			'[name=tokenUri]': {
 				observe: 'tokenUri',
 				setOptions: {
@@ -245,12 +239,8 @@ $(function() {
 		},
 		
 		save : function () {
-			
-			var data = this.$el.find('.profile-settings__form').serializeObject();
-		    	data.redirectUris = data.redirectUris.replace('\r\n', ',');
-			
-			this.model.set(data, { silent : true });
-	    	
+//			var data = this.$el.find('.profile-settings__form').serializeObject();
+//			this.model.set(data, { silent : true });
 	    	if (this.model.isValid(true)) {
 //	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });

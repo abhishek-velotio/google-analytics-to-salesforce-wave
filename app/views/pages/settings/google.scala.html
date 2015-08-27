@@ -25,7 +25,6 @@
 				clientId : "",
 				clientEmail : "",
 				clientSecret : "",
-				redirectUris : "",
 				tokenUri : "https://accounts.google.com/o/oauth2/token",
 				authUri : "https://accounts.google.com/o/oauth2/auth",
 				authProviderX509CertUrl : "https://www.googleapis.com/oauth2/v1/certs",
@@ -63,12 +62,7 @@
 					required : true,
 					pattern : 'url'
 				},
-				
-				redirectUris : {
-			    	required : true,
-			    	msg: 'Please enter an list redirects URIs'
-			    },
-				
+
 				tokenUri : {
 					required : true,
 					pattern : 'url'
