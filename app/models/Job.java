@@ -33,6 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import play.libs.Json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -65,6 +66,7 @@ public class Job extends BaseEntity {
 	
 	@Column(name="google_analytics_properties")
 	@Deprecated
+	@JsonIgnore
 	private String googleAnalyticsProperties;
 	
 	@Column(name="ga_profile")
@@ -117,11 +119,13 @@ public class Job extends BaseEntity {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="google_analytics_profile_id")
+	@JsonProperty(value = "googleProfile")
 	private GoogleAnalyticsProfile googleAnalyticsProfile;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="salesforce_analytics_profile_id")
+	@JsonProperty(value = "salesforceProfile")
 	private SalesforceAnalyticsProfile salesforceAnalyticsProfile;
 
 	@NotNull
