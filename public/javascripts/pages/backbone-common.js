@@ -226,7 +226,7 @@ Backbone.Validation.configure({
 
 _.extend(Backbone.Validation.validators, {
 	limit: function(value, attr, customValue, model) {
-		if(value && value.length > customValue){
+		if ($.isArray(value) && value.length > customValue) {
 			return 'You have exceeded the number of elements in array';
 		}
 	}

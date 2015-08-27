@@ -377,6 +377,8 @@ console.log('LOADED '+self.options._id);
 				title : 'Success',
 				text  : 'Job is created'
 			}).el);
+
+   			Views.Modal.prototype.save.call(this);
 		},
 		
 		errorSaving : function (model, response) {
@@ -403,33 +405,20 @@ console.log('LOADED '+self.options._id);
 					data.startTime = null; 
 					break;
 			}
+
 			
+			data.repeatPeriod = (data.type === 'repeated') ? data.period : null;
+			data.includePreviousData = (data.type === 'repeated') ? !!(data.previousData) : null;
+
 			return data;
-/*			return {
-				name : data.name.trim(),
-	    		googleProfile : Number(data.googleProfile),
-				salesforceProfile : Number(data.salesforceProfile),
-				googleAnalyticsProperties : {
-					analyticsProfile : data["googleAnalyticsProperties_profile"],
-					dimensions : data["googleAnalyticsProperties_dimensions"],
-					metrics : data["googleAnalyticsProperties_metrics"],
-					startDate : data["googleAnalyticsProperties_startDate"],
-					endDate : data["googleAnalyticsProperties_endDate"],
-					sort : data["googleAnalyticsProperties_sorting"] || ""
-				},
-				'startTime' : startTime,
-				repeatPeriod : (data.type === 'repeated') ? data.period : null,
-				includePreviousData : (data.type === 'repeated') ? !!(data.previousData) : null
-			}*/
 		},
 		
 		save : function () {
 			this.model.set(this.format($('.job-settings__form').serializeObject()), { silent : true });
-//console.dir(this.model); return;
 	    	if (this.model.isValid(true)) {
 //	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
-	    			Views.Modal.prototype.save.call(this);
+	    			this.$el.find('.button_type_save').attr('disabled', true);
 //	    		}
 	    	}
 		},
