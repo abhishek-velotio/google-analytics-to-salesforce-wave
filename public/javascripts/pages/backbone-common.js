@@ -65,7 +65,6 @@ $(function () {
 			
 			this.options = options;
 			this.collection.bind('reset', this.render);
-			this.$el.addClass(this.options.classes);
 			this.render();
 		},
 		
@@ -75,8 +74,9 @@ console.log('Select:change '+this.$el.find('select').attr('name'));
 		},
 		
 		render : function () {
+			this.$el.removeClass().addClass(this.className).addClass(this.options.classes);
+
 			this.data = this.options.groupped ? _.groupBy(this.collection.toJSON(), this.options.groupField) : this.collection.toJSON();
-			
 			this.$el.html(this.template({ 
 				id 		 : this.options._id,
 				title 	 : this.options.title,
