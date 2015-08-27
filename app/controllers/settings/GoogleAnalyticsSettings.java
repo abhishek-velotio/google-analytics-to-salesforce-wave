@@ -45,7 +45,7 @@ public class GoogleAnalyticsSettings extends Controller {
 	
 	@Transactional
 	public static Result get(String profileId) {
-		GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
+		GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId));
 		return ok(Json.toJson(profile));
 	}
 	
@@ -63,7 +63,7 @@ public class GoogleAnalyticsSettings extends Controller {
 	
 	@Transactional
 	public static Result delete(String profileId) {
-		GoogleAnalyticsProfileDAO.delete(GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId)));
+		GoogleAnalyticsProfileDAO.delete(GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId)));
 		return ok();
 	}
 	
@@ -80,7 +80,7 @@ public class GoogleAnalyticsSettings extends Controller {
 	
 	public static Result connect(String profileId) {
 		ObjectNode result = Json.newObject();
-		GoogleAnalyticsProfile profile = (GoogleAnalyticsProfile) GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
+		GoogleAnalyticsProfile profile = (GoogleAnalyticsProfile) GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId));
 		Cache.set(GoogleAnalyticsProfileDAO.CACHE_PROFILE_PREFIX + profileId, profile);
 		result.put("authUrl", GoogleConnector.getAuthURL(profile));
 		flash(GoogleAnalyticsProfileDAO.FLASH_PROFILE_ID, profileId);
@@ -89,7 +89,7 @@ public class GoogleAnalyticsSettings extends Controller {
 	
 	public static Result disconnect(String profileId) {	
 		
-		GoogleAnalyticsProfile profile = (GoogleAnalyticsProfile) GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
+		GoogleAnalyticsProfile profile = (GoogleAnalyticsProfile) GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId));
 		final String cacheId = GoogleConnector.CACHE_CREDENTIAL_PREFIX + profileId;
 		
 		profile.setAccessToken(null);

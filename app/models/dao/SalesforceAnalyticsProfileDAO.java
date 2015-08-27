@@ -63,7 +63,7 @@ public class SalesforceAnalyticsProfileDAO extends BaseDAO<SalesforceAnalyticsPr
 		return null;
 	}
 	
-	public static SalesforceAnalyticsProfile getProfileById(Integer profileId) {
+	public static SalesforceAnalyticsProfile getProfileById(Long profileId) {
 		
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<SalesforceAnalyticsProfile>() {

@@ -34,6 +34,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import play.libs.Json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -51,6 +52,7 @@ import com.ga2sa.utils.StringToArraySerializer;
 @Entity
 @Table(name="jobs")
 @NamedQuery(name="Job.findAll", query="SELECT j FROM Job j ORDER BY j.created DESC")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Job extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -119,13 +121,13 @@ public class Job extends BaseEntity {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="google_analytics_profile_id")
-	@JsonProperty(value = "googleProfile")
+	@JsonIgnore
 	private GoogleAnalyticsProfile googleAnalyticsProfile;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="salesforce_analytics_profile_id")
-	@JsonProperty(value = "salesforceProfile")
+	@JsonIgnore
 	private SalesforceAnalyticsProfile salesforceAnalyticsProfile;
 
 	@NotNull

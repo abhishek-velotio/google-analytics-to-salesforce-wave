@@ -41,6 +41,8 @@ public class ArrayToStringDeserializer extends JsonDeserializer<String> {
 		JsonNode tree = jsonParser.readValueAsTree();
 		if (tree.isArray()) {
 			tree.forEach(obj -> array.add(obj.textValue()));
+		} else {
+			array.add(tree.textValue());
 		}
 		
 		return StringUtils.join(array, ",");

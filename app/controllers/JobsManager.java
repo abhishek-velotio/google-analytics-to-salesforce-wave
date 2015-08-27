@@ -14,14 +14,12 @@
 package controllers;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
-import models.GoogleAnalyticsProfile;
 import models.Job;
 import models.JobStatus;
-import models.SalesforceAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.JobDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
@@ -60,25 +58,16 @@ public class JobsManager extends Controller {
 	public static Result create () {
 		
 		JsonNode requestData = request().body().asJson();
+		Job job = Json.fromJson(requestData, Job.class);
 		
-		GoogleAnalyticsProfile gaProfile = GoogleAnalyticsProfileDAO.getProfileById(requestData.get("googleAnalyticsProfile").intValue());
-		SalesforceAnalyticsProfile saProfile = SalesforceAnalyticsProfileDAO.getProfileById(requestData.get("salesforceAnalyticsProfile").intValue());
-		
-		Job job = new Job();
-		job.setName(requestData.get("name").textValue());
-		job.setGoogleAnalyticsProfile(gaProfile);
-		job.setSalesforceAnalyticsProfile(saProfile);
-//		job.setGoogleAnalyticsProperties(requestData.get("googleAnalyticsProperties").toString());
+		job.setGoogleAnalyticsProfile(GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("googleProfile").textValue())));
+		job.setSalesforceAnalyticsProfile(SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("salesforceProfile").textValue())));
 		job.setUser(ApplicationSecurity.getCurrentUser());
 		job.setStatus(JobStatus.PENDING);
+		if (job.getStartTime() == null) job.setStartTime(Timestamp.from(Instant.now()));
 		
-		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
-		
-		
-		if (!requestData.get("startTime").isNull()) job.setStartTime(new Timestamp(requestData.get("startTime").asLong()));
-		else job.setStartTime(new Timestamp(new Date().getTime()));
-		
-		if (!requestData.get("includePreviousData").isNull()) job.setIncludePreviousData(requestData.get("includePreviousData").asBoolean());
+//		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
+//		if (!requestData.get("includePreviousData").isNull()) job.setIncludePreviousData(requestData.get("includePreviousData").asBoolean());
 		
 		Map<String, String> validateResult = validate(job);
 		if (validateResult.isEmpty()) {

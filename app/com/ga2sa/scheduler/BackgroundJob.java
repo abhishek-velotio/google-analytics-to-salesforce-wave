@@ -107,7 +107,7 @@ public class BackgroundJob extends UntypedActor{
 				csvReport = Report.getReport(job).toCSV();
 			}
 			
-			Logger.debug("QUERY   " + job.getGoogleAnalyticsProperties());
+//			Logger.debug("QUERY   " + job.getGoogleAnalyticsProperties());
 			
 			try {
 				if (job.isRepeated() && job.needIncludePreviousData() && previousReport != null) {

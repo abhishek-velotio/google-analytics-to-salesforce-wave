@@ -229,11 +229,10 @@ public class Report {
 	public static Report getReport(Job job) throws Exception {
 		final String nameReport = job.getName();
 		final String profileId = job.getGoogleAnalyticsProfile().getId().toString();
-		final String properties = job.getGoogleAnalyticsProperties();
 		
 		GoogleCredential credential = ApplicationSecurity.getGoogleCredential(profileId);
 		
-		return new Report( nameReport, GoogleAnalyticsDataManager.getReport(credential, properties), 
+		return new Report( nameReport, GoogleAnalyticsDataManager.getReport(credential, job), 
 				GoogleAnalyticsDataManager.getMetrics(credential), GoogleAnalyticsDataManager.getDimensions(credential));
 	}
 }
