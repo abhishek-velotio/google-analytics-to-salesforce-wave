@@ -99,7 +99,7 @@ public class SchedulerManager extends UntypedActor {
 			startDate.setTime(job.getNextStartTime());
 			if (startDate.after(currentDate)) scheduleDate.setTime(job.getNextStartTime());
 		} else {
-			startDate.setTime(job.getStartTime());
+			startDate.setTime(job.getStartTime() == null ? Calendar.getInstance().getTime() : job.getStartTime());
 			if (startDate.after(currentDate)) {
 				Logger.debug("AFTER");
 				scheduleDate.setTime(job.getStartTime());

@@ -42,6 +42,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ga2sa.utils.ArrayToStringDeserializer;
 import com.ga2sa.utils.JsonUtil;
 import com.ga2sa.utils.StringToArraySerializer;
+import com.ga2sa.utils.StringToBooleanDeserializer;
 
 
 /**
@@ -116,6 +117,7 @@ public class Job extends BaseEntity {
 	private String repeatPeriod;
 	
 	@Column(name="include_previous_data")
+	@JsonDeserialize(using = StringToBooleanDeserializer.class)
 	private Boolean includePreviousData;
 
 	@NotNull

@@ -22,13 +22,16 @@ import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SessionDAO;
 import models.dao.UserDAO;
 import play.Logger;
+import play.Play;
 import play.cache.Cache;
+import play.mvc.Http;
 
 import com.ga2sa.google.GoogleConnector;
 import com.ga2sa.helpers.forms.LoginForm;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
 import controllers.SessionManager;
+import controllers.routes;
 /**
  * 
  * Class for manage application security. Responsible for authentication and authorization users. 
@@ -38,6 +41,12 @@ import controllers.SessionManager;
  *
  */
 public class ApplicationSecurity {
+	
+	public static final String redirectURL;
+	
+	static {
+		redirectURL = routes.Authorization.googleSignIn().absoluteURL(Play.isProd(), Http.Context.current()._requestHeader());
+	}
 	
 	public static final String SESSION_ID_KEY = "session_id";
 	/**

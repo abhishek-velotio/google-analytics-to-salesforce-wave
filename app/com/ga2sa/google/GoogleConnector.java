@@ -21,6 +21,7 @@ import models.dao.GoogleAnalyticsProfileDAO;
 import play.Play;
 import play.mvc.Http;
 
+import com.ga2sa.security.ApplicationSecurity;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -44,8 +45,6 @@ public class GoogleConnector {
 	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	public static final String CACHE_CREDENTIAL_PREFIX = "cache_credential_";
-	
-	public static final String redirectURL = routes.Authorization.googleSignIn().absoluteURL(Play.isProd(), Http.Context.current()._requestHeader());
 	
 	
 	/**
@@ -71,7 +70,7 @@ public class GoogleConnector {
 	 * @return redirect url
 	 */
 	public static String getAuthURL(GoogleAnalyticsProfile profile) {
-		return getFlow(profile).newAuthorizationUrl().setRedirectUri(redirectURL).toURI().toString();
+		return getFlow(profile).newAuthorizationUrl().setRedirectUri(ApplicationSecurity.redirectURL).toURI().toString();
 	}
 	
 	/**
@@ -83,7 +82,7 @@ public class GoogleConnector {
 		
 		try {
 			GoogleAuthorizationCodeFlow flow = getFlow(profile);
-			GoogleTokenResponse response = flow.newTokenRequest(authorizationCode).setRedirectUri(redirectURL).execute();
+			GoogleTokenResponse response = flow.newTokenRequest(authorizationCode).setRedirectUri(ApplicationSecurity.redirectURL).execute();
 			storeCredentials(profile, flow.createAndStoreCredential(response, null));
 		} catch (IOException e) {
 			e.printStackTrace();
