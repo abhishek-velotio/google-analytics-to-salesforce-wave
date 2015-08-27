@@ -87,7 +87,7 @@ public class GoogleAnalyticsProfileDAO extends BaseDAO<GoogleAnalyticsProfile> {
 		return null;
 	}
 	
-	public static GoogleAnalyticsProfile getProfileById(Integer profileId) {
+	public static GoogleAnalyticsProfile getProfileById(Long profileId) {
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<GoogleAnalyticsProfile>() {
 				public GoogleAnalyticsProfile apply () {

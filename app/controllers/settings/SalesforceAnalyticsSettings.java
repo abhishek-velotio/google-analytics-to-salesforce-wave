@@ -53,13 +53,13 @@ public class SalesforceAnalyticsSettings extends Controller {
 	
 	@Transactional
 	public static Result delete(String profileId) {
-		SalesforceAnalyticsProfileDAO.delete(SalesforceAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId)));
+		SalesforceAnalyticsProfileDAO.delete(SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId)));
 		return ok();
 	}
 	
 	@Transactional
 	public static Result update(String profileId) {
-		SalesforceAnalyticsProfile object = SalesforceAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
+		SalesforceAnalyticsProfile object = SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId));
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {

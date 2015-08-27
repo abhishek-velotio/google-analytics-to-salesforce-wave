@@ -148,7 +148,7 @@ public class ApplicationSecurity {
 		final String cacheId = GoogleConnector.CACHE_CREDENTIAL_PREFIX + profileId;
 		GoogleCredential credential = (GoogleCredential)Cache.get(cacheId);
 		if (credential == null) {
-			GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Integer.parseInt(profileId));
+			GoogleAnalyticsProfile profile = GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(profileId));
 			credential = GoogleConnector.getCredentials(profile);
 			Cache.set(cacheId, credential);
 		}

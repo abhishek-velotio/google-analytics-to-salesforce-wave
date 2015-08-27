@@ -162,10 +162,10 @@ public class GoogleAnalyticsDataManager {
 				job.gaMetrics
 			).setDimensions(job.gaDimensions);
 			
-			if (!job.gaSorting.isEmpty()) {
+			if (job.gaSorting != null) {
 				query.setSort(job.gaSorting);
 			}
-			
+			Logger.debug("QUERY    " + query.toString());
 			return query.execute();
 		}
 		return null;
