@@ -131,14 +131,6 @@ $(function() {
 			Backbone.Validation.bind(this);
 		},
 		
-		format : function (sourceData) {
-	    	var formattedData = sourceData;
-
-	    	formattedData.isActive === 'on' ? formattedData.isActive = true : formattedData.isActive = false;
-	    	
-	    	return formattedData;
-	    },
-
 		bindings: {
 			'[name=username]': {
 				observe: 'username',
@@ -180,6 +172,9 @@ $(function() {
 				observe: 'isActive',
 				setOptions: {
 					validate: true
+				},
+				onSet: function(val, options) {
+					return (val === 'on' ? true : false);
 				}
 			}
 		},
@@ -202,9 +197,9 @@ $(function() {
 		
 		save : function () {
 			
-			var data = this.format(this.$el.find('.profile-settings__form').serializeObject());
+//			var data = this.format(this.$el.find('.profile-settings__form').serializeObject());
 			
-			this.model.set(data, { silent : true });
+//			this.model.set(data, { silent : true });
 	    	
 	    	if (this.model.isValid(true)) {
 //	    		if (this.model.hasChanged() || this.model.isNew()) {

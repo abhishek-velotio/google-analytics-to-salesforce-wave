@@ -62,9 +62,8 @@
 		});
 		
 		Collections.Users = new Backbone.Collection([], {
-			model 	: Models.User
+			model : Models.User
 		});
-		
 		Collections.Users.reset(@Html(Json.stringify(params.get("users"))));
 	});
 	

@@ -24,18 +24,24 @@ $(function () {
 	Models.JobSettings = Backbone.Model.extend({
 		urlRoot : '/job',
 		defaults : {
-			googleAnalyticsProfile : null,
-			salesforceAnalyticsProfile : null
+			name : "",
+			googleProfile : null,
+			googleAnalyticsProperties_profile : null,
+			googleAnalyticsProperties_dimensions : null,
+			googleAnalyticsProperties_metrics : null,
+			googleAnalyticsProperties_startDate : "",
+			googleAnalyticsProperties_endDate : "",
+			salesforceProfile : null
 		},
-		
+
 		validation : {
 			name : {
 				required : true
 			},
-			googleAnalyticsProfile : {
+			googleProfile : {
 				required : true
 			},
-			googleAnalyticsProperties_analyticsProfile : {
+			googleAnalyticsProperties_profile : {
 				required : true
 			},
 			googleAnalyticsProperties_dimensions : {
@@ -52,7 +58,7 @@ $(function () {
 			googleAnalyticsProperties_endDate : {
 				required : true
 			},
-			salesforceAnalyticsProfile : {
+			salesforceProfile : {
 				required : true
 			}
 		}
@@ -61,11 +67,24 @@ $(function () {
 
 	/* FORM COMPONENTS */
 
-	Views.Accounts = Views.DependSelect.extend({
+	Views.Accounts = Views.Select.extend({ // emulate DependSelect
 		
 		initialize : function (options) {
-			Views.DependSelect.prototype.initialize.call(this, options);
+			Views.Select.prototype.initialize.call(this, options);
 			this.bind("googleProfile.change", this.loadData);
+		},
+
+		loadData : function (profileId) {
+			var self = this;
+console.log('TRIGGERED CHANGE '+self.options._id);
+			this.collection.fetch({ 
+				url : '/google/profile/'+ profileId + '/accounts',
+				reset: true,
+				success : function () {
+console.log('LOADED '+self.options._id);
+					self.change(profileId);
+				}
+			});
 		},
 		
 		change : function (profileId) {
@@ -73,87 +92,79 @@ $(function () {
 			_.each(dependSelects, function (select) {
 				select.trigger(this.options._id + '.change', profileId, this.$el.find('select').val());
 			}, this);
+		}
+		
+	});
+	
+	Views.Properties = Views.Select.extend({
+		
+		initialize : function (options) {
+			Views.Select.prototype.initialize.call(this, options);
+			this.bind("googleAnalyticsProperties_account.change", this.loadData);
 		},
 		
-		loadData : function (profileId) {
+		loadData : function (profileId, accountId) {
 			var self = this;
+console.log('TRIGGERED CHANGE '+self.options._id);
 			this.collection.fetch({ 
-				url : '/google/profile/'+ profileId + '/accounts',
+				url : '/google/profile/'+ profileId + '/properties/' + accountId,
+				reset: true,
 				success : function () {
-					self.change(profileId);
+console.log('LOADED '+self.options._id);
+					self.change(profileId, accountId);
 				}
 			});
 		},
-		
-		render : function () {
-			return Views.DependSelect.prototype.render.call(this);
-		}
-	});
-	
-	Views.Properties = Views.DependSelect.extend({
-		
-		initialize : function (options) {
-			Views.DependSelect.prototype.initialize.call(this, options);
-			this.bind("account.change", this.loadData);
-		},
-		
+
 		change : function (profileId, accountId) {
 			var dependSelects = this.options.dependSelects;
 			_.each(dependSelects, function (select) {
 				select.trigger(this.options._id + '.change',  profileId, accountId, this.$el.find('select').val());
 			}, this);
-		},
-		
-		loadData : function (profileId, accountId) {
-			var self = this;
-			this.collection.fetch({ 
-				url : '/google/profile/'+ profileId + '/properties/' + accountId,
-				success : function () {
-					self.change(profileId, accountId);
-				}
-			});
-		},
-		
-		render : function () {
-			return Views.DependSelect.prototype.render.call(this);
 		}
 	});
 	
-	Views.AnalyticsProfiles = Views.Select.extend({
-		
+	Views.Profiles = Views.Select.extend({
+
 		initialize : function (options) {
 			Views.Select.prototype.initialize.call(this, options);
-			this.bind("property.change", this.loadData);
-			
+			this.bind("googleAnalyticsProperties_property.change", this.loadData);
 		},
 		
 		loadData : function (profileId, accountId, propertyId) {
-			this.collection.fetch({ url : '/google/profile/'+ profileId + '/profiles/' + accountId + "/" + propertyId });
-		},
-		
-		render : function () {
-			return Views.Select.prototype.render.call(this);
+			var self = this;
+console.log('TRIGGERED CHANGE '+self.options._id);
+			this.collection.fetch({
+				url : '/google/profile/'+ profileId + '/profiles/' + accountId + "/" + propertyId,
+				reset: true,
+				success : function() {
+console.log('LOADED '+self.options._id);
+				}
+			});
 		}
 	});
-	
-	Views.Keys = Views.DependSelect.extend({
+
+
+
+	Views.Keys = Views.Select.extend({
 		
 		initialize : function (options) {
-			Views.DependSelect.prototype.initialize.call(this, options);
+			Views.Select.prototype.initialize.call(this, options);
 			this.bind("googleProfile.change", this.loadData);
-			this.collection.unbind('all', this.render);
-			this.collection.bind('sync', this.render);
+//			this.collection.unbind('all', this.render);
+//			this.collection.bind('sync', this.render);
 		},
 		
 		loadData : function (profileId) {
 			this.collection.fetch({ 
-				url : '/google/profile/'+ profileId + '/' + this.options.keyName
+				url : '/google/profile/'+ profileId + '/' + this.options.keyName,
+				reset: true
 			});
 		},
 		
 		render : function () {
 			
-			Views.DependSelect.prototype.render.call(this);
+			Views.Select.prototype.render.call(this);
 			
 			this.$el.find('select').select2({
 				placeholder: "Select " + this.options.title.toLowerCase(),
@@ -285,46 +296,74 @@ $(function () {
 					validate: true
 				}
 			},
-			'[name=googleAnalyticsProfile]': {
-				observe: 'googleAnalyticsProfile',
+			'[name=googleProfile]': {
+				observe: 'googleProfile',
 				setOptions: {
 					validate: true
+				},
+				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					return $(event.target).val();
 				}
 			},
-			'[name=googleAnalyticsProperties_analyticsProfile]': {
-				observe: 'googleAnalyticsProperties_analyticsProfile',
+			'[name=googleAnalyticsProperties_profile]': {
+				observe: 'googleAnalyticsProperties_profile',
 				setOptions: {
 					validate: true
+				},
+				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					return $(event.target).val();
 				}
 			},
 			'[name=googleAnalyticsProperties_dimensions]': {
 				observe: 'googleAnalyticsProperties_dimensions',
 				setOptions: {
 					validate: true
+				},
+				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					return $(event.target).val();
 				}
 			},
 			'[name=googleAnalyticsProperties_metrics]': {
 				observe: 'googleAnalyticsProperties_metrics',
 				setOptions: {
 					validate: true
+				},
+				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					return $(event.target).val();
 				}
 			},
 			'[name=googleAnalyticsProperties_startDate]': {
 				observe: 'googleAnalyticsProperties_startDate',
+				events: ['keyup', 'change', 'cut', 'paste', 'dp.change', 'blur'],
 				setOptions: {
 					validate: true
 				}
 			},
 			'[name=googleAnalyticsProperties_endDate]': {
 				observe: 'googleAnalyticsProperties_endDate',
+				events: ['keyup', 'change', 'cut', 'paste', 'dp.change', 'blur'],
 				setOptions: {
 					validate: true
 				}
 			},
-			'[name=salesforceAnalyticsProfile]': {
-				observe: 'salesforceAnalyticsProfile',
+			'[name=googleAnalyticsProperties_sorting]': {
+				observe: 'googleAnalyticsProperties_sorting',
+				getVal: function($el, event, options) {
+					return $(event.target).val();
+				}
+			},
+			'[name=salesforceProfile]': {
+				observe: 'salesforceProfile',
 				setOptions: {
 					validate: true
+				},
+				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					return $(event.target).val();
 				}
 			}
 		},
@@ -332,7 +371,6 @@ $(function () {
 
 	    successSaving : function (model, response) {
 	    	this.model.trigger('change');
-			//Collections.Jobs.add(this.model, { at: 0 });
 	    	Collections.Jobs.fetch()
 			$('.content__main').prepend(new Views.Alert({
 				typeAlert : 'success',
@@ -369,10 +407,10 @@ $(function () {
 			return data;
 /*			return {
 				name : data.name.trim(),
-	    		googleAnalyticsProfile : Number(data.googleProfile),
-				salesforceAnalyticsProfile : Number(data.salesforceProfile),
+	    		googleProfile : Number(data.googleProfile),
+				salesforceProfile : Number(data.salesforceProfile),
 				googleAnalyticsProperties : {
-					analyticsProfile : data["googleAnalyticsProperties_analyticsProfile"],
+					analyticsProfile : data["googleAnalyticsProperties_profile"],
 					dimensions : data["googleAnalyticsProperties_dimensions"],
 					metrics : data["googleAnalyticsProperties_metrics"],
 					startDate : data["googleAnalyticsProperties_startDate"],
@@ -387,7 +425,7 @@ $(function () {
 		
 		save : function () {
 			this.model.set(this.format($('.job-settings__form').serializeObject()), { silent : true });
-	    	
+//console.dir(this.model); return;
 	    	if (this.model.isValid(true)) {
 //	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
@@ -399,8 +437,9 @@ $(function () {
 		render : function () {
 			Views.Modal.prototype.render.call(this);
 			this.$el.find('.modal-body').append(new Views.JobForm().el);
-
+console.log('===== STICKIT =====');
 			this.stickit();
+			this.$el.find('.form-control').trigger('stickit');
 			formState(this);
 
 			return this;
@@ -456,21 +495,38 @@ $(function () {
 				type			: 'text',
 				classes			: 'job-settings__name col-xs-12',
 			});
-			
-			this.EndDateView = new Views.Input({
-				_id 		 	: 'googleAnalyticsProperties_endDate',
-				title 	 		: 'End date',
-				type			: 'text',
-				classes			: 'job-settings__end-date col-xs-6',
+
+
+			this.ProfilesView = new Views.Profiles({
+				_id 		 	: 'googleAnalyticsProperties_profile',
+				title 	 		: 'Analytics Profile',
+				classes			: 'job-settings__analytics-profile col-xs-4',
+				multiple 		: false,
+				groupped 		: false,
+				collection 		: new Backbone.Collection()
 			});
-			
-			this.StartDateView = new Views.Input({
-				_id 		 	: 'googleAnalyticsProperties_startDate',
-				title 	 		: 'Start date',
-				type			: 'text',
-				classes			: 'job-settings__start-date col-xs-6',
+
+			this.PropertiesView = new Views.Properties({
+				_id 		 	: 'googleAnalyticsProperties_property',
+				title 	 		: 'Property',
+				classes			: 'job-settings__property col-xs-4',
+				multiple 		: false,
+				groupped 		: false,
+				collection 		: new Backbone.Collection(),
+				dependSelects	: [this.ProfilesView]
 			});
-			
+
+			this.AccountsView = new Views.Accounts({
+				_id 		 	: 'googleAnalyticsProperties_account',
+				title 	 		: 'Account',
+				classes			: 'job-settings__account col-xs-4',
+				multiple 		: false,
+				groupped 		: false,
+				collection 		: new Backbone.Collection(),
+				dependSelects	: [this.PropertiesView]
+			});
+
+
 			this.MetricsView = new Views.Keys({
 				_id 		 	: 'googleAnalyticsProperties_metrics',
 				title 	 		: 'Metrics',
@@ -481,7 +537,7 @@ $(function () {
 				keyName			: 'metrics',
 				collection 		: new Backbone.Collection()
 			});
-			
+
 			this.DimensionsView = new Views.Keys({
 				_id 		 	: 'googleAnalyticsProperties_dimensions',
 				title 	 		: 'Dimensions',
@@ -492,36 +548,32 @@ $(function () {
 				keyName			: 'dimensions',
 				collection 		: new Backbone.Collection()
 			});
-			
-			this.AnalyticsProfilesView = new Views.AnalyticsProfiles({
-				_id 		 	: 'googleAnalyticsProperties_analyticsProfile',
-				title 	 		: 'Analytics Profile',
-				classes			: 'job-settings__analytics-profile col-xs-4',
-				multiple 		: false,
-				groupped 		: false,
-				collection 		: new Backbone.Collection()
-			});
-			
-			this.PropertiesView = new Views.Properties({
-				_id 		 	: 'property',
-				title 	 		: 'Property',
-				classes			: 'job-settings__property col-xs-4',
-				multiple 		: false,
-				groupped 		: false,
-				collection 		: new Backbone.Collection(),
-				dependSelects	: [this.AnalyticsProfilesView]
+
+			this.EndDateView = new Views.Input({
+				_id 		 	: 'googleAnalyticsProperties_endDate',
+				title 	 		: 'End date',
+				type			: 'text',
+				classes			: 'job-settings__end-date col-xs-6',
 			});
 
-			this.AccountsView = new Views.Accounts({
-				_id 		 	: 'account',
-				title 	 		: 'Account',
-				classes			: 'job-settings__account col-xs-4',
-				multiple 		: false,
-				groupped 		: false,
-				collection 		: new Backbone.Collection(),
-				dependSelects	: [this.PropertiesView]
+			this.StartDateView = new Views.Input({
+				_id 		 	: 'googleAnalyticsProperties_startDate',
+				title 	 		: 'Start date',
+				type			: 'text',
+				classes			: 'job-settings__start-date col-xs-6',
 			});
-			
+
+			this.Sorter = new Views.Sorter({
+				_id 		 	: 'googleAnalyticsProperties_sorting',
+				title 	 		: 'Sorting',
+				classes			: 'job-settings__sorting col-xs-12',
+				multiple 		: true,
+				groupped 		: false,
+				listenSelects	: [this.MetricsView, this.DimensionsView],
+				collection 		: new Backbone.Collection()
+			});
+
+
 			this.GoogleProfilesView = new Views.DependSelect({
 				_id 		 	: 'googleProfile',
 				title 	 		: 'Google Profile',
@@ -541,18 +593,10 @@ $(function () {
 				groupped 		: false,
 				collection 		: Collections.SalesforceProfiles,
 			});
-			
-			this.Sorter = new Views.Sorter({
-				_id 		 	: 'googleAnalyticsProperties_sorting',
-				title 	 		: 'Sorting',
-				classes			: 'job-settings__sorting col-xs-12',
-				multiple 		: true,
-				groupped 		: false,
-				listenSelects	: [this.MetricsView, this.DimensionsView],
-				collection 		: new Backbone.Collection()
-			});
+
 			
 			this.Scheduler = new Views.Scheduler();
+
 			
 			$(this.StartDateView.el).find('input')
 				.datetimepicker({
@@ -574,7 +618,7 @@ $(function () {
 		                clear: 'fa fa-trash'
 		            }
 				});
-			
+
 			$(this.EndDateView.el).find('input')
 				.datetimepicker({
 					defaultDate: moment(),
@@ -600,7 +644,7 @@ $(function () {
 			this.$el.append(this.GoogleProfilesView.el);
 			this.$el.append(this.AccountsView.el);
 			this.$el.append(this.PropertiesView.el);
-			this.$el.append(this.AnalyticsProfilesView.el);
+			this.$el.append(this.ProfilesView.el);
 			this.$el.append(this.MetricsView.el);
 			this.$el.append(this.DimensionsView.el);
 			this.$el.append(this.StartDateView.el);
@@ -608,7 +652,7 @@ $(function () {
 			this.$el.append(this.Sorter.el);
 			this.$el.append(this.SalesforceProfilesView.el);
 			this.$el.append(this.Scheduler.el);
-			
+
 			return this;
 		}
 		
