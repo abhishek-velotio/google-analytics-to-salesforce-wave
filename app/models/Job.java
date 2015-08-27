@@ -68,7 +68,7 @@ public class Job extends BaseEntity {
 	private String googleAnalyticsProperties;
 	
 	@Column(name="ga_profile")
-	@JsonProperty(value = "googleAnalyticsProperties_analyticsProfile")
+	@JsonProperty(value = "googleAnalyticsProperties_profile")
 	public String gaProfile;
 	
 	@Column(name="ga_dimensions")
