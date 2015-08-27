@@ -136,24 +136,28 @@ $(function() {
 			'[name=name]': {
 				observe: 'name',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=username]': {
 				observe: 'username',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=password]': {
 				observe: 'password',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=applicationName]': {
 				observe: 'applicationName',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			}

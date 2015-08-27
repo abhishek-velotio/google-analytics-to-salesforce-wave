@@ -135,42 +135,49 @@ $(function() {
 			'[name=username]': {
 				observe: 'username',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=emailAddress]': {
 				observe: 'emailAddress',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=firstName]': {
 				observe: 'firstName',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=lastName]': {
 				observe: 'lastName',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=password]': {
 				observe: 'password',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=role]': {
 				observe: 'role',
 				setOptions: {
+					silent: true,
 					validate: true
 				}
 			},
 			'[name=isActive]': {
 				observe: 'isActive',
 				setOptions: {
+					silent: true,
 					validate: true
 				},
 				onSet: function(val, options) {
@@ -186,7 +193,7 @@ $(function() {
 				text  : 'Data saved successfully.'
 			}).el);
 
-	    	this.model.trigger('change');
+			this.model.trigger('change');
 			Collections.Users.add(this.model);
 			Views.Modal.prototype.save.call(this);
 		},
