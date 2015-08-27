@@ -382,7 +382,7 @@ console.log('LOADED '+self.options._id);
 		},
 		
 		errorSaving : function (model, response) {
-			$('.content__main').prepend(new Views.Alert({
+			this.$('.modal-body').prepend(new Views.Alert({
 				typeAlert : 'danger',
 				title : 'Error',
 				text  : 'Job is not created'
