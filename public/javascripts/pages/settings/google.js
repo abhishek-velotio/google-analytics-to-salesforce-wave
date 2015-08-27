@@ -247,13 +247,9 @@ $(function() {
 		},
 		
 		save : function () {
-//			var data = this.$el.find('.profile-settings__form').serializeObject();
-//			this.model.set(data, { silent : true });
 	    	if (this.model.isValid(true)) {
-//	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
 	    			this.$el.find('.button_type_save').attr('disabled', true);
-//	    		}
 	    	}
 
 		},

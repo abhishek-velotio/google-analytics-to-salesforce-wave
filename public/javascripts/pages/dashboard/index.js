@@ -31,7 +31,10 @@ $(function () {
 			googleAnalyticsProperties_metrics : null,
 			googleAnalyticsProperties_startDate : "",
 			googleAnalyticsProperties_endDate : "",
-			salesforceProfile : null
+			salesforceProfile : null,
+			startTime : null,
+			repeatPeriod : null,
+			includePreviousData : null
 		},
 
 		validation : {
@@ -390,25 +393,20 @@ console.log('LOADED '+self.options._id);
 		},
 		
 		format : function (data) {
-
-			var type = $('.job-settings__scheduler .nav li.active a').attr('href').replace('#', ''),
-				startTime;
-			
+			var type = $('.job-settings__scheduler .nav li.active a').attr('href').replace('#', '');
 			switch (type) {
 				case "delayed": 
 					data.startTime = !!(data.delayStart) ? moment(data.delayStart).valueOf() : null;
 					break;
 				case "repeated": 
 					data.startTime = !!(data.repeatStart) ? moment(data.repeatStart).valueOf() : null;
+					data.repeatPeriod = data.period;
+					data.includePreviousData = data.previousData;
 					break;
 				default : 
 					data.startTime = null; 
 					break;
 			}
-
-			
-			data.repeatPeriod = (data.type === 'repeated') ? data.period : null;
-			data.includePreviousData = (data.type === 'repeated') ? !!(data.previousData) : null;
 
 			return data;
 		},

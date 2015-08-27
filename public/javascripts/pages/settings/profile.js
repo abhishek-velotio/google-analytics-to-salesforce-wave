@@ -86,8 +86,6 @@ $(function () {
 
 		save : function (event) {
 			event.preventDefault();
-//			var data = this.$el.serializeObject()
-//			this.model.set(data, { silent : true });
 	    	if (this.model.isValid(true)) {
     			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
     			this.$el.find('.button_type_save').attr('disabled', true);
