@@ -1,8 +1,55 @@
-.form-signin__heading {
-	text-align: center;
+.signin-header {
+	background-color:#fff;
+	border-bottom:1px solid #d3dddf;
+	padding:40px 20px 20px;
 }
 
-.form-signin__logo {
-	display: block;
-	margin: 50px auto;
+.signin-logo {
+	display:block;
+	text-indent:-500px;
+	overflow:hidden;
+	width:231px;
+	height:54px;
+	background: url('/assets/images/logo.png') no-repeat 0 0;
+	margin-bottom:5px;
+}
+
+.signin-title {
+}
+
+.signin-form {
+	padding:0 20px;
+	max-width:340px;
+}
+
+.signin-header { padding-left:120px; }
+.signin-title { margin-left:64px; }
+.signin-form { margin-left:164px; }
+
+
+
+@media only screen and (max-width : 979px) {
+	.signin-header { padding-left:20px; }
+	.signin-title { margin-left:64px; }
+	.signin-form { margin-left:64px; }
+}
+
+@media only screen and (max-width : 670px) {
+	.signin-header {
+		padding:20px 15px 10px;
+	}
+	.signin-title {
+		margin-left:34px;
+	}
+	.signin-form {
+		margin:0;
+		padding:0 15px;
+	}
+
+	.signin-logo {
+		margin:0;
+		width:126px;
+		height:30px;
+		background: url('/assets/images/logo-small.png') no-repeat 0 0;
+	}
 }
