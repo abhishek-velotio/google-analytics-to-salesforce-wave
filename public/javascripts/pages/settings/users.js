@@ -199,7 +199,7 @@ $(function() {
 		},
 		
 		errorSaving : function (model, response) {
-			this.highlightErrors(JSON.parse(response.responseText));
+			highlightErrors(this, JSON.parse(response.responseText));
 		},
 		
 		save : function () {

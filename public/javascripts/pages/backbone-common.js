@@ -266,6 +266,12 @@ function hideError(el) {
 	$group.find('.help-block').remove();
 }
 
+function highlightErrors(view, errors) {
+   	_.each(errors, function (message, attr) {
+		showError(view.$('[name="' + attr + '"]'), message);
+	});
+}
+
 function formState(view) {
 	view.$el.find('.button_type_save').prop('disabled', !(view.model.isValid() && view.model.hasChanged()) );
 }

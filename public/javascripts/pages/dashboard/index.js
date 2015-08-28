@@ -374,23 +374,19 @@ console.log('LOADED '+self.options._id);
 
 
 	    successSaving : function (model, response) {
-	    	this.model.trigger('change');
-	    	Collections.Jobs.fetch()
 			$('.content__main').prepend(new Views.Alert({
 				typeAlert : 'success',
-				title : 'Success',
+				title : '',
 				text  : 'Job is created'
 			}).el);
 
+			this.model.trigger('change');
+	    	Collections.Jobs.fetch()
    			Views.Modal.prototype.save.call(this);
 		},
 		
 		errorSaving : function (model, response) {
-			this.$('.modal-body').prepend(new Views.Alert({
-				typeAlert : 'danger',
-				title : 'Error',
-				text  : 'Job is not created'
-			}).el);
+			highlightErrors(this, JSON.parse(response.responseText));
 		},
 		
 		format : function (data) {
