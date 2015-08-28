@@ -18,8 +18,8 @@ import java.util.Collections;
 
 import models.GoogleAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
-import play.Play;
 
+import com.ga2sa.security.ApplicationSecurity;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -29,8 +29,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.analytics.AnalyticsScopes;
-
-import controllers.routes;
 /**
  * 
  * Class for manage connections to GA
@@ -66,7 +64,7 @@ public class GoogleConnector {
 	 * @return redirect url
 	 */
 	public static String getAuthURL(GoogleAnalyticsProfile profile) {
-		return getFlow(profile).newAuthorizationUrl().setRedirectUri(getRedirectURL(profile)).toURI().toString();
+		return getFlow(profile).newAuthorizationUrl().setRedirectUri(ApplicationSecurity.getRedirectURL()).toURI().toString();
 	}
 	
 	/**
@@ -78,7 +76,7 @@ public class GoogleConnector {
 		
 		try {
 			GoogleAuthorizationCodeFlow flow = getFlow(profile);
-			GoogleTokenResponse response = flow.newTokenRequest(authorizationCode).setRedirectUri(getRedirectURL(profile)).execute();
+			GoogleTokenResponse response = flow.newTokenRequest(authorizationCode).setRedirectUri(ApplicationSecurity.getRedirectURL()).execute();
 			storeCredentials(profile, flow.createAndStoreCredential(response, null));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -120,7 +118,4 @@ public class GoogleConnector {
 		return credential;
 	}
 	
-	private static String getRedirectURL(GoogleAnalyticsProfile profile) {
-		return Play.isProd() ? profile.redirectUris : "http://localhost:9000" + routes.Authorization.googleSignIn().url();
-	}
 }

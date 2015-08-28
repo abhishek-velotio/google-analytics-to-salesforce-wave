@@ -24,6 +24,8 @@ import models.dao.UserDAO;
 import play.Logger;
 import play.Play;
 import play.cache.Cache;
+import play.core.j.HttpExecutionContext;
+import play.libs.HttpExecution;
 import play.mvc.Http;
 
 import com.ga2sa.google.GoogleConnector;
@@ -42,13 +44,13 @@ import controllers.routes;
  */
 public class ApplicationSecurity {
 	
-	public static final String redirectURL;
-	
-	static {
-		redirectURL = routes.Authorization.googleSignIn().absoluteURL(Play.isProd(), Http.Context.current()._requestHeader());
-	}
 	
 	public static final String SESSION_ID_KEY = "session_id";
+	
+	public static String getRedirectURL() {
+		return routes.Authorization.googleSignIn().absoluteURL(Play.isProd(), Http.Context.current()._requestHeader());
+	}
+	
 	/**
 	 * Method for authenticate user in the application.
 	 * 

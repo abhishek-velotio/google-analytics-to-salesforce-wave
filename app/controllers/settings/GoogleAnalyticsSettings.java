@@ -54,8 +54,6 @@ public class GoogleAnalyticsSettings extends Controller {
 	@Transactional
 	public static Result add() {
 		GoogleAnalyticsProfile object = Json.fromJson(request().body().asJson(), GoogleAnalyticsProfile.class);
-		if (object.redirectUris == null && Play.isProd()) object.redirectUris = ApplicationSecurity.redirectURL;
-		
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
@@ -73,7 +71,6 @@ public class GoogleAnalyticsSettings extends Controller {
 	@Transactional
 	public static Result update(String profileId) {
 		GoogleAnalyticsProfile object = Json.fromJson(request().body().asJson(), GoogleAnalyticsProfile.class);
-		if (object.redirectUris == null && Play.isProd()) object.redirectUris = ApplicationSecurity.redirectURL;
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
