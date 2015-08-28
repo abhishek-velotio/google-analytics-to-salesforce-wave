@@ -38,9 +38,12 @@ $(function () {
 		},
 
 		validation : {
-			name : {
+			name : [{
 				required : true
-			},
+			},{
+				pattern: /^[a-zA-Z0-9]*$/,
+				msg: 'Not allow special characters, including spaces'
+			}],
 			googleProfile : {
 				required : true
 			},
