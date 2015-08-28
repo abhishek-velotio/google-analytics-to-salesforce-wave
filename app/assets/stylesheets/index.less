@@ -18,6 +18,11 @@
 	font-size:22px;
 	color:#536e77;
 }
+.app-title i {
+	font-style: normal;
+	color:#3ab0c8;
+	margin:0 2px;
+}
 
 
 @media only screen and (max-width : 670px) {
@@ -51,19 +56,6 @@
 	border-color: darken(@btn-color, 5%);
 }
 
-.content {
-	height: 100%;
-	position: relative;
-	overflow-y: auto;
-	padding: 20px;
-}
-
-.content__header {
-	margin: 0 0 20px 0;
-	border-bottom: 1px solid #ddd;
-	padding-bottom: 10px;
-	font-size: 24px;
-}
 .form-group .select2{
 	width: 100% !important;
 }
@@ -82,6 +74,19 @@
 	font-weight:bold;
 }
 
+.content {
+	height: 100%;
+	position: relative;
+	overflow-y: auto;
+	padding: 20px;
+}
+
+.content__header {
+	margin: 0 0 20px 0;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+	font-size: 24px;
+}
 .signin-header {
 	background-color:#fff;
 	border-bottom:1px solid #d3dddf;
@@ -166,15 +171,15 @@
 	content: "\e600";
 }
 
-.has-warning .select2-selection{
-	border-color: #8a6d3b !important;
-}
 .header {
 	width: 100%;
 	position: absolute;
 	top:0;
 	left:0;
 	z-index: 1;
+}
+.has-warning .select2-selection{
+	border-color: #8a6d3b !important;
 }
 .job__status:after {
 	content: "";
@@ -495,14 +500,12 @@ body {
 	position: relative;
 }
 
-.table .table__cell_type_action {
-	width: 220px;
-}
+.table .table__cell_actions1 { width: 90px; }
+.table .table__cell_actions2 { width: 140px; }
+.table .table__cell_actions3 { width: 220px; }
 
 .table__head {
 	background: #f0f0f0;
-/*	background: #12414B;
-	color: #fff;*/
 	font-size:90%;
 }
 .table-profiles__actions {

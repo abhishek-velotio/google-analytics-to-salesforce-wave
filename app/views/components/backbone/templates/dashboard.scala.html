@@ -20,7 +20,7 @@
 	<td class='job__user table__cell'> 
 		<%= user %> 
 	</td>
-	<td class='job__action table__cell'> 
+	<td class='job__action table__cell table__cell_actions1'> 
 		<% if (status === 'PENDING') { %> <button class='job__cancel-btn btn btn-sm btn-info'>Cancel</button> <% } %>
 		<% if (status !== 'PENDING') { %> <button class='job__delete-btn btn btn-sm btn-danger'>Delete</button>  <% } %>
 	</td>	
