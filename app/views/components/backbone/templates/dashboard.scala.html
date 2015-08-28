@@ -20,15 +20,14 @@
 	<td class='job__user table__cell'> 
 		<%= user %> 
 	</td>
-	<td class='job__action table__cell table__cell_type_action'> 
+	<td class='job__action table__cell'> 
 		<% if (status === 'PENDING') { %> <button class='job__cancel-btn btn btn-sm btn-info'>Cancel</button> <% } %>
 		<% if (status !== 'PENDING') { %> <button class='job__delete-btn btn btn-sm btn-danger'>Delete</button>  <% } %>
 	</td>	
 </script>
 
 <script type="text/template" id="scheduler">
-	<label class="scheduler__label">Scheduler</label>
-	<ul class="nav nav-pills" role="tablist">
+	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#immediately" aria-controls="immediately" role="tab" data-toggle="tab">Immediately</a></li>
 		<li role="presentation"><a href="#delayed" aria-controls="delayed" role="tab" data-toggle="tab">Delayed</a></li>
 		<li role="presentation"><a href="#repeated" aria-controls="repeated" role="tab" data-toggle="tab">Repeated</a></li>

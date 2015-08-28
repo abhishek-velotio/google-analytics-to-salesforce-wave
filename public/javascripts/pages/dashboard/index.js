@@ -285,6 +285,7 @@ console.log('LOADED '+self.options._id);
 	/* POPUP */
 
 	Views.JobPopup = Views.Modal.extend({
+		width : 780,
 	
 		initialize : function (options) {
 			Views.Modal.prototype.initialize.call(this, options);
@@ -517,7 +518,7 @@ console.log('===== STICKIT =====');
 			this.MetricsView = new Views.Keys({
 				_id 		 	: 'googleAnalyticsProperties_metrics',
 				title 	 		: 'Metrics',
-				classes			: 'job-settings__metrics col-xs-12',
+				classes			: 'job-settings__metrics col-xs-6',
 				multiple 		: true,
 				groupped 		: true,
 				groupField		: 'group',
@@ -528,7 +529,7 @@ console.log('===== STICKIT =====');
 			this.DimensionsView = new Views.Keys({
 				_id 		 	: 'googleAnalyticsProperties_dimensions',
 				title 	 		: 'Dimensions',
-				classes			: 'job-settings__dimensions col-xs-12',
+				classes			: 'job-settings__dimensions col-xs-6',
 				multiple 		: true,
 				groupped 		: true,
 				groupField		: 'group',
@@ -540,20 +541,20 @@ console.log('===== STICKIT =====');
 				_id 		 	: 'googleAnalyticsProperties_endDate',
 				title 	 		: 'End date',
 				type			: 'text',
-				classes			: 'job-settings__end-date col-xs-6',
+				classes			: 'job-settings__end-date col-xs-4',
 			});
 
 			this.StartDateView = new Views.Input({
 				_id 		 	: 'googleAnalyticsProperties_startDate',
 				title 	 		: 'Start date',
 				type			: 'text',
-				classes			: 'job-settings__start-date col-xs-6',
+				classes			: 'job-settings__start-date col-xs-4',
 			});
 
 			this.Sorter = new Views.Sorter({
 				_id 		 	: 'googleAnalyticsProperties_sorting',
 				title 	 		: 'Sorting',
-				classes			: 'job-settings__sorting col-xs-12',
+				classes			: 'job-settings__sorting col-xs-4',
 				multiple 		: true,
 				groupped 		: false,
 				listenSelects	: [this.MetricsView, this.DimensionsView],
@@ -564,7 +565,7 @@ console.log('===== STICKIT =====');
 			this.GoogleProfilesView = new Views.DependSelect({
 				_id 		 	: 'googleProfile',
 				title 	 		: 'Google Profile',
-				classes			: 'job-settings__google-profile col-xs-12',
+				classes			: 'job-settings__google-profile col-xs-12 no-label',
 				multiple 		: false,
 				groupped 		: false,
 				collection 		: Collections.GoogleProfiles,
@@ -575,7 +576,7 @@ console.log('===== STICKIT =====');
 			this.SalesforceProfilesView = new Views.Select({
 				_id 		 	: 'salesforceProfile',
 				title 	 		: 'Salesforce Profile',
-				classes			: 'job-settings__salesforce-profile col-xs-12',
+				classes			: 'job-settings__salesforce-profile col-xs-12 no-label',
 				multiple 		: false,
 				groupped 		: false,
 				collection 		: Collections.SalesforceProfiles,
@@ -626,19 +627,34 @@ console.log('===== STICKIT =====');
 		                clear: 'fa fa-trash'
 		            }
 				});
-			
+
+
 			this.$el.append(this.JobNameView.el);
-			this.$el.append(this.GoogleProfilesView.el);
-			this.$el.append(this.AccountsView.el);
-			this.$el.append(this.PropertiesView.el);
-			this.$el.append(this.ProfilesView.el);
-			this.$el.append(this.MetricsView.el);
-			this.$el.append(this.DimensionsView.el);
-			this.$el.append(this.StartDateView.el);
-			this.$el.append(this.EndDateView.el);
-			this.$el.append(this.Sorter.el);
-			this.$el.append(this.SalesforceProfilesView.el);
-			this.$el.append(this.Scheduler.el);
+
+			$('<div>', {'class':'panel panel-default clearfix'})
+				.append('<div class="panel-heading">Google Profile</div>')
+				.append(this.GoogleProfilesView.el)
+				.append(this.AccountsView.el)
+				.append(this.PropertiesView.el)
+				.append(this.ProfilesView.el)
+				.append('<div class="clear"></div>')
+				.append(this.MetricsView.el)
+				.append(this.DimensionsView.el)
+				.append('<div class="clear"></div>')
+				.append(this.StartDateView.el)
+				.append(this.EndDateView.el)
+				.append(this.Sorter.el)
+				.appendTo(this.$el);
+
+			$('<div>', {'class':'panel panel-default clearfix'})
+				.append('<div class="panel-heading">Salesforce Profile</div>')
+				.append(this.SalesforceProfilesView.el)
+				.appendTo(this.$el);
+
+			$('<div>', {'class':'panel panel-default clearfix'})
+				.append('<div class="panel-heading">Scheduler</div>')
+				.append(this.Scheduler.el)
+				.appendTo(this.$el);
 
 			return this;
 		}

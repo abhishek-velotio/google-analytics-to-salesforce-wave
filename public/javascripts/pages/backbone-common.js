@@ -96,12 +96,6 @@ console.log(this.data);
 	});
 	
 	Views.DependSelect = Views.Select.extend({
-/*
-		initialize : function (options) {
-			Views.Select.prototype.initialize.call(this, options);
-//			this.collection.bind('all', this.render);
-		},
-*/		
 		change : function () {
 console.log('DependSelect:change '+this.$el.find('select').attr('name'));
 			var dependSelects = this.options.dependSelects;
@@ -182,6 +176,12 @@ console.log('DependSelect:change '+this.$el.find('select').attr('name'));
 				title : this.options.title
 			}));
 			this.$el.modal({show:false});
+
+			if (this.width !== undefined)
+				this.$el.find('.modal-dialog').css({
+					'width':'auto',
+					'max-width':this.width+'px'
+				});
 		},
 		
 		destroy : function() {
