@@ -19,9 +19,7 @@ import java.util.Collections;
 import models.GoogleAnalyticsProfile;
 import models.dao.GoogleAnalyticsProfileDAO;
 import play.Play;
-import play.mvc.Http;
 
-import com.ga2sa.security.ApplicationSecurity;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -54,8 +52,6 @@ public class GoogleConnector {
 	 * @return
 	 */
 	private static GoogleAuthorizationCodeFlow getFlow(GoogleAnalyticsProfile profile)  {
-//		String[] uris = profile.getRedirectUris().split(",");
-//		redirectURL = uris.length > 0 ? (Play.isProd() ? uris[1] : uris[0]) : null;
 		return new GoogleAuthorizationCodeFlow
 			.Builder(HTTP_TRANSPORT, JSON_FACTORY, profile.getClientId(), profile.getClientSecret(), Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY))
 			.setAccessType("offline")
@@ -70,7 +66,7 @@ public class GoogleConnector {
 	 * @return redirect url
 	 */
 	public static String getAuthURL(GoogleAnalyticsProfile profile) {
-		return getFlow(profile).newAuthorizationUrl().setRedirectUri(ApplicationSecurity.redirectURL).toURI().toString();
+		return getFlow(profile).newAuthorizationUrl().setRedirectUri(getRedirectURL(profile)).toURI().toString();
 	}
 	
 	/**
@@ -82,7 +78,7 @@ public class GoogleConnector {
 		
 		try {
 			GoogleAuthorizationCodeFlow flow = getFlow(profile);
-			GoogleTokenResponse response = flow.newTokenRequest(authorizationCode).setRedirectUri(ApplicationSecurity.redirectURL).execute();
+			GoogleTokenResponse response = flow.newTokenRequest(authorizationCode).setRedirectUri(getRedirectURL(profile)).execute();
 			storeCredentials(profile, flow.createAndStoreCredential(response, null));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -122,5 +118,9 @@ public class GoogleConnector {
 			.setRefreshToken(profile.getRefreshToken());
 		
 		return credential;
+	}
+	
+	private static String getRedirectURL(GoogleAnalyticsProfile profile) {
+		return Play.isProd() ? profile.redirectUris : "http://localhost:9000" + routes.Authorization.googleSignIn().url();
 	}
 }

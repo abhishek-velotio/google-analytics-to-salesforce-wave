@@ -19,6 +19,7 @@ import models.GoogleAnalyticsProfile;
 import models.UserGroup;
 import models.dao.GoogleAnalyticsProfileDAO;
 import play.Logger;
+import play.Play;
 import play.cache.Cache;
 import play.db.jpa.Transactional;
 import play.libs.F.Callback0;
@@ -30,6 +31,7 @@ import play.twirl.api.MimeTypes;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ga2sa.google.GoogleConnector;
 import com.ga2sa.security.Access;
+import com.ga2sa.security.ApplicationSecurity;
 import com.ga2sa.validators.Validator;
 /**
  * 
@@ -52,6 +54,7 @@ public class GoogleAnalyticsSettings extends Controller {
 	@Transactional
 	public static Result add() {
 		GoogleAnalyticsProfile object = Json.fromJson(request().body().asJson(), GoogleAnalyticsProfile.class);
+		if (object.redirectUris == null && Play.isProd()) object.redirectUris = ApplicationSecurity.redirectURL;
 		
 		return commonAction(object, new Callback0() {
 			@Override
@@ -70,6 +73,7 @@ public class GoogleAnalyticsSettings extends Controller {
 	@Transactional
 	public static Result update(String profileId) {
 		GoogleAnalyticsProfile object = Json.fromJson(request().body().asJson(), GoogleAnalyticsProfile.class);
+		if (object.redirectUris == null && Play.isProd()) object.redirectUris = ApplicationSecurity.redirectURL;
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {

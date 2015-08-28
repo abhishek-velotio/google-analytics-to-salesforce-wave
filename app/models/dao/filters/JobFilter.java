@@ -23,14 +23,14 @@ import java.util.Optional;
  */
 public class JobFilter extends BaseFilter {
 	
-	public JobFilter(Integer count, Integer offset, String orderBy, OrderType orderType) {
+	public JobFilter(Integer count, Integer offset, String orderBy, BaseFilter.OrderType orderType) {
 		this.count = Optional.ofNullable(count);
 		this.offset = Optional.ofNullable(offset);
 		this.orderBy = Optional.ofNullable(orderBy);
 		this.orderType = Optional.ofNullable(orderType);
 	}
 	
-	public JobFilter(Optional<Integer> count, Optional<Integer> page, Optional<String> orderBy, Optional<OrderType> orderType) {
+	public JobFilter(Optional<Integer> count, Optional<Integer> page, Optional<String> orderBy, Optional<BaseFilter.OrderType> orderType) {
 		this.count = count;
 		this.offset = Optional.of(page.orElse(1) <= 0 ? DEFAULT_OFFSET : (page.orElse(1) - 1) * count.orElse(DEFAULT_COUNT));
 		this.orderBy = orderBy;
