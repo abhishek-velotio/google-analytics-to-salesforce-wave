@@ -1,9 +1,9 @@
 {
-  "name": "GA2SA Project",
-  "description": "Integration Google ANanlytics and Salesforce Ananlytics",
-  "website":"https://github.com/Cervello/ga2sa",
-  "repository": "https://github.com/Cervello/ga2sa",
-  "keywords": ["salesforce", "google-analitics", "playframework"],
+  "name": "GA2SW Project",
+  "description": "Google Analytics to Salesforce Wave",
+  "website":"https://github.com/Cervello/google-analytics-to-salesforce-wave",
+  "repository": "https://github.com/Cervello/google-analytics-to-salesforce-wave",
+  "keywords": ["salesforce", "google-analytics", "playframework"],
   "addons": ["heroku-postgresql"],
   "success_url": "/signin"
 }
