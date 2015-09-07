@@ -69,7 +69,6 @@ $(function () {
 		},
 		
 		change : function () {
-console.log('Select:change '+this.$el.find('select').attr('name'));
 			return this;
 		},
 		
@@ -84,8 +83,6 @@ console.log('Select:change '+this.$el.find('select').attr('name'));
 				groupped : this.options.groupped,
 				items	 : this.data
 			}));
-console.log('RENDERED '+this.$el.find('select').attr('name'));
-console.log(this.data);
 			this.$el.find('select').trigger('rendered');
 
 			if (this.options.changeAfterInit) this.change();
@@ -97,7 +94,6 @@ console.log(this.data);
 	
 	Views.DependSelect = Views.Select.extend({
 		change : function () {
-console.log('DependSelect:change '+this.$el.find('select').attr('name'));
 			var dependSelects = this.options.dependSelects;
 			_.each(dependSelects, function (select) {
 				select.trigger(this.options._id + '.change', this.$el.find('select').val());
@@ -234,16 +230,12 @@ _.extend(Backbone.Validation.validators, {
 
 _.extend(Backbone.Validation.callbacks, {
     valid: function (view, attr, selector) {
-//console.log('VALID: '+attr);
-//console.dir(view.model);
 		if (view.model.hasChanged(attr)) {
 			hideError(view.$('[name="' + attr + '"]'));
 			formState(view);
 		}
     },
     invalid: function (view, attr, error, selector) {
-console.dir(view.model);
-console.log('INVALID: '+attr);
 		if (view.model.hasChanged(attr)) {
 			showError(view.$('[name="' + attr + '"]'), error);
 			formState(view);

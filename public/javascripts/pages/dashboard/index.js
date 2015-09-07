@@ -82,12 +82,10 @@ $(function () {
 
 		loadData : function (profileId) {
 			var self = this;
-console.log('TRIGGERED CHANGE '+self.options._id);
 			this.collection.fetch({ 
 				url : '/google/profile/'+ profileId + '/accounts',
 				reset: true,
 				success : function () {
-console.log('LOADED '+self.options._id);
 					self.change(profileId);
 				}
 			});
@@ -111,12 +109,10 @@ console.log('LOADED '+self.options._id);
 		
 		loadData : function (profileId, accountId) {
 			var self = this;
-console.log('TRIGGERED CHANGE '+self.options._id);
 			this.collection.fetch({ 
 				url : '/google/profile/'+ profileId + '/properties/' + accountId,
 				reset: true,
 				success : function () {
-console.log('LOADED '+self.options._id);
 					self.change(profileId, accountId);
 				}
 			});
@@ -139,13 +135,9 @@ console.log('LOADED '+self.options._id);
 		
 		loadData : function (profileId, accountId, propertyId) {
 			var self = this;
-console.log('TRIGGERED CHANGE '+self.options._id);
 			this.collection.fetch({
 				url : '/google/profile/'+ profileId + '/profiles/' + accountId + "/" + propertyId,
-				reset: true,
-				success : function() {
-console.log('LOADED '+self.options._id);
-				}
+				reset: true
 			});
 		}
 	});
@@ -414,17 +406,15 @@ console.log('LOADED '+self.options._id);
 		save : function () {
 			this.model.set(this.format($('.job-settings__form').serializeObject()), { silent : true });
 	    	if (this.model.isValid(true)) {
-//	    		if (this.model.hasChanged() || this.model.isNew()) {
 	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
 	    			this.$el.find('.button_type_save').attr('disabled', true);
-//	    		}
 	    	}
 		},
 		
 		render : function () {
 			Views.Modal.prototype.render.call(this);
 			this.$el.find('.modal-body').append(new Views.JobForm().el);
-console.log('===== STICKIT =====');
+
 			this.stickit();
 			this.$el.find('.form-control').trigger('stickit');
 			formState(this);

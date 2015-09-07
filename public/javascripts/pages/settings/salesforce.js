@@ -181,8 +181,8 @@ $(function() {
 		
 		save : function () {
 	    	if (this.model.isValid(true)) {
-	    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
-	    			this.$el.find('.button_type_save').attr('disabled', true);
+    			this.model.save(null, { success : this.successSaving, error : this.errorSaving });
+    			this.$el.find('.button_type_save').attr('disabled', true);
 	    	}
 		},
 		
