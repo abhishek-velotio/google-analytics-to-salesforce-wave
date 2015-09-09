@@ -26,7 +26,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
@@ -44,7 +43,7 @@ import com.ga2sa.security.PasswordManager;
  * @editor Sergey Legostaev 
  */
 @Entity
-@Table(name="users", uniqueConstraints=@UniqueConstraint(columnNames = { "username" }))
+@Table(name="users")
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u ORDER BY u.id ASC")
 public class User extends BaseEntity {
 
@@ -53,7 +52,7 @@ public class User extends BaseEntity {
 	@NotEmpty
 	@NotNull
 	@Email
-	@Column(name="email_address")
+	@Column(name="email_address", unique = true)
 	public String emailAddress;
 	
 	@NotEmpty
@@ -83,6 +82,7 @@ public class User extends BaseEntity {
 	
 	@NotEmpty
 	@NotNull
+	@Column(unique = true)
 	public String username;
 	
 	//bi-directional many-to-one association to Job

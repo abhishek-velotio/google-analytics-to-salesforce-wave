@@ -15,6 +15,9 @@ package controllers.settings;
 
 import java.util.Map;
 
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.ServerErrorMessage;
+
 import models.User;
 import models.UserGroup;
 import models.dao.UserDAO;
@@ -40,7 +43,8 @@ import com.ga2sa.validators.Validator;
 @Access(allowFor = UserGroup.ADMIN)
 public class UsersSettings extends Controller {
 	
-	private static final String USER_EXISTS = "User already exists";
+	private static final String USER_EXISTS = "User with same username already exists";
+	private static final String EMAIL_EXISTS = "User with same email address already exists";
 	
 	@Transactional
 	public static Result add() {
@@ -89,9 +93,22 @@ public class UsersSettings extends Controller {
 			try {
 				callback.invoke();
 				return ok(Json.toJson(object)).as(MimeTypes.JAVASCRIPT());
-			} catch (Throwable e) {
-				Logger.debug(USER_EXISTS);
-				validateResult.put("username", USER_EXISTS);
+			} catch (Throwable e) { 
+				
+				if (e.getCause() instanceof PSQLException) {
+					PSQLException e2 = (PSQLException)e.getCause(); 
+					ServerErrorMessage errorMessage = e2.getServerErrorMessage();
+					if (errorMessage.getConstraint().equals("users_email_address_key")) {
+						validateResult.put("emailAddress", EMAIL_EXISTS);
+					} else {
+						validateResult.put("username", USER_EXISTS);
+					}
+					Logger.debug(errorMessage.getDetail());
+					
+				} else {
+					e.printStackTrace();
+					validateResult.put("username", "Application error, see to log file");
+				}
 			}
 		}
 		return badRequest(Json.toJson(validateResult)).as(MimeTypes.JAVASCRIPT());
