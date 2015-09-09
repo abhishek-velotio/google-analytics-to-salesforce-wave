@@ -20,6 +20,10 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.ga2sa.security.PasswordManager;
+
+import models.User;
+
 /**
  * 
  * Class for validate object.
@@ -28,6 +32,8 @@ import javax.validation.Validation;
  *
  */
 public class Validator {
+	
+	private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).*)";
 	
 	/**
 	 * Common method for validate DB object
@@ -43,6 +49,16 @@ public class Validator {
 		} else {
 			Set<ConstraintViolation<T>> errors = Validation.buildDefaultValidatorFactory().getValidator().validate( object );
 			errors.forEach(error -> result.put(error.getPropertyPath().toString(), error.getMessage())); 
+			if (object instanceof User) {
+				User u = (User) object;
+				if (u.id == null || (u.id != null && u.password.equals(PasswordManager.PASSWORD_TMP) == false)) {
+					if (u.password != null && u.password.length() < 6) {
+						result.put("password", "Password must contain at least 6 characters");
+					} else if (u.password != null && u.password.matches(PASSWORD_PATTERN) == false) {
+						 result.put("password", "Password must include characters in UPPER/lowercase and numbers");
+					}
+				}
+			}
 		}
 		return result;
 	}

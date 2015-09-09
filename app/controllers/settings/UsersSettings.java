@@ -49,10 +49,10 @@ public class UsersSettings extends Controller {
 	@Transactional
 	public static Result add() {
 		User user = Json.fromJson(request().body().asJson(), User.class);
-		user.password = PasswordManager.encryptPassword(user.password);
 		return commonAction(user, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
+				user.password = PasswordManager.encryptPassword(user.password);
 				UserDAO.save(user);
 			}
 		});
@@ -69,19 +69,18 @@ public class UsersSettings extends Controller {
 	@Transactional
 	public static Result update(String profileId) {
 		User user = Json.fromJson(request().body().asJson(), User.class);
-		if (user.id != null) {
-			if (user.password.equals(PasswordManager.PASSWORD_TMP)) {
-				User sourceUser = UserDAO.getUserById(user.id);
-				user.password = sourceUser.password;
-			}
-			User currentUser  = ApplicationSecurity.getCurrentUser();
-			if (user.id.equals(currentUser.id)) user.isActive = true;
-		}
-		
+		User currentUser  = ApplicationSecurity.getCurrentUser();
+		if (user.id.equals(currentUser.id)) user.isActive = true;
 		
 		return commonAction(user, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
+				if (user.id != null) {
+					if (user.password.equals(PasswordManager.PASSWORD_TMP)) {
+						User sourceUser = UserDAO.getUserById(user.id);
+						user.password = sourceUser.password;
+					}
+				}
 				UserDAO.update(user);
 			}
 		});
