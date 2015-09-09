@@ -47,6 +47,11 @@ public class ApplicationSecurity {
 	
 	public static final String SESSION_ID_KEY = "session_id";
 	
+	/**
+	 * Method for generation of redirect url for Google Analytics profile.
+	 * 
+	 * @return url for GA profile
+	 */
 	public static String getRedirectURL() {
 		return routes.Authorization.googleSignIn().absoluteURL(Play.isProd(), Http.Context.current()._requestHeader());
 	}
