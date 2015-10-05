@@ -13,7 +13,6 @@
 package com.ga2sa.scheduler;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,16 +26,12 @@ import models.JobStatus;
 import models.dao.GoogleAnalyticsReportDAO;
 import models.dao.JobDAO;
 import play.Logger;
-import play.libs.Json;
 import akka.actor.UntypedActor;
 
 import com.ga2sa.google.Report;
 import com.ga2sa.salesforce.SalesforceDataManager;
 import com.google.common.io.Files;
 //import org.apache.commons.io.IOUtils;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Class for background job
@@ -64,52 +59,49 @@ public class BackgroundJob extends UntypedActor{
 			Logger.debug("Job started: " + job.getName());
 			
 			GoogleAnalyticsReport previousReport = GoogleAnalyticsReportDAO.getReportByJobId(job.getId());
-			
-			if (job.isRepeated()) {
-				
-				Integer duration = (job.getRepeatPeriod().equals("week")) ? 7 : 1;
-				Integer timeUnit = (job.getRepeatPeriod().equals("week") || job.getRepeatPeriod().equals("day") ) ? Calendar.DATE : Calendar.MONTH;
+			try {
+				if (job.isRepeated()) {
 					
-				if (job.needIncludePreviousData() && previousReport != null) {
+					Integer duration = (job.getRepeatPeriod().equals("week")) ? 7 : 1;
+					Integer timeUnit = (job.getRepeatPeriod().equals("week") || job.getRepeatPeriod().equals("day") ) ? Calendar.DATE : Calendar.MONTH;
+						
+					if (job.needIncludePreviousData() && previousReport != null) {
+						
+	//					JsonNode changedProperties = Json.parse(job.getGoogleAnalyticsProperties());
+						
+						Calendar startDateForReport = Calendar.getInstance();
+						Calendar endDateForReport = Calendar.getInstance();
+						
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+						
+						try {
+	//						endDateForReport.setTime(sdf.parse(changedProperties.get("endDate").asText()));
+							endDateForReport.setTime(sdf.parse(job.gaEndDate));
+							startDateForReport.setTime(endDateForReport.getTime());
+							startDateForReport.add(Calendar.DATE, 1);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						
+						endDateForReport.add(timeUnit, duration);
+						
+	//					ObjectNode node = (ObjectNode) changedProperties;
+	//					node.set("startDate", new TextNode(sdf.format(startDateForReport.getTime())));
+	//					node.set("endDate", new TextNode(sdf.format(endDateForReport.getTime())));
+						
+	//					job.setGoogleAnalyticsProperties(node.toString());
+						
+						job.gaStartDate = sdf.format(startDateForReport.getTime());
+						job.gaEndDate = sdf.format(endDateForReport.getTime());
+						csvReport = Report.getReport(job).addToCSV(previousReport.data);
 					
-//					JsonNode changedProperties = Json.parse(job.getGoogleAnalyticsProperties());
-					
-					Calendar startDateForReport = Calendar.getInstance();
-					Calendar endDateForReport = Calendar.getInstance();
-					
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-					
-					try {
-//						endDateForReport.setTime(sdf.parse(changedProperties.get("endDate").asText()));
-						endDateForReport.setTime(sdf.parse(job.gaEndDate));
-						startDateForReport.setTime(endDateForReport.getTime());
-						startDateForReport.add(Calendar.DATE, 1);
-					} catch (ParseException e) {
-						e.printStackTrace();
+					} else {
+						csvReport = Report.getReport(job).toCSV();
 					}
-					
-					endDateForReport.add(timeUnit, duration);
-					
-//					ObjectNode node = (ObjectNode) changedProperties;
-//					node.set("startDate", new TextNode(sdf.format(startDateForReport.getTime())));
-//					node.set("endDate", new TextNode(sdf.format(endDateForReport.getTime())));
-					
-//					job.setGoogleAnalyticsProperties(node.toString());
-					
-					job.gaStartDate = sdf.format(startDateForReport.getTime());
-					job.gaEndDate = sdf.format(endDateForReport.getTime());
-					csvReport = Report.getReport(job).addToCSV(previousReport.data);
-				
 				} else {
 					csvReport = Report.getReport(job).toCSV();
 				}
-			} else {
-				csvReport = Report.getReport(job).toCSV();
-			}
 			
-//			Logger.debug("QUERY   " + job.getGoogleAnalyticsProperties());
-			
-			try {
 				if (job.isRepeated() && job.needIncludePreviousData() && previousReport != null) {
 //					previousReport.setData(IOUtils.toByteArray(Files.asByteSource(csvReport).openStream()));
 					previousReport.data = Files.toByteArray(csvReport);
@@ -118,17 +110,10 @@ public class BackgroundJob extends UntypedActor{
 //					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.getId(), IOUtils.toByteArray(Files.asByteSource(csvReport).openStream())));
 					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.getId(), Files.toByteArray(csvReport)));
 				}
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				job.setStatus(JobStatus.FAIL);
-				job.setErrors(e1.getMessage());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			try {
+				
 				SalesforceDataManager.uploadData(job.getSalesforceAnalyticsProfile(), csvReport);
-				job.setStatus(JobStatus.OK);			
+				job.setStatus(JobStatus.OK);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				job.setStatus(JobStatus.FAIL);
@@ -142,8 +127,7 @@ public class BackgroundJob extends UntypedActor{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			csvReport.delete();
+			if (csvReport != null) csvReport.delete();
 		} else {
 			unhandled(obj);
 		}

@@ -51,6 +51,8 @@ public class GoogleAnalyticsDataManager {
 	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	
+	private static final Integer LIMIT_RECORDS = 1000;
+	
 	
 	private static Analytics getAnalytics(GoogleCredential credential) {
 		return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
@@ -151,7 +153,6 @@ public class GoogleAnalyticsDataManager {
 	 * @param Job
 	 * @return GA report
 	 * @throws IOException 
-	 * @throws Exception
 	 */
 	public static GaData getReport(GoogleCredential credential, Job job) throws IOException {
 		if (job != null) { 
@@ -166,7 +167,21 @@ public class GoogleAnalyticsDataManager {
 				query.setSort(job.gaSorting);
 			}
 			Logger.debug("QUERY    " + query.toString());
-			return query.execute();
+			GaData gaData = query.execute();
+			
+			if (gaData.getTotalResults() > LIMIT_RECORDS) {
+				Logger.debug("TOTAL RESULTS : " + gaData.getTotalResults());
+				List<List<String>> records = new ArrayList<List<String>>(gaData.getRows());
+				do {
+					gaData = query.setStartIndex(records.size() + 1).execute();
+					records.addAll(gaData.getRows());
+				} while (gaData.getNextLink() != null);
+					
+				Logger.debug("ROWS SIZE : " + records.size());
+				gaData.setRows(records);
+			}
+			
+			return gaData;
 		}
 		return null;
 	}
