@@ -29,7 +29,7 @@ $(function() {
 					.find('tbody')
 					.append(new Views.ProfileRow({ model: profile }).el);
 			}, this);
-			
+
 			return this;
 		}
 		
@@ -65,7 +65,6 @@ $(function() {
 		delete : function () {
 			this.model.collection.remove(this.model);
 			this.model.destroy();
-			this.$el.remove();
 			return this;
 		},
 		

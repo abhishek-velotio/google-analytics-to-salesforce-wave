@@ -114,12 +114,13 @@ $(function () {
 			_.bindAll(this, 'render');
 			
 			this.options = options;
-			this.collection.bind('add', this.render);
+			this.collection.bind('add remove reset', this.render);
 			this.$el.addClass(this.options.classes);
 			this.render();
 		},
 		
 		render : function () {
+console.log('- RENDER : '+this.collection.length);
 			this.$el.html(this.template({ headers : this.headers }));			
 			return this;
 		}

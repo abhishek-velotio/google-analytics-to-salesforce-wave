@@ -712,7 +712,7 @@ $(function () {
 			this.render();
 		},
 		refresh : function() {
-			Collections.Jobs.fetch()
+			Collections.Jobs.fetch({reset: true})
 		},
 		render : function () {
 			this.$el.html('<i class="fa fa-refresh"></i>');
@@ -757,7 +757,6 @@ $(function () {
 		delete : function () {
 			this.model.collection.remove(this.model);
 			this.model.destroy();
-			this.$el.remove();
 			return this;
 		},
 		
@@ -774,7 +773,7 @@ $(function () {
 		render : function () {
 			
 			Views.Table.prototype.render.call(this);
-			
+
 			this.collection.each(function (job) {
 				$(this.$el.find('thead th')[5]).addClass('table_align_center');
 
