@@ -29,9 +29,8 @@ public class SalesforceAnalyticsProfileDAO extends BaseDAO<SalesforceAnalyticsPr
 	
 	public static List<String> privateFields = Arrays.asList(
 			"password", 
-			"username", 
-			"applicationName"
-		);
+			"username"		
+	);
 	
 	public static List<SalesforceAnalyticsProfile> getProfiles() {
 		

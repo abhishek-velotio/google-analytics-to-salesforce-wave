@@ -9,13 +9,12 @@
 		<%= googleAnalyticsProfile.name %> 
 	</td>
 	<td class='job__sa-profile table__cell'> 
-		<%= salesforceAnalyticsProfile.name %> 
+		<%= salesforceAnalyticsProfile.name %> - <%=salesforceAnalyticsProfile.applicationName%> 
 	</td>
 	<td class='job__start-date table__cell'> 
 		<%= new Date(startTime).toLocaleString("en-US") %> 
 	</td>
-	<td class='job__status job__status_type_<%= status.toLowerCase() %> table__cell' 
-		<% if (status === 'FAIL' || status === 'CANCELED') { %> style='cursor : pointer;' title="<%= errors %>" onclick="alert(this.title == '' ? 'No error message' : this.title )" <% } %>">
+	<td class='job__status job__status_type_<%= status.toLowerCase() %> table__cell' style='cursor : pointer;' title="<%= messages %>" onclick="alert(this.title == '' ? 'No messages' : this.title )">
 	</td>
 	<td class='job__user table__cell'> 
 		<%= user %> 

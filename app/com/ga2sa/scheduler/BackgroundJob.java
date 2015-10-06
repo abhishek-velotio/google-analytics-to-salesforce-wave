@@ -25,11 +25,15 @@ import models.Job;
 import models.JobStatus;
 import models.dao.GoogleAnalyticsReportDAO;
 import models.dao.JobDAO;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import play.Logger;
 import akka.actor.UntypedActor;
 
 import com.ga2sa.google.Report;
 import com.ga2sa.salesforce.SalesforceDataManager;
+import com.google.api.services.analytics.model.GaData;
 import com.google.common.io.Files;
 //import org.apache.commons.io.IOUtils;
 
@@ -54,10 +58,10 @@ public class BackgroundJob extends UntypedActor{
 			
 			if (job.getStatus().equals(JobStatus.CANCELED)) return;
 			
+			Report report = null;
 			File csvReport = null;
-			
 			Logger.debug("Job started: " + job.getName());
-			
+
 			GoogleAnalyticsReport previousReport = GoogleAnalyticsReportDAO.getReportByJobId(job.getId());
 			try {
 				if (job.isRepeated()) {
@@ -67,57 +71,45 @@ public class BackgroundJob extends UntypedActor{
 						
 					if (job.needIncludePreviousData() && previousReport != null) {
 						
-	//					JsonNode changedProperties = Json.parse(job.getGoogleAnalyticsProperties());
-						
 						Calendar startDateForReport = Calendar.getInstance();
 						Calendar endDateForReport = Calendar.getInstance();
 						
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 						
-						try {
-	//						endDateForReport.setTime(sdf.parse(changedProperties.get("endDate").asText()));
-							endDateForReport.setTime(sdf.parse(job.gaEndDate));
-							startDateForReport.setTime(endDateForReport.getTime());
-							startDateForReport.add(Calendar.DATE, 1);
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
+						endDateForReport.setTime(sdf.parse(job.gaEndDate));
+						startDateForReport.setTime(endDateForReport.getTime());
+						startDateForReport.add(Calendar.DATE, 1);
 						
 						endDateForReport.add(timeUnit, duration);
-						
-	//					ObjectNode node = (ObjectNode) changedProperties;
-	//					node.set("startDate", new TextNode(sdf.format(startDateForReport.getTime())));
-	//					node.set("endDate", new TextNode(sdf.format(endDateForReport.getTime())));
-						
-	//					job.setGoogleAnalyticsProperties(node.toString());
-						
 						job.gaStartDate = sdf.format(startDateForReport.getTime());
 						job.gaEndDate = sdf.format(endDateForReport.getTime());
-						csvReport = Report.getReport(job).addToCSV(previousReport.data);
+						
+						report = Report.getReport(job);
+						csvReport = report.addToCSV(previousReport.data);
 					
-					} else {
-						csvReport = Report.getReport(job).toCSV();
-					}
-				} else {
-					csvReport = Report.getReport(job).toCSV();
+					} 
+				}
+				
+				if (csvReport == null)  {
+					report = Report.getReport(job);
+					csvReport = report.toCSV();
 				}
 			
 				if (job.isRepeated() && job.needIncludePreviousData() && previousReport != null) {
-//					previousReport.setData(IOUtils.toByteArray(Files.asByteSource(csvReport).openStream()));
 					previousReport.data = Files.toByteArray(csvReport);
 					GoogleAnalyticsReportDAO.update(previousReport);
 				} else {
-//					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.getId(), IOUtils.toByteArray(Files.asByteSource(csvReport).openStream())));
 					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.getId(), Files.toByteArray(csvReport)));
 				}
 				
 				SalesforceDataManager.uploadData(job.getSalesforceAnalyticsProfile(), csvReport);
 				job.setStatus(JobStatus.OK);
+				job.setMessages(report.getData().size() + " rows have been loaded.");
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 				job.setStatus(JobStatus.FAIL);
-				job.setErrors(e.getMessage());
+				job.setMessages( StringEscapeUtils.escapeHtml4(e.getMessage()));
 			}
 			
 			job.setEndTime(new Timestamp(new Date().getTime()));

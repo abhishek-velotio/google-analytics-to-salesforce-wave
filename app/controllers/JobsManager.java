@@ -64,6 +64,7 @@ public class JobsManager extends Controller {
 		job.setSalesforceAnalyticsProfile(SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("salesforceProfile").textValue())));
 		job.setUser(ApplicationSecurity.getCurrentUser());
 		job.setStatus(JobStatus.PENDING);
+		job.setMessages("Job has pending status");
 		if (job.getStartTime() == null) job.setStartTime(Timestamp.from(Instant.now()));
 		
 //		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
@@ -108,7 +109,7 @@ public class JobsManager extends Controller {
 			if (job != null) {
 				if (job.getStatus().equals(JobStatus.PENDING) == false) return badRequest("Job already completed.");
 				job.setStatus(JobStatus.CANCELED);
-				job.setErrors("Job has been canceled.");
+				job.setMessages("Job has been canceled.");
 				JobDAO.update(job);
 				return ok(Json.toJson(job));
 			}

@@ -29,6 +29,7 @@ import javax.validation.constraints.Pattern;
 import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import play.libs.Json;
@@ -65,7 +66,8 @@ public class Job extends BaseEntity {
 	@Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Not allow special characters, including spaces")
 	private String name;
 	
-	private String errors;
+	@Column(name = "errors")
+	private String messages;
 	
 	@Column(name="google_analytics_properties")
 	@Deprecated
@@ -164,12 +166,12 @@ public class Job extends BaseEntity {
 		this.endTime = endTime;
 	}
 
-	public String getErrors() {
-		return this.errors;
+	public String getMessages() {
+		return StringEscapeUtils.escapeHtml4(this.messages);
 	}
 
-	public void setErrors(String errors) {
-		this.errors = errors;
+	public void setMessages(String messages) {
+		this.messages = messages;
 	}
 
 	public String getGoogleAnalyticsProperties() {

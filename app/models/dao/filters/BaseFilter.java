@@ -28,7 +28,7 @@ public abstract class BaseFilter {
 	}
 	
 	public static final int DEFAULT_OFFSET = 0;
-	public static final int DEFAULT_COUNT = 10;
+	public static final int DEFAULT_COUNT = 1000;
 	public static final String DEFAULT_ORDER_BY = "created";
 	public static final OrderType DEFAULT_ORDER_TYPE = OrderType.desc;
 	
