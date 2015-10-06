@@ -13,7 +13,10 @@
 
 package models.dao;
 
+import javax.persistence.NoResultException;
+
 import models.GoogleAnalyticsReport;
+import play.Logger;
 import play.db.jpa.JPA;
 /**
  * DAO class for work with Google Analytics Report entity.
@@ -32,7 +35,11 @@ public class GoogleAnalyticsReportDAO extends BaseDAO<GoogleAnalyticsReport> {
 				}
 			});
 		} catch (Throwable e) {
-			e.printStackTrace();
+			if (e instanceof NoResultException) {
+				Logger.debug("Report not found for job id : " + id);
+			} else {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

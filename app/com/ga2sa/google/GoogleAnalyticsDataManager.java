@@ -173,6 +173,7 @@ public class GoogleAnalyticsDataManager {
 				Logger.debug("TOTAL RESULTS : " + gaData.getTotalResults());
 				List<List<String>> records = new ArrayList<List<String>>(gaData.getRows());
 				do {
+					Logger.debug(gaData.getSelfLink());
 					gaData = query.setStartIndex(records.size() + 1).execute();
 					records.addAll(gaData.getRows());
 				} while (gaData.getNextLink() != null);
