@@ -86,16 +86,20 @@ $(function () {
 				url : '/google/profile/'+ profileId + '/accounts',
 				reset: true,
 				success : function () {
-					self.change(profileId);
+					self.changeDependSelects(profileId);
 				}
 			});
 		},
 		
-		change : function (profileId) {
+		changeDependSelects : function(profileId) {
 			var dependSelects = this.options.dependSelects;
 			_.each(dependSelects, function (select) {
 				select.trigger(this.options._id + '.change', profileId, this.$el.find('select').val());
 			}, this);
+		},
+		
+		change : function () {
+			this.changeDependSelects($('#googleProfile').val());
 		}
 		
 	});
@@ -113,16 +117,20 @@ $(function () {
 				url : '/google/profile/'+ profileId + '/properties/' + accountId,
 				reset: true,
 				success : function () {
-					self.change(profileId, accountId);
+					self.changeDependSelects(profileId, accountId);
 				}
 			});
 		},
-
-		change : function (profileId, accountId) {
+		
+		changeDependSelects : function (profileId, accountId) {
 			var dependSelects = this.options.dependSelects;
 			_.each(dependSelects, function (select) {
 				select.trigger(this.options._id + '.change',  profileId, accountId, this.$el.find('select').val());
 			}, this);
+		},
+
+		change : function () {
+			this.changeDependSelects($('#googleProfile').val(), $('#googleAnalyticsProperties_account').val());
 		}
 	});
 	
@@ -732,6 +740,7 @@ $(function () {
 		model : Models.Job,
 		
 		events : {
+			'click .job__edit-btn' 		 : 'edit', 
 			'click .job__cancel-btn' 		: 'cancel',
 			'click .job__delete-btn' 		: 'delete'
 		},
@@ -741,6 +750,13 @@ $(function () {
 		initialize : function () {
 			_.bindAll(this, 'render');
 			this.render();
+		},
+		
+		edit : function() {
+			//SLegostaev, this functional does not completed yet
+			var popup = new Views.JobPopup({ title 	: 'Edit job', model : this.model });
+			popup.show();
+			return this;
 		},
 		
 		cancel : function() {
