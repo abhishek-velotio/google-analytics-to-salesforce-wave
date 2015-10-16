@@ -17,6 +17,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -39,11 +41,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class SalesforceAnalyticsProfile extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-//	@Id
-//	@SequenceGenerator(name="SALESFORCE_ANALYTICS_PROFILES_ID_GENERATOR", sequenceName="SALESFORCE_ANALYTICS_PROFILES_ID_SEQ")
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SALESFORCE_ANALYTICS_PROFILES_ID_GENERATOR")
-//	private Integer id;
-	
 	@NotNull
 	@NotEmpty
 	@Column(name="application_name")
@@ -62,6 +59,10 @@ public class SalesforceAnalyticsProfile extends BaseEntity {
 	@NotEmpty
 	private String name;
 	
+	@Column(name = "salesforce_account_type")
+	@Enumerated(EnumType.STRING)
+	public SFAccountType accountType;
+	
 	//bi-directional many-to-one association to Job
 	@JsonIgnore
 	@OneToMany(mappedBy="salesforceAnalyticsProfile")
@@ -70,13 +71,6 @@ public class SalesforceAnalyticsProfile extends BaseEntity {
 	public SalesforceAnalyticsProfile() {
 	}
 
-//	public Integer getId() {
-//		return this.id;
-//	}
-//
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
 
 	public String getApplicationName() {
 		return this.applicationName;

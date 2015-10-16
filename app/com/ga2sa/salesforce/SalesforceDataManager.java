@@ -17,6 +17,8 @@ import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
 
+import play.Play;
+import models.SFAccountType;
 import models.SalesforceAnalyticsProfile;
 
 import com.google.common.io.Files;
@@ -36,20 +38,22 @@ public class SalesforceDataManager {
 	
 	public static void uploadData(SalesforceAnalyticsProfile profile, File report) throws Exception {
 				
-		String dataset = Files.getNameWithoutExtension(report.getName());
-	    String datasetLabel = null;
-	    String app = profile.getApplicationName();
-	    String username = profile.getUsername();
-	    String password = profile.getPassword();
-	    String token = null;
-	    String sessionId = null;
-	    String endpoint = null;
+		final String dataset = Files.getNameWithoutExtension(report.getName());
+		final String datasetLabel = null;
+	    final String app = profile.getApplicationName();
+	    final String username = profile.getUsername();
+	    final String password = profile.getPassword();
+	    final String token = null;
+	    final String sessionId = null;
+	    final String endpoint = profile.accountType == null || profile.accountType.equals(SFAccountType.PRODUCTION) 
+	    		? null : Play.application().configuration().getString("salesforce_endpoint");
 	    //String action = null;
-	    String inputFile = report.getAbsolutePath();
-	    String uploadFormat = "csv";
-	    CodingErrorAction codingErrorAction = CodingErrorAction.REPORT;   
-	    Charset fileCharset = Charset.forName("UTF-8");
-	    String Operation = "Overwrite";
+	    
+	    final String inputFile = report.getAbsolutePath();
+	    final String uploadFormat = "csv";
+	    final CodingErrorAction codingErrorAction = CodingErrorAction.REPORT;   
+	    final Charset fileCharset = Charset.forName("UTF-8");
+	    final String Operation = "Overwrite";
 	    boolean useBulkAPI = false;
 	    
 	    try {

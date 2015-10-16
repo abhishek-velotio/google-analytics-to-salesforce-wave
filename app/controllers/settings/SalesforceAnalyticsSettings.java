@@ -15,6 +15,7 @@ package controllers.settings;
 
 import java.util.Map;
 
+import models.SFAccountType;
 import models.SalesforceAnalyticsProfile;
 import models.UserGroup;
 import models.dao.SalesforceAnalyticsProfileDAO;
@@ -26,6 +27,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.MimeTypes;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ga2sa.security.Access;
 import com.ga2sa.validators.Validator;
 /**
@@ -69,10 +71,12 @@ public class SalesforceAnalyticsSettings extends Controller {
 	}
 	
 	private static Result commonAction(SalesforceAnalyticsProfile object, Callback0 callback) {
-		object.setName(request().body().asJson().get("name").textValue());
-		object.setUsername(request().body().asJson().get("username").textValue());
-		object.setPassword(request().body().asJson().get("password").textValue());
-		object.setApplicationName(request().body().asJson().get("applicationName").textValue());
+		JsonNode body = request().body().asJson();
+		object.setName(body.get("name").textValue());
+		object.setUsername(body.get("username").textValue());
+		object.setPassword(body.get("password").textValue());
+		object.setApplicationName(body.get("applicationName").textValue());
+		object.accountType = SFAccountType.valueOf(SFAccountType.class, body.get("accountType").textValue());
 		Map<String, String> validateResult = Validator.validate(object);
 		if (validateResult.isEmpty()) {
 			try {

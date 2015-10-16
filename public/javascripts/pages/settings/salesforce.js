@@ -147,6 +147,13 @@ $(function() {
 					validate: true
 				}
 			},
+			'[name=accountType]': {
+				observe: 'accountType',
+				setOptions: {
+					silent: true,
+					validate: true
+				}
+			},
 			'[name=password]': {
 				observe: 'password',
 				setOptions: {
