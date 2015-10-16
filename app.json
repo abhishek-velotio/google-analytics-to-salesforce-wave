@@ -5,5 +5,6 @@
   "repository": "https://github.com/Cervello/google-analytics-to-salesforce-wave",
   "keywords": ["salesforce", "google analytics", "playframework", "heroku", "cervello", "wave", "analytics cloud"],
   "addons": ["heroku-postgresql"],
+  "env": { "SF_ENDPOINT" : "https://test.salesforce.com/services/Soap/u/31.0" },
   "success_url": "/signin"
 }
