@@ -63,7 +63,7 @@ $(function() {
 		},
 		
 		edit : function () {
-			var popup = new Views.ProfileSettings({ model : this.model, title : 'Edit profile'});
+			var popup = new Views.ProfileSettings({ model : this.model.clone(), title : 'Edit profile'});
 			popup.show();
 		},
 		
@@ -175,56 +175,56 @@ $(function() {
 			'[name=name]': {
 				observe: 'name',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=authProviderX509CertUrl]': {
 				observe: 'authProviderX509CertUrl',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=authUri]': {
 				observe: 'authUri',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=clientEmail]': {
 				observe: 'clientEmail',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=clientId]': {
 				observe: 'clientId',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=clientSecret]': {
 				observe: 'clientSecret',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=clientX509CertUrl]': {
 				observe: 'clientX509CertUrl',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=tokenUri]': {
 				observe: 'tokenUri',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			}
@@ -238,7 +238,7 @@ $(function() {
 			}).el);
 
 	    	this.model.trigger('change');
-			Collections.Profiles.add(this.model);
+			Collections.Profiles.add(this.model, {merge: true});
 			Views.Modal.prototype.save.call(this);
 		},
 		
@@ -261,8 +261,13 @@ $(function() {
 		
 		render : function () {
 			Views.Modal.prototype.render.call(this);
-
 			this.$el.find('.modal-body').append(new Views.GoogleProfileForm({ model : this.model }).el);
+
+			var view = this;
+			this.model.on('change', function(){
+console.log('------------- MODEL CHANGED --------------');
+				formState(view);
+			});
 			this.stickit();
 			formState(this);
 			return this;

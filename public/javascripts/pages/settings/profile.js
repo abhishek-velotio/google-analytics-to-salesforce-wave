@@ -94,6 +94,12 @@ $(function () {
 		
 		render : function () {
 			this.$el.html(this.template(this.model.toJSON()));
+
+			var view = this;
+			this.model.on('change', function(){
+console.log('------------- MODEL CHANGED --------------');
+				formState(view);
+			});
 			this.stickit();
 			formState(this);
 			return this;

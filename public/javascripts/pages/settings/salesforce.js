@@ -60,7 +60,7 @@ $(function() {
 		},
 		
 		edit : function () {
-			var popup = new Views.ProfileSettings({ model : this.model, title : 'Edit profile' });
+			var popup = new Views.ProfileSettings({ model : this.model.clone(), title : 'Edit profile' });
 			popup.show();
 		},
 		
@@ -136,36 +136,37 @@ $(function() {
 			'[name=name]': {
 				observe: 'name',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
-				}
+				},
+				updateView: false
 			},
 			'[name=username]': {
 				observe: 'username',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=accountType]': {
 				observe: 'accountType',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				},
-				events: ['change', 'click']
+				events: ['change'/*, 'click'*/]
 			},
 			'[name=password]': {
 				observe: 'password',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=applicationName]': {
 				observe: 'applicationName',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			}
@@ -179,7 +180,7 @@ $(function() {
 			}).el);
 
 	    	this.model.trigger('change');
-			Collections.Profiles.add(this.model);
+			Collections.Profiles.add(this.model, {merge: true});
 			Views.Modal.prototype.save.call(this);
 		},
 		
@@ -201,14 +202,14 @@ $(function() {
 		
 		render : function () {
 			Views.Modal.prototype.render.call(this);
-
-var view = this;
-this.model.on('change', function(){
-	console.log('------------- MODEL CHANGED --------------');
-	formState(view);
-});
-
 			this.$el.find('.modal-body').append(new Views.SalesforceProfileForm({ model : this.model }).el);
+
+
+			var view = this;
+			this.model.on('change', function(){
+console.log('------------- MODEL CHANGED --------------');
+				formState(view);
+			});
 			this.stickit();
 			formState(this);
 			return this;

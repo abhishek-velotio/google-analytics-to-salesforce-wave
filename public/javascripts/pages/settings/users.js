@@ -57,7 +57,7 @@ $(function() {
 		},
 		
 		edit : function () {
-			var popup = new Views.ProfileSettings({ model : this.model, title : "Edit user"});
+			var popup = new Views.ProfileSettings({ model : this.model.clone(), title : "Edit user"});
 			popup.show();
 			return this;
 		},
@@ -134,49 +134,49 @@ $(function() {
 			'[name=username]': {
 				observe: 'username',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=emailAddress]': {
 				observe: 'emailAddress',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=firstName]': {
 				observe: 'firstName',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=lastName]': {
 				observe: 'lastName',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=password]': {
 				observe: 'password',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=role]': {
 				observe: 'role',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				}
 			},
 			'[name=isActive]': {
 				observe: 'isActive',
 				setOptions: {
-					silent: true,
+//					silent: true,
 					validate: true
 				},
 				onSet: function(val, options) {
@@ -193,7 +193,7 @@ $(function() {
 			}).el);
 
 			this.model.trigger('change');
-			Collections.Users.add(this.model);
+			Collections.Users.add(this.model, {merge: true});
 			Views.Modal.prototype.save.call(this);
 		},
 		
@@ -215,8 +215,13 @@ $(function() {
 		
 		render : function () {
 			Views.Modal.prototype.render.call(this);
-
 			this.$el.find('.modal-body').append(new Views.UserProfileForm({ model : this.model }).el);
+
+			var view = this;
+			this.model.on('change', function(){
+console.log('------------- MODEL CHANGED --------------');
+				formState(view);
+			});
 			this.stickit();
 			formState(this);
 			return this;

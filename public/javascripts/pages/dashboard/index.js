@@ -323,36 +323,39 @@ $(function () {
 					return $(event.target).val();
 				}
 			},
-			'[name=googleAnalyticsProperties_dimensions]': {
-				observe: 'googleAnalyticsProperties_dimensions',
-				setOptions: {
-					validate: true
-				},
-				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
-				getVal: function($el, event, options) {
-					return $(event.target).val();
-				}
-			},
 			'[name=googleAnalyticsProperties_metrics]': {
 				observe: 'googleAnalyticsProperties_metrics',
 				setOptions: {
 					validate: true
 				},
-				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				events: ['change', 'prechange', 'rendered', 'stickit'],
 				getVal: function($el, event, options) {
+					if (event.type == 'change') $(event.target).trigger('prechange');
+console.log(event.type);
+					return $(event.target).val();
+				}
+			},
+			'[name=googleAnalyticsProperties_dimensions]': {
+				observe: 'googleAnalyticsProperties_dimensions',
+				setOptions: {
+					validate: true
+				},
+				events: ['change', 'prechange', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					if (event.type == 'change') $(event.target).trigger('prechange');
 					return $(event.target).val();
 				}
 			},
 			'[name=googleAnalyticsProperties_startDate]': {
 				observe: 'googleAnalyticsProperties_startDate',
-				events: ['keyup', 'change', 'cut', 'paste', 'dp.change', 'blur'],
+				events: ['keyup', 'change', 'cut', 'paste', 'dp.change', 'dp.hide', 'blur'],
 				setOptions: {
 					validate: true
 				}
 			},
 			'[name=googleAnalyticsProperties_endDate]': {
 				observe: 'googleAnalyticsProperties_endDate',
-				events: ['keyup', 'change', 'cut', 'paste', 'dp.change', 'blur'],
+				events: ['keyup', 'change', 'cut', 'paste', 'dp.change', 'dp.hide', 'blur'],
 				setOptions: {
 					validate: true
 				}
@@ -423,6 +426,11 @@ $(function () {
 			Views.Modal.prototype.render.call(this);
 			this.$el.find('.modal-body').append(new Views.JobForm().el);
 
+			var view = this;
+			this.model.on('change', function(){
+console.log('------------- MODEL CHANGED --------------');
+				formState(view);
+			});
 			this.stickit();
 			this.$el.find('.form-control').trigger('stickit');
 			formState(this);

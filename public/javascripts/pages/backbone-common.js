@@ -120,7 +120,6 @@ $(function () {
 		},
 		
 		render : function () {
-console.log('- RENDER : '+this.collection.length);
 			this.$el.html(this.template({ headers : this.headers }));			
 			return this;
 		}
@@ -231,15 +230,19 @@ _.extend(Backbone.Validation.validators, {
 
 _.extend(Backbone.Validation.callbacks, {
     valid: function (view, attr, selector) {
+//console.dir(view.model);
+console.log('VALID: '+attr);
 		if (view.model.hasChanged(attr)) {
 			hideError(view.$('[name="' + attr + '"]'));
-			formState(view);
+//			formState(view);
 		}
     },
     invalid: function (view, attr, error, selector) {
+//console.dir(view.model);
+console.log('INVALID: '+attr);
 		if (view.model.hasChanged(attr)) {
 			showError(view.$('[name="' + attr + '"]'), error);
-			formState(view);
+//			formState(view);
 		}
 	}
 });
