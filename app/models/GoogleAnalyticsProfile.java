@@ -76,10 +76,6 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 	@NotEmpty
 	private String name;
 	
-//	@NotNull
-//	@Column(name="redirect_uris")
-//	public String redirectUris;
-	
 	@NotNull
 	@NotEmpty
 	@URL

@@ -14,7 +14,6 @@ package com.ga2sa.scheduler;
 
 import java.io.File;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +32,6 @@ import akka.actor.UntypedActor;
 
 import com.ga2sa.google.Report;
 import com.ga2sa.salesforce.SalesforceDataManager;
-import com.google.api.services.analytics.model.GaData;
 import com.google.common.io.Files;
 //import org.apache.commons.io.IOUtils;
 
