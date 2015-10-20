@@ -36,7 +36,8 @@ libraryDependencies ++= Seq(
   "org.apache.httpcomponents" % "httpclient" 						% "4.5",
   "org.apache.httpcomponents" % "httpmime" 							% "4.5",
   "net.sf.supercsv" 		% "super-csv" 							% "2.3.1",
-  "com.ibm.icu" 			% "icu4j" 								% "55.1"
+  "com.ibm.icu" 			% "icu4j" 								% "55.1",
+  "com.google.code.externalsortinginjava" % "externalsortinginjava" % "0.1.9"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)

@@ -39,7 +39,7 @@ public class SalesforceDataManager {
 	public static void uploadData(SalesforceAnalyticsProfile profile, File report) throws Exception {
 				
 		final String dataset = Files.getNameWithoutExtension(report.getName());
-		final String datasetLabel = null;
+		final String datasetLabel = dataset + "-Label";
 	    final String app = profile.getApplicationName();
 	    final String username = profile.getUsername();
 	    final String password = profile.getPassword();
