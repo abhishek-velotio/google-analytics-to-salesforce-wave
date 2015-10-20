@@ -3,6 +3,8 @@
 }
 .form-group.no-label label { display:none; }
 
+label[for] { cursor:pointer; }
+
 .panel {
 	clear:both;
 	margin:0 15px;
@@ -15,3 +17,13 @@
 	padding:6px 15px;
 	font-weight:bold;
 }
+
+
+.radio-group {
+	padding:2px 5px;
+}
+.radio-group label {
+	font-weight:normal;
+	padding-left:5px;
+}
+.radio-group label + input[type="radio"] { margin-left:20px; }

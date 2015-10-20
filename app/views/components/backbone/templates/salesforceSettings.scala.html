@@ -18,9 +18,13 @@
     	<input type="text" class="form-control" id="username" name="username" placeholder="Enter salesforce username" value="<%= username %>">
   	</div>
 	<div class="form-group">
-    	<label for="accountType">Salesforce account type</label>
-    	<input type="radio" id="accountType" name="accountType" value="PRODUCTION" <% if (accountType == 'PRODUCTION' || accountType == null) { %> checked <% } %> >Production
-		<input type="radio" id="accountType" name="accountType" value="SANDBOX" <% if (accountType == 'SANDBOX') { %> checked <% } %>>Sandbox
+    	<label>Salesforce account type</label>
+		<div class="radio-group">
+    	<input type="radio" id="accountType-production" name="accountType" value="PRODUCTION" <% if (accountType == 'PRODUCTION' || accountType == null) { %> checked <% } %> >
+		<label for="accountType-production">Production</label>
+		<input type="radio" id="accountType-sandbox" name="accountType" value="SANDBOX" <% if (accountType == 'SANDBOX') { %> checked <% } %>>
+		<label for="accountType-sandbox">Sandbox</label>
+		</div>
   	</div>
 	<div class="form-group">
     	<label for="password">Salesforce password</label>

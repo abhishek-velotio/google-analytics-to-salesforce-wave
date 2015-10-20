@@ -12,25 +12,6 @@
 @content-bgcolor:#fafafa;
 
 @btn-color:#08afd1;
-.app-title {
-	display:inline-block;
-	font-family:"Open Sans",helvetica,sans serif;
-	font-size:22px;
-	color:#536e77;
-}
-.app-title i {
-	font-style: normal;
-	color:#3ab0c8;
-	margin:0 2px;
-}
-
-
-@media only screen and (max-width : 670px) {
-	.app-title {
-		font-size:16px;
-	}
-}
-
 .button {}
 
 .button_type_add {
@@ -56,22 +37,23 @@
 	border-color: darken(@btn-color, 5%);
 }
 
-.form-group .select2{
-	width: 100% !important;
+.app-title {
+	display:inline-block;
+	font-family:"Open Sans",helvetica,sans serif;
+	font-size:22px;
+	color:#536e77;
 }
-.form-group.no-label label { display:none; }
+.app-title i {
+	font-style: normal;
+	color:#3ab0c8;
+	margin:0 2px;
+}
 
-.panel {
-	clear:both;
-	margin:0 15px;
-}
-.panel + .panel {
-	margin-top:10px;
-}
-.panel-heading {
-	margin-bottom:15px;
-	padding:6px 15px;
-	font-weight:bold;
+
+@media only screen and (max-width : 670px) {
+	.app-title {
+		font-size:16px;
+	}
 }
 
 .content {
@@ -87,6 +69,35 @@
 	padding-bottom: 10px;
 	font-size: 24px;
 }
+.form-group .select2{
+	width: 100% !important;
+}
+.form-group.no-label label { display:none; }
+
+label[for] { cursor:pointer; }
+
+.panel {
+	clear:both;
+	margin:0 15px;
+}
+.panel + .panel {
+	margin-top:10px;
+}
+.panel-heading {
+	margin-bottom:15px;
+	padding:6px 15px;
+	font-weight:bold;
+}
+
+
+.radio-group {
+	padding:2px 5px;
+}
+.radio-group label {
+	font-weight:normal;
+	padding-left:5px;
+}
+.radio-group label + input[type="radio"] { margin-left:20px; }
 .signin-header {
 	background-color:#fff;
 	border-bottom:1px solid #d3dddf;
@@ -171,15 +182,15 @@
 	content: "\e600";
 }
 
+.has-warning .select2-selection{
+	border-color: #8a6d3b !important;
+}
 .header {
 	width: 100%;
 	position: absolute;
 	top:0;
 	left:0;
 	z-index: 1;
-}
-.has-warning .select2-selection{
-	border-color: #8a6d3b !important;
 }
 .job__status:after {
 	content: "";

@@ -152,7 +152,8 @@ $(function() {
 				setOptions: {
 					silent: true,
 					validate: true
-				}
+				},
+				events: ['change', 'click']
 			},
 			'[name=password]': {
 				observe: 'password',
@@ -200,6 +201,12 @@ $(function() {
 		
 		render : function () {
 			Views.Modal.prototype.render.call(this);
+
+var view = this;
+this.model.on('change', function(){
+	console.log('------------- MODEL CHANGED --------------');
+	formState(view);
+});
 
 			this.$el.find('.modal-body').append(new Views.SalesforceProfileForm({ model : this.model }).el);
 			this.stickit();
