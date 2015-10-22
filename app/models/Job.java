@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -73,6 +74,14 @@ public class Job extends BaseEntity {
 	@Deprecated
 	@JsonIgnore
 	private String googleAnalyticsProperties;
+	
+	@Column(name="ga_account")
+	@JsonProperty(value = "googleAnalyticsProperties_account")
+	public String gaAccount;
+	
+	@Column(name="ga_property")
+	@JsonProperty(value = "googleAnalyticsProperties_property")
+	public String gaProperty;
 	
 	@Column(name="ga_profile")
 	@JsonProperty(value = "googleAnalyticsProperties_profile")
@@ -125,19 +134,33 @@ public class Job extends BaseEntity {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="google_analytics_profile_id")
-	@JsonIgnore
 	private GoogleAnalyticsProfile googleAnalyticsProfile;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="salesforce_analytics_profile_id")
-	@JsonIgnore
 	private SalesforceAnalyticsProfile salesforceAnalyticsProfile;
+	
+	//this field need for binding data from/to json
+	@Transient
+	private String googleProfile;
+	
+	//this field need for binding data from/to json
+	@Transient
+	public String salesforceProfile;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="executed_by")
 	private User user;
+
+	public String getGoogleProfile() {
+		return googleAnalyticsProfile == null ? null : String.valueOf(googleAnalyticsProfile.getId());
+	}
+
+	public String getSalesforceProfile() {
+		return salesforceAnalyticsProfile == null ? null : String.valueOf(salesforceAnalyticsProfile.id);
+	}
 
 	public Job() {
 	}

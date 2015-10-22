@@ -20,6 +20,7 @@
 		<%= user %> 
 	</td>
 	<td class='job__action table__cell table__cell_actions1'> 
+		<button class='job__edit-btn btn btn-sm btn-edit'>Edit</button>
 		<% if (status === 'PENDING') { %> <button class='job__cancel-btn btn btn-sm btn-info'>Cancel</button> <% } %>
 		<% if (status !== 'PENDING') { %> <button class='job__delete-btn btn btn-sm btn-danger'>Delete</button>  <% } %>
 	</td>	
