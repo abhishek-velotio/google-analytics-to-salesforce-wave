@@ -9,6 +9,7 @@
     </div>
     <div class="collapse navbar-collapse" id="top-menu">
       <ul class="nav navbar-nav">
+        <li @if(activePage == "dataset") { class="active" }><a href="@routes.Dataset.index">Dataset</a></li>
         <li @if(activePage == "dashboard") { class="active" }><a href="@routes.Dashboard.index">Dashboard</a></li>
         <li @if(activePage == "settings")  { class="active" }><a href="@routes.Settings.index">Settings</a></li>
       </ul>

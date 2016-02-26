@@ -20,6 +20,7 @@ import models.SalesforceAnalyticsProfile;
 import models.UserGroup;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import play.Logger;
+import play.Play;
 import play.db.jpa.Transactional;
 import play.libs.F.Callback0;
 import play.libs.Json;
@@ -30,6 +31,8 @@ import play.twirl.api.MimeTypes;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ga2sa.security.Access;
 import com.ga2sa.validators.Validator;
+import com.sforce.dataset.util.DatasetUtils;
+import com.sforce.soap.partner.PartnerConnection;
 /**
  * 
  * Controller class for manage Salesforce profiles.
@@ -48,6 +51,10 @@ public class SalesforceAnalyticsSettings extends Controller {
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
+//				String endpoint = object.accountType == null || object.accountType.equals(SFAccountType.PRODUCTION) 
+//			    		? null : Play.application().configuration().getString("salesforce_endpoint");
+//				PartnerConnection connection = DatasetUtils.login(0, object.getUsername(), object.getPassword(), null, endpoint, null, false);
+//				System.out.println("true");
 				SalesforceAnalyticsProfileDAO.save(object);
 			}
 		});
@@ -65,6 +72,10 @@ public class SalesforceAnalyticsSettings extends Controller {
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
+//				String endpoint = object.accountType == null || object.accountType.equals(SFAccountType.PRODUCTION) 
+//			    		? null : Play.application().configuration().getString("salesforce_endpoint");
+//				PartnerConnection connection = DatasetUtils.login(0, object.getUsername(), object.getPassword(), null, endpoint, null, false);
+//				System.out.println("true");
 				SalesforceAnalyticsProfileDAO.update(object);
 			}
 		});

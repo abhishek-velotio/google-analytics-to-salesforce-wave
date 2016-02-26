@@ -32,6 +32,6 @@ public class Application extends Controller {
 	 * @return
 	 */
 	public static Result index() {
-		return redirect(routes.Dashboard.index());
+		return redirect(routes.Dataset.index());
 	}
 }

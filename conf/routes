@@ -18,6 +18,10 @@ GET		/signout									controllers.Authorization.ga2saSignOut()
 
 GET		/dashboard									controllers.Dashboard.index()
 
+# Dataset
+
+GET		/dataset									controllers.Dataset.index()
+
 # Job
 
 POST	/job										controllers.JobsManager.create()

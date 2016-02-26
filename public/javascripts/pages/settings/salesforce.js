@@ -207,7 +207,6 @@ $(function() {
 
 			var view = this;
 			this.model.on('change', function(){
-console.log('------------- MODEL CHANGED --------------');
 				formState(view);
 			});
 			this.stickit();
