@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import models.DatasetJob;
 import models.GoogleAnalyticsReport;
 import models.Job;
 import models.JobStatus;
@@ -52,7 +53,7 @@ public class BackgroundJob extends UntypedActor{
 	public void onReceive(Object obj) throws Exception {
 		if (obj instanceof Job) {
 			
-			Job job = JobDAO.findById(((Job) obj).id);
+			DatasetJob job = JobDAO.findById(((Job) obj).id);
 			
 			if (job.getStatus().equals(JobStatus.CANCELED)) return;
 			
@@ -60,7 +61,7 @@ public class BackgroundJob extends UntypedActor{
 			File csvReport = null;
 			Logger.debug("Job started: " + job.getName());
 
-			GoogleAnalyticsReport previousReport = GoogleAnalyticsReportDAO.getReportByJobId(job.getId());
+			GoogleAnalyticsReport previousReport = GoogleAnalyticsReportDAO.getReportByJobId(job.id);
 			try {
 				if (job.isRepeated()) {
 					
@@ -97,7 +98,7 @@ public class BackgroundJob extends UntypedActor{
 					previousReport.data = Files.toByteArray(csvReport);
 					GoogleAnalyticsReportDAO.update(previousReport);
 				} else {
-					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.getId(), Files.toByteArray(csvReport)));
+					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.id, Files.toByteArray(csvReport)));
 				}
 				
 				SalesforceDataManager.uploadData(job.getSalesforceAnalyticsProfile(), csvReport);

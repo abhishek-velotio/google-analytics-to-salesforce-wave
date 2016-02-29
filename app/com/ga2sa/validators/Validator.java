@@ -22,7 +22,10 @@ import javax.validation.Validation;
 
 import com.ga2sa.security.PasswordManager;
 
+import models.Job;
 import models.User;
+import models.dao.BaseDAO;
+import models.dao.JobDAO;
 
 /**
  * 
@@ -58,6 +61,10 @@ public class Validator {
 						 result.put("password", "Password must include characters in UPPER/lowercase and numbers");
 					}
 				}
+			} else if (object instanceof Job) {
+				//String name = ((Job) object).getName();
+				//Class<T> clazz = (Class<T>) ((T) object).getClass();
+				//if (BaseDAO.isExist(clazz, name)) result.put("name", "Job already exists");
 			}
 		}
 		return result;

@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -62,11 +63,16 @@ public class SalesforceAnalyticsProfile extends BaseEntity {
 	@Column(name = "salesforce_account_type")
 	@Enumerated(EnumType.STRING)
 	public SFAccountType accountType;
+
+	//bi-directional many-to-one association to Job
+	@JsonIgnore
+	@OneToMany(mappedBy="salesforceAnalyticsProfile", fetch = FetchType.LAZY)
+	public List<DatasetJob> datasetJobs;
 	
 	//bi-directional many-to-one association to Job
 	@JsonIgnore
-	@OneToMany(mappedBy="salesforceAnalyticsProfile")
-	private List<Job> jobs;
+	@OneToMany(mappedBy="salesforceAnalyticsProfile", fetch = FetchType.LAZY)
+	public List<DashboardJob> dashboardJobs;
 
 	public SalesforceAnalyticsProfile() {
 	}
@@ -104,26 +110,26 @@ public class SalesforceAnalyticsProfile extends BaseEntity {
 		this.name = name;
 	}
 	
-	public List<Job> getJobs() {
-		return this.jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
-
-	public Job addJob(Job job) {
-		getJobs().add(job);
-		job.setSalesforceAnalyticsProfile(this);
-
-		return job;
-	}
-
-	public Job removeJob(Job job) {
-		getJobs().remove(job);
-		job.setSalesforceAnalyticsProfile(null);
-
-		return job;
-	}
+//	public List<Job> getJobs() {
+//		return this.jobs;
+//	}
+//
+//	public void setJobs(List<Job> jobs) {
+//		this.jobs = jobs;
+//	}
+//
+//	public Job addJob(Job job) {
+//		getJobs().add(job);
+//		job.setSalesforceAnalyticsProfile(this);
+//
+//		return job;
+//	}
+//
+//	public Job removeJob(Job job) {
+//		getJobs().remove(job);
+//		job.setSalesforceAnalyticsProfile(null);
+//
+//		return job;
+//	}
 
 }

@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -93,20 +94,11 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 	@Column(name="refresh_token")
 	private String refreshToken;
 	
-	//bi-directional many-to-one association to Job
 	@JsonIgnore
-	@OneToMany(mappedBy="googleAnalyticsProfile")
-	private List<Job> jobs;
+	@OneToMany(mappedBy="googleAnalyticsProfile", fetch = FetchType.LAZY)
+	public List<DatasetJob> datasetJobs;
 
 	public GoogleAnalyticsProfile() {
-	}
-
-	public Long getId() {
-		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getAuthProviderX509CertUrl() {
@@ -205,26 +197,23 @@ public class GoogleAnalyticsProfile extends BaseEntity {
 		this.refreshToken = refreshToken;
 	}
 	
-	public List<Job> getJobs() {
-		return this.jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
-
-	public Job addJob(Job job) {
-		getJobs().add(job);
-		job.setGoogleAnalyticsProfile(this);
-
-		return job;
-	}
-
-	public Job removeJob(Job job) {
-		getJobs().remove(job);
-		job.setGoogleAnalyticsProfile(null);
-
-		return job;
-	}
+//	public List<DatasetJob> getJobs() {
+//		return this.jobs;
+//	}
+//
+//	public void setJobs(List<DatasetJob> jobs) {
+//		this.jobs = jobs;
+//	}
+//
+//	public void addJob(DatasetJob job) {
+//		getJobs().add(job);
+//		job.setGoogleAnalyticsProfile(this);
+//	}
+//
+//	public void removeJob(DatasetJob job) {
+//		getJobs().remove(job);
+//		job.setGoogleAnalyticsProfile(null);
+//
+//	}
 
 }

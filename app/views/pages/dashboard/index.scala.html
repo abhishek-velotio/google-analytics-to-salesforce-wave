@@ -33,27 +33,15 @@
 			// job and jobs list
 			
 			Models.Job = Backbone.Model.extend({
-				urlRoot : '/job'
+				urlRoot : '/dashboard_job'
 			});
 			
 			Collections.Jobs = new Backbone.Collection([], {
 				model : Models.Job
 			});
-			Collections.Jobs.url = '/jobs';
+			Collections.Jobs.url = '/dashboard_jobs';
 			Collections.Jobs.fetch({reset: true});
 
-
-			// google profiles list
-			
-			Models.GoogleProfile = Backbone.Model.extend({
-				urlRoot : '/google/profile'
-			});
-			
-			Collections.GoogleProfiles = new Backbone.Collection([], {
-				model : Models.GoogleProfile
-			});
-			Collections.GoogleProfiles.reset(@Html(Json.stringify(params.get("googleProfiles"))));
-			
 			
 			// salesforce profiles list
 			
@@ -64,7 +52,13 @@
 			Collections.SalesforceProfiles = new Backbone.Collection([], {
 				model : Models.SalesforceProfile
 			});
+			
 			Collections.SalesforceProfiles.reset(@Html(Json.stringify(params.get("salesforceProfiles"))));
+			
+			//dashboard type model
+			Collections.DashboardType = new Backbone.Collection([]);
+			var dashboardTypeValues = @Html(Json.stringify(params.get("dashboardType")));
+			Collections.DashboardType.reset($.map(dashboardTypeValues, function(val, i) { return {id : val, name : val.replace('_', ' ') } } ));
 
 		});
 	

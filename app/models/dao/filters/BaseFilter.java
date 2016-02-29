@@ -21,7 +21,7 @@ import java.util.Optional;
  *
  */
 
-public abstract class BaseFilter {
+public class BaseFilter<T> {
 	
 	public enum OrderType {
 		asc, desc;
@@ -36,5 +36,32 @@ public abstract class BaseFilter {
 	public Optional<Integer> offset;
 	public Optional<String> orderBy;
 	public Optional<OrderType> orderType; 
+	public Optional<Class<T>> objClass;
+	
+	public BaseFilter() {}
+	
+	public BaseFilter(Class<T> objClass) { 
+		this.objClass = Optional.ofNullable(objClass);
+	}
+	
+	public BaseFilter(Integer count, Integer page, String orderBy, BaseFilter.OrderType orderType, Class<T> objClass) {
+		this(objClass);
+		this.count = Optional.ofNullable(count);
+		this.offset = getOffset(Optional.ofNullable(page));
+		this.orderBy = Optional.ofNullable(orderBy);
+		this.orderType = Optional.ofNullable(orderType);
+		
+	}
+	
+	public BaseFilter(Optional<Integer> count, Optional<Integer> page, Optional<String> orderBy, Optional<BaseFilter.OrderType> orderType) {
+		this.count = count;
+		this.offset = getOffset(page);
+		this.orderBy = orderBy;
+		this.orderType = orderType;
+	}
+	
+	private Optional<Integer> getOffset(Optional<Integer> page) {
+		return Optional.of(page.orElse(1) <= 0 ? DEFAULT_OFFSET : (page.orElse(1) - 1) * count.orElse(DEFAULT_COUNT));
+	}
 	
 }

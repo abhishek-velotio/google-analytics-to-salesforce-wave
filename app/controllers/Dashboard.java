@@ -16,7 +16,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.Map;
 
-import models.dao.GoogleAnalyticsProfileDAO;
+import models.DashboardType;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -46,14 +46,13 @@ public class Dashboard extends Controller {
 	public static Result index() {
 		params.clear();
 		
-		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
+//		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
 		JsonNode salesforceProfiles = Json.toJson(SalesforceAnalyticsProfileDAO.getProfiles());
-		//JsonNode jobs = Json.toJson(JobDAO.getJobs());
+		JsonNode dashboardType = Json.toJson(DashboardType.values());
 
-		params.put("googleProfiles", JsonUtil.excludeFields(googleProfiles, GoogleAnalyticsProfileDAO.privateFields));
+//		params.put("googleProfiles", JsonUtil.excludeFields(googleProfiles, GoogleAnalyticsProfileDAO.privateFields));
 		params.put("salesforceProfiles", JsonUtil.excludeFields(salesforceProfiles, SalesforceAnalyticsProfileDAO.privateFields));
-		//params.put("jobs", jobs);
-
+		params.put("dashboardType", dashboardType);
 		return ok(views.html.pages.dashboard.index.render(params));
 	}
 

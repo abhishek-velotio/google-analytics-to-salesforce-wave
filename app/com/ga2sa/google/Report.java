@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.DatasetJob;
 import models.Job;
+
 
 //import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -226,9 +228,9 @@ public class Report {
 		return year + "-" + month + "-" + day;
 	}
 	
-	public static Report getReport(Job job) throws Exception {
+	public static Report getReport(DatasetJob job) throws Exception {
 		final String nameReport = job.getName();
-		final String profileId = job.getGoogleAnalyticsProfile().getId().toString();
+		final String profileId = job.getGoogleAnalyticsProfile().id.toString();
 		
 		GoogleCredential credential = ApplicationSecurity.getGoogleCredential(profileId);
 		

@@ -16,8 +16,9 @@ package controllers;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Map;
-import java.util.Optional;
 
+import models.DashboardJob;
+import models.DatasetJob;
 import models.Job;
 import models.JobStatus;
 import models.dao.GoogleAnalyticsProfileDAO;
@@ -25,7 +26,6 @@ import models.dao.JobDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import models.dao.filters.BaseFilter;
 import models.dao.filters.BaseFilter.OrderType;
-import models.dao.filters.JobFilter;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -58,7 +58,7 @@ public class JobsManager extends Controller {
 	public static Result create () {
 		
 		JsonNode requestData = request().body().asJson();
-		Job job = Json.fromJson(requestData, Job.class);
+		DatasetJob job = Json.fromJson(requestData, DatasetJob.class);
 		
 		job.setGoogleAnalyticsProfile(GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("googleProfile").textValue())));
 		job.setSalesforceAnalyticsProfile(SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("salesforceProfile").textValue())));
@@ -70,7 +70,7 @@ public class JobsManager extends Controller {
 //		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
 //		if (!requestData.get("includePreviousData").isNull()) job.setIncludePreviousData(requestData.get("includePreviousData").asBoolean());
 		
-		Map<String, String> validateResult = validate(job);
+		Map<String, String> validateResult = Validator.validate(job);
 		if (validateResult.isEmpty()) {
 			try {
 				JobDAO.save(job);
@@ -91,17 +91,15 @@ public class JobsManager extends Controller {
 	}
 	
 	public static Result jobs(Integer count, Integer page, String orderBy, String orderType) {
-		BaseFilter filter = count == null && page == null && orderBy == null && orderType == null 
-				? null : new JobFilter(Optional.ofNullable(count), Optional.ofNullable(page), Optional.ofNullable(orderBy), 
-											Optional.ofNullable(orderType == null ? null : OrderType.valueOf(orderType)));
-		return ok(Json.toJson(JobDAO.getJobs(filter))).as(MimeTypes.JAVASCRIPT());
+		BaseFilter<DatasetJob> filter = new BaseFilter<DatasetJob>(count, page, orderBy, orderType == null ? null : OrderType.valueOf(orderType), DatasetJob.class);
+		return ok(Json.toJson(JobDAO.getAllByFilter(filter))).as(MimeTypes.JAVASCRIPT());
 	}
 	
-	private static Map<String, String> validate(Job job) {
-		Map<String, String> validateResult = Validator.validate(job);
-		if (JobDAO.isExist(job)) validateResult.put("name", "Job already exists");
-		return validateResult;
-	}
+//	private static Map<String, String> validate(Job job) {
+//		Map<String, String> validateResult = Validator.validate(job);
+//		if (JobDAO.isExist(job)) validateResult.put("name", "Job already exists");
+//		return validateResult;
+//	}
 	
 	public static Result cancel(Long id) throws Exception {
 		if (id != null)  {

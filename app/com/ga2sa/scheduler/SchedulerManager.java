@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import models.DatasetJob;
 import models.Job;
 import models.dao.JobDAO;
 import play.Logger;
@@ -57,14 +58,14 @@ public class SchedulerManager extends UntypedActor {
 			
 		} else if (obj instanceof Job) {
 			Logger.debug("******* START NEW JOB *******"); 
-			update((Job) obj);
+			update((DatasetJob) obj);
 		} else {
 			unhandled(obj);
 		}
 	}
 	
 	private void update() {
-		Job job = JobDAO.getLastJob();
+		DatasetJob job = JobDAO.getLastJob();
 		
 		Logger.debug("JOB   " + job.getName());
 		
@@ -74,7 +75,7 @@ public class SchedulerManager extends UntypedActor {
 		
 	}
 	
-	private void update(Job job) {
+	private void update(DatasetJob job) {
 		Logger.debug("JOB   " + job.getName());
 		Calendar currentDate = Calendar.getInstance();
 		runJob(job, currentDate);
@@ -82,12 +83,12 @@ public class SchedulerManager extends UntypedActor {
 	}
 
 	private void start() {
-		List<Job> jobs = JobDAO.getJobsForScheduler();
+		List<DatasetJob> jobs = JobDAO.getJobsForScheduler();
 		Calendar currentDate = Calendar.getInstance();
 		jobs.forEach(job -> runJob(job, currentDate));
 	}
 	
-	private void runJob(Job job, Calendar currentDate) {
+	private void runJob(DatasetJob job, Calendar currentDate) {
 		
 		Calendar scheduleDate = Calendar.getInstance();
 		Calendar startDate = Calendar.getInstance();

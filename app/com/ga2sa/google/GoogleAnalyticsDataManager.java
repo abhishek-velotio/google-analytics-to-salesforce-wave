@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.DatasetJob;
 import models.Job;
 
 import org.apache.commons.lang3.StringUtils;
@@ -154,7 +155,7 @@ public class GoogleAnalyticsDataManager {
 	 * @return GA report
 	 * @throws IOException 
 	 */
-	public static GaData getReport(GoogleCredential credential, Job job) throws IOException {
+	public static GaData getReport(GoogleCredential credential, DatasetJob job) throws IOException {
 		if (job != null) { 
 			Get query = getAnalytics(credential).data().ga().get(
 				"ga:" + job.gaProfile,

@@ -88,7 +88,12 @@ public class User extends BaseEntity {
 	//bi-directional many-to-one association to Job
 	@JsonIgnore
 	@OneToMany(mappedBy="user", fetch = FetchType.LAZY)
-	private List<Job> jobs;
+	public List<DatasetJob> datasetJobs;
+	
+	//bi-directional many-to-one association to Job
+	@JsonIgnore
+	@OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+	public List<DashboardJob> dashboardJobs;
 
 	public User() {
 	}
@@ -98,20 +103,20 @@ public class User extends BaseEntity {
 		return PasswordManager.PASSWORD_TMP;
 	}
 	
-	public List<Job> getJobs() {
-		return this.jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
-
-	public void addJob(Job job) {
-		getJobs().add(job);
-	}
-
-	public void removeJob(Job job) {
-		getJobs().remove(job);
-	}
+//	public List<Job> getJobs() {
+//		return this.jobs;
+//	}
+//
+//	public void setJobs(List<Job> jobs) {
+//		this.jobs = jobs;
+//	}
+//
+//	public void addJob(Job job) {
+//		getJobs().add(job);
+//	}
+//
+//	public void removeJob(Job job) {
+//		getJobs().remove(job);
+//	}
 	
 }

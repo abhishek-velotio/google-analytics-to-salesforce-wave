@@ -13,11 +13,22 @@
 
 package models.dao;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+
+import models.Job;
+import models.dao.filters.BaseFilter;
+import models.dao.filters.BaseFilter.OrderType;
 
 import org.postgresql.util.PSQLException;
 
+import play.Logger;
 import play.db.jpa.JPA;
 
 /**
@@ -29,6 +40,35 @@ import play.db.jpa.JPA;
  */
 
 public class BaseDAO<T> {
+	
+	public static <T> List<T> findAll(Class<T> clazz) {
+		return getAllByFilter(new BaseFilter<T>(clazz));
+	}
+	
+	public static <T> List<T> getAllByFilter(final BaseFilter<T> filter) { 
+		if (filter != null && !filter.objClass.isPresent()) throw new IllegalArgumentException("Object is null");
+		try {
+			return JPA.withTransaction(new play.libs.F.Function0<List<T>>() {
+				@SuppressWarnings({ "unchecked" })
+				public List<T> apply () {
+
+						CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+						CriteriaQuery<T> cq = cb.createQuery(filter.objClass.get());
+						Root<T> c = cq.from(filter.objClass.get());
+						cq.select(c);
+						Path<Job> orderBy = c.get(filter.orderBy.orElse(BaseFilter.DEFAULT_ORDER_BY));
+						OrderType orderType = filter.orderType.orElse(OrderType.desc);
+						cq.orderBy(orderType.equals(OrderType.asc) ? cb.asc(orderBy) : cb.desc(orderBy));
+						return JPA.em().createQuery(cq)
+								.setFirstResult(filter.offset.orElse(BaseFilter.DEFAULT_OFFSET))
+								.setMaxResults(filter.count.orElse(BaseFilter.DEFAULT_COUNT)).getResultList();
+				}
+			});
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return Collections.emptyList();
+	}
 	
 	public static <T> Long getCount(Class<T> clazz) {
 		try {
@@ -45,6 +85,26 @@ public class BaseDAO<T> {
 			e.printStackTrace();
 		}
 		return 0l;
+	}
+	
+	public static <T> Boolean isExist(Class<T> object, String name) {
+		try {
+			return JPA.withTransaction(new play.libs.F.Function0<Boolean>() {
+				public Boolean apply () {
+					CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+			    	CriteriaQuery<T> cq = cb.createQuery(object);
+			    	Root<T> c = cq.from(object);
+			    	ParameterExpression<T> p = cb.parameter(object);
+			    	cq.select(c).where(cb.equal(c.get("name"), p));
+			    	Logger.debug(name);
+					return JPA.em().createQuery(cq).setParameter("name", name).getResultList().size() > 0;
+				}
+			});
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public static <T> void save(T object) throws Exception {

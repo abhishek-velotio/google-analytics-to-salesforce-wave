@@ -22,13 +22,20 @@ GET		/dashboard									controllers.Dashboard.index()
 
 GET		/dataset									controllers.Dataset.index()
 
-# Job
+# Dataset Job
 
 POST	/job										controllers.JobsManager.create()
 DELETE	/job/:id									controllers.JobsManager.delete(id : Long)
 POST	/job/cancel/:id								controllers.JobsManager.cancel(id : Long)
 GET		/jobs										controllers.JobsManager.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)		
 GET		/jobs/count									controllers.JobsManager.countJobs()
+
+# Dashboard Job
+
+GET		/dashboard_jobs								controllers.DashboardJobController.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)	
+POST	/dashboard_job								controllers.DashboardJobController.create()
+DELETE	/dashboard_job/:id							controllers.DashboardJobController.delete(id : Long)
+POST	/dashboard_job/cancel/:id					controllers.DashboardJobController.cancel(id : Long)
 
 # Settings
 
