@@ -17,8 +17,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.ga2sa.actors.BackgroundJobInterface;
+import com.ga2sa.actors.DatasetBGJob;
+
 import models.DatasetJob;
-import models.Job;
 import models.dao.JobDAO;
 import play.Logger;
 import play.libs.Akka;
@@ -56,55 +58,41 @@ public class SchedulerManager extends UntypedActor {
 					break;
 			}
 			
-		} else if (obj instanceof Job) {
+		} else if (obj instanceof DatasetJob) {
 			Logger.debug("******* START NEW JOB *******"); 
-			update((DatasetJob) obj);
+			runJob((DatasetJob) obj);
 		} else {
 			unhandled(obj);
 		}
 	}
 	
 	private void update() {
-		DatasetJob job = JobDAO.getLastJob();
-		
-		Logger.debug("JOB   " + job.getName());
-		
-		Calendar currentDate = Calendar.getInstance();
-		
-		runJob(job, currentDate);
-		
+		runJob(JobDAO.getLastJob());
 	}
 	
-	private void update(DatasetJob job) {
-		Logger.debug("JOB   " + job.getName());
-		Calendar currentDate = Calendar.getInstance();
-		runJob(job, currentDate);
-		
-	}
-
 	private void start() {
-		List<DatasetJob> jobs = JobDAO.getJobsForScheduler();
-		Calendar currentDate = Calendar.getInstance();
-		jobs.forEach(job -> runJob(job, currentDate));
+		JobDAO.getJobsForScheduler().forEach(job -> runJob(job));
 	}
 	
-	private void runJob(DatasetJob job, Calendar currentDate) {
-		
+	private void runJob(DatasetJob job) {
+		BackgroundJobInterface bgJob = new DatasetBGJob(job);
+		Logger.debug("JOB   " + job.getName());
+		Calendar currentDate = Calendar.getInstance();
 		Calendar scheduleDate = Calendar.getInstance();
 		Calendar startDate = Calendar.getInstance();
 		
 		
 		ActorRef backgroundJob = Akka.system().actorOf(Props.create(BackgroundJob.class));
 		
-		if (job.getNextStartTime() != null) {
-			startDate.setTime(job.getNextStartTime());
-			if (startDate.after(currentDate)) scheduleDate.setTime(job.getNextStartTime());
-		} else {
+		if (job.getNextStartTime() == null) {
 			startDate.setTime(job.getStartTime() == null ? Calendar.getInstance().getTime() : job.getStartTime());
 			if (startDate.after(currentDate)) {
 				Logger.debug("AFTER");
 				scheduleDate.setTime(job.getStartTime());
 			}
+		} else {
+			startDate.setTime(job.getNextStartTime());
+			if (startDate.after(currentDate)) scheduleDate.setTime(job.getNextStartTime());
 		}
 		
 		long offset = (scheduleDate.getTimeInMillis() - currentDate.getTimeInMillis()) / 1000;
@@ -130,11 +118,11 @@ public class SchedulerManager extends UntypedActor {
 			
 			long offsetPeriod = (period.getTimeInMillis() - scheduleDate.getTimeInMillis()) / 1000;
 			
-			Akka.system().scheduler().schedule(FiniteDuration.create(offset, TimeUnit.SECONDS), FiniteDuration.create(offsetPeriod, TimeUnit.SECONDS), backgroundJob, job, Akka.system().dispatcher(), ActorRef.noSender());
+			Akka.system().scheduler().schedule(FiniteDuration.create(offset, TimeUnit.SECONDS), FiniteDuration.create(offsetPeriod, TimeUnit.SECONDS), backgroundJob, bgJob, Akka.system().dispatcher(), ActorRef.noSender());
 		
 		} else {
 			
-			Akka.system().scheduler().scheduleOnce(FiniteDuration.create(offset, TimeUnit.SECONDS), backgroundJob, job, Akka.system().dispatcher(), ActorRef.noSender());
+			Akka.system().scheduler().scheduleOnce(FiniteDuration.create(offset, TimeUnit.SECONDS), backgroundJob, bgJob, Akka.system().dispatcher(), ActorRef.noSender());
 		}
 	}
 

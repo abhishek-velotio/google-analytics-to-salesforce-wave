@@ -31,17 +31,7 @@ import play.db.jpa.JPA;
 public class JobDAO extends BaseDAO<DatasetJob> {
 	
 	public static DatasetJob findById(Long id) {
-		try {
-			return JPA.withTransaction(new play.libs.F.Function0<DatasetJob>() {
-				public DatasetJob apply () {
-					return (DatasetJob) JPA.em().createQuery("select j from Job j where j.id = :id", DatasetJob.class)
-							.setParameter("id", id).getSingleResult();
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
+		return findById(DatasetJob.class, id);
 	}
 	
 	

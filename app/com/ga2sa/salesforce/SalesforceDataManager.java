@@ -17,14 +17,11 @@ import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
 
-import play.Play;
-import models.SFAccountType;
 import models.SalesforceAnalyticsProfile;
 
 import com.google.common.io.Files;
 import com.sforce.dataset.loader.DatasetLoader;
 import com.sforce.dataset.loader.DatasetLoaderException;
-import com.sforce.dataset.util.DatasetUtils;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 /**
@@ -41,14 +38,6 @@ public class SalesforceDataManager {
 		final String dataset = Files.getNameWithoutExtension(report.getName());
 		final String datasetLabel = dataset + "-Label";
 	    final String app = profile.getApplicationName();
-	    final String username = profile.getUsername();
-	    final String password = profile.getPassword();
-	    final String token = null;
-	    final String sessionId = null;
-	    final String endpoint = profile.accountType == null || profile.accountType.equals(SFAccountType.PRODUCTION) 
-	    		? null : Play.application().configuration().getString("salesforce_endpoint");
-	    //String action = null;
-	    
 	    final String inputFile = report.getAbsolutePath();
 	    final String uploadFormat = "csv";
 	    final CodingErrorAction codingErrorAction = CodingErrorAction.REPORT;   
@@ -57,7 +46,7 @@ public class SalesforceDataManager {
 	    boolean useBulkAPI = false;
 	    
 	    try {
-	    	PartnerConnection partnerConnection = DatasetUtils.login(0, username, password, token, endpoint, sessionId, true);
+	    	PartnerConnection partnerConnection = SalesforceSecurity.login(profile);
 	    	DatasetLoader.uploadDataset(inputFile, uploadFormat, codingErrorAction, fileCharset, dataset, app, datasetLabel, Operation, useBulkAPI, partnerConnection, System.out);
 	    } catch (ConnectionException | MalformedURLException | DatasetLoaderException e) {
 	    	throw new Exception(e.getMessage());

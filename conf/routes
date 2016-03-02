@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET	 /test	controllers.TestController.index()
+
 # Home page
 GET     /                           				controllers.Application.index()
 
@@ -16,11 +18,11 @@ GET		/signout									controllers.Authorization.ga2saSignOut()
 
 # Dashboard
 
-GET		/dashboard									controllers.Dashboard.index()
+GET		/dashboard									controllers.DashboardTabController.index()
 
 # Dataset
 
-GET		/dataset									controllers.Dataset.index()
+GET		/dataset									controllers.DatasetTabController.index()
 
 # Dataset Job
 

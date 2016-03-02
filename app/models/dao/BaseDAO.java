@@ -18,7 +18,6 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
@@ -28,7 +27,6 @@ import models.dao.filters.BaseFilter.OrderType;
 
 import org.postgresql.util.PSQLException;
 
-import play.Logger;
 import play.db.jpa.JPA;
 
 /**
@@ -41,7 +39,20 @@ import play.db.jpa.JPA;
 
 public class BaseDAO<T> {
 	
-	public static <T> List<T> findAll(Class<T> clazz) {
+	protected static <T> T findById(Class<T> clazz, Long id) {
+		try {
+			return JPA.withTransaction(new play.libs.F.Function0<T>() {
+				public T apply () {
+						return JPA.em().find(clazz, id);
+				}
+			});
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	protected static <T> List<T> findAll(Class<T> clazz) {
 		return getAllByFilter(new BaseFilter<T>(clazz));
 	}
 	
@@ -49,7 +60,6 @@ public class BaseDAO<T> {
 		if (filter != null && !filter.objClass.isPresent()) throw new IllegalArgumentException("Object is null");
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<List<T>>() {
-				@SuppressWarnings({ "unchecked" })
 				public List<T> apply () {
 
 						CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
@@ -92,12 +102,10 @@ public class BaseDAO<T> {
 			return JPA.withTransaction(new play.libs.F.Function0<Boolean>() {
 				public Boolean apply () {
 					CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
-			    	CriteriaQuery<T> cq = cb.createQuery(object);
-			    	Root<T> c = cq.from(object);
-			    	ParameterExpression<T> p = cb.parameter(object);
-			    	cq.select(c).where(cb.equal(c.get("name"), p));
-			    	Logger.debug(name);
-					return JPA.em().createQuery(cq).setParameter("name", name).getResultList().size() > 0;
+			    	CriteriaQuery<T> q = cb.createQuery(object);
+			    	Root<T> root = q.from(object);
+			    	q.select(root).where(cb.equal(root.get("name"), name));
+					return JPA.em().createQuery(q).getResultList().size() > 0;
 				}
 			});
 		} catch (Throwable e) {

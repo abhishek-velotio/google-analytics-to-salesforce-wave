@@ -21,12 +21,19 @@ import models.dao.SalesforceAnalyticsProfileDAO;
 import models.dao.filters.BaseFilter;
 import models.dao.filters.BaseFilter.OrderType;
 import play.Logger;
+import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.MimeTypes;
+import scala.concurrent.duration.FiniteDuration;
+import akka.actor.ActorRef;
+import akka.actor.Props;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ga2sa.actors.DashboardBGJob;
+import com.ga2sa.scheduler.BackgroundJob;
+import com.ga2sa.security.Access;
 import com.ga2sa.security.ApplicationSecurity;
 import com.ga2sa.validators.Validator;
 
@@ -34,7 +41,10 @@ import com.ga2sa.validators.Validator;
  * @author SLegostaev
  *
  */
+@Access
 public class DashboardJobController extends Controller {
+	
+	private static final String NOT_FOUND = "Dashboard not found";
 	
 	public static Result create() {
 		JsonNode requestData = request().body().asJson();
@@ -49,6 +59,7 @@ public class DashboardJobController extends Controller {
 		if (validateResult.isEmpty()) {
 			try {
 				DashboardJobDAO.save(job);
+				//startBGjob(job);
 				return ok(Json.toJson(job)).as(MimeTypes.JAVASCRIPT());
 			} catch (Exception e) {
 				Logger.debug(e.getMessage());
@@ -58,34 +69,35 @@ public class DashboardJobController extends Controller {
 		return badRequest(Json.toJson(validateResult)).as(MimeTypes.JAVASCRIPT());
 	}
 
+	private static void startBGjob(DashboardJob job) {
+		ActorRef backgroundJob = Akka.system().actorOf(Props.create(BackgroundJob.class));
+		Akka.system().scheduler().scheduleOnce(FiniteDuration.Zero(), backgroundJob, new DashboardBGJob(job), Akka.system().dispatcher(), ActorRef.noSender());
+	}
 	
 	public static Result cancel(Long id) throws Exception {
-//		if (id != null)  {
-//			Job job = JobDAO.findById(id);
-//			if (job != null) {
-//				if (job.getStatus().equals(JobStatus.PENDING) == false) return badRequest("Job already completed.");
-//				job.setStatus(JobStatus.CANCELED);
-//				job.setMessages("Job has been canceled.");
-//				JobDAO.update(job);
-//				return ok(Json.toJson(job));
-//			}
-//		}
-//		return notFound(NOT_FOUND);
-		return ok();
+		if (id != null)  {
+			DashboardJob job = DashboardJobDAO.findById(id);
+			if (job != null) {
+				if (job.getStatus().equals(JobStatus.PENDING) == false) return badRequest("Job already completed.");
+				job.setStatus(JobStatus.CANCELED);
+				job.setMessages("Job has been canceled.");
+				DashboardJobDAO.update(job);
+				return ok(Json.toJson(job));
+			}
+		}
+		return notFound(NOT_FOUND);
 	}
 	
 	public static Result delete(Long id) {
-//		if (id != null)  {
-//			Job job = JobDAO.findById(id);
-//			if (job != null) {
-//				if (job.getStatus().equals(JobStatus.PENDING)) return badRequest("Job has pending status now and can not be deleted.");
-//				JobDAO.delete(job);
-//				return ok();
-//			}
-//		}
-//		return notFound(NOT_FOUND);
-		
-		return ok();
+		if (id != null)  {
+			DashboardJob job = DashboardJobDAO.findById(id);
+			if (job != null) {
+				if (job.getStatus().equals(JobStatus.PENDING)) return badRequest("Job has pending status now and can not be deleted.");
+				DashboardJobDAO.delete(job);
+				return ok();
+			}
+		}
+		return notFound(NOT_FOUND);
 	}
 	
 	public static Result jobs(Integer count, Integer page, String orderBy, String orderType) {

@@ -10,19 +10,16 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package models.dao;
-
-import models.DashboardJob;
+package com.ga2sa.actors;
 
 /**
  * @author SLegostaev
  *
  */
-public class DashboardJobDAO extends BaseDAO<DashboardJob> {
-	
-	public static DashboardJob findById(Long id) {
-		return findById(DashboardJob.class, id);
-	}
-	
-	
+public interface BackgroundJobInterface {
+
+	//public void onStart();
+	//public void onStop();
+	//public void onCancel();
+	public void start();
 }

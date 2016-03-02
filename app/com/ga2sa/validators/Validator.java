@@ -62,9 +62,9 @@ public class Validator {
 					}
 				}
 			} else if (object instanceof Job) {
-				//String name = ((Job) object).getName();
-				//Class<T> clazz = (Class<T>) ((T) object).getClass();
-				//if (BaseDAO.isExist(clazz, name)) result.put("name", "Job already exists");
+				String name = ((Job) object).getName();
+				Class<T> clazz = (Class<T>) ((T) object).getClass();
+				if (BaseDAO.isExist(clazz, name)) result.put("name", "Job with same name already exists");
 			}
 		}
 		return result;

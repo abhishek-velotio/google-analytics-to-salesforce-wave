@@ -16,7 +16,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.Map;
 
-import models.DashboardType;
+import models.dao.GoogleAnalyticsProfileDAO;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -29,11 +29,10 @@ import com.ga2sa.utils.JsonUtil;
  * 
  * Controller class for work with dashboard page
  * 
- * @author Igor Ivarov
- * @editor Sergey Legostaev
+ * @author Sergey Legostaev
  */
 @Access
-public class Dashboard extends Controller {
+public class DatasetTabController extends Controller {
 	
 	private static Map<String, JsonNode> params = new HashMap<String, JsonNode>();
 	
@@ -46,14 +45,15 @@ public class Dashboard extends Controller {
 	public static Result index() {
 		params.clear();
 		
-//		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
+		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
 		JsonNode salesforceProfiles = Json.toJson(SalesforceAnalyticsProfileDAO.getProfiles());
-		JsonNode dashboardType = Json.toJson(DashboardType.values());
+		//JsonNode jobs = Json.toJson(JobDAO.getJobs());
 
-//		params.put("googleProfiles", JsonUtil.excludeFields(googleProfiles, GoogleAnalyticsProfileDAO.privateFields));
+		params.put("googleProfiles", JsonUtil.excludeFields(googleProfiles, GoogleAnalyticsProfileDAO.privateFields));
 		params.put("salesforceProfiles", JsonUtil.excludeFields(salesforceProfiles, SalesforceAnalyticsProfileDAO.privateFields));
-		params.put("dashboardType", dashboardType);
-		return ok(views.html.pages.dashboard.index.render(params));
+		//params.put("jobs", jobs);
+
+		return ok(views.html.pages.dataset.index.render(params));
 	}
 
 }
