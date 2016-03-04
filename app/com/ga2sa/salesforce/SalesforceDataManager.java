@@ -82,7 +82,6 @@ public class SalesforceDataManager {
 		HttpPost post = new HttpPost(dashboardREST);
 		post.setHeader("Authorization", "OAuth " + config.getSessionId());
 		post.addHeader("Content-Type", "application/json");
-		Logger.debug(dashboardJson.toString());
 		StringEntity entity = new StringEntity(dashboardJson.toString());
 		entity.setContentType("application/json");
 		post.setEntity(entity);
