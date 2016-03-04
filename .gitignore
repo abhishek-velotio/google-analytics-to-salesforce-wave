@@ -15,5 +15,6 @@ project/project
 project/target
 package.json
 *.csv
-*.json
+*schema.json
 archive/
+config/*.json
