@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import models.DatasetJob;
 import models.GoogleAnalyticsReport;
+import models.Job;
 import models.JobStatus;
 import models.dao.GoogleAnalyticsReportDAO;
 import models.dao.JobDAO;
@@ -32,6 +33,7 @@ import play.Logger;
 import com.ga2sa.google.Report;
 import com.ga2sa.salesforce.SalesforceDataManager;
 import com.google.common.io.Files;
+import com.sforce.dataset.loader.file.schema.ext.ExternalFileSchema;
 
 /**
  * @author SLegostaev
@@ -51,7 +53,7 @@ public class DatasetBGJob implements BackgroundJobInterface {
 	@Override
 	public void start() {
 		
-		if (job.getStatus().equals(JobStatus.CANCELED)) return;
+//		if (job.getStatus().equals(JobStatus.CANCELED)) return;
 		
 		Report report = null;
 		File csvReport = null;
@@ -107,13 +109,25 @@ public class DatasetBGJob implements BackgroundJobInterface {
 			job.setMessages( StringEscapeUtils.escapeHtml4(e.getMessage()));
 		}
 		
-		job.setEndTime(new Timestamp(new Date().getTime()));
-		
 		try {
+			job.setEndTime(new Timestamp(new Date().getTime()));
 			JobDAO.update(job);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (csvReport != null) csvReport.delete();
+		if (csvReport != null) { 
+			csvReport.delete();
+			File schemaFile = ExternalFileSchema.getSchemaFile(csvReport, System.out);
+			if (schemaFile.exists()) schemaFile.delete();
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.ga2sa.actors.BackgroundJobInterface#getJob()
+	 */
+	@Override
+	public Job getJob() {
+		// TODO Auto-generated method stub
+		return job;
 	}
 }

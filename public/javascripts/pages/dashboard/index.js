@@ -25,9 +25,9 @@ $(function () {
 		urlRoot : '/dashboard_job',
 		defaults : {
 			name : "",
-			datasetName : "",
 			dashboardType : "",
-			salesforceProfile : null
+			salesforceProfile : null,
+			dataset : ""
 		},
 
 		validation : {
@@ -38,17 +38,35 @@ $(function () {
 				msg: 'Not allow special characters, including spaces'
 			}],
 			
-			datasetName : {
-				required : true
-			},
-			
 			dashboardType : {
 				required : true
 			},
 			
 			salesforceProfile : {
 				required : true
+			},
+			
+			dataset : {
+				required : true
 			}
+		}
+	});
+	
+	/* FORM COMPONENTS */
+
+	Views.Datasets= Views.Select.extend({ // emulate DependSelect
+		
+		initialize : function (options) {
+			Views.Select.prototype.initialize.call(this, options);
+			this.bind("salesforceProfile.change", this.loadData);
+		},
+
+		loadData : function (profileId) {
+			var self = this;
+			this.collection.fetch({ 
+				url : '/salesforce/profile/'+ profileId + '/datasets',
+				reset: true
+			});
 		}
 	});
 	
@@ -66,13 +84,6 @@ $(function () {
 		bindings: {
 			'[name=name]': {
 				observe: 'name',
-				setOptions: {
-					validate: true
-				}
-			},
-			
-			'[name=datasetName]': {
-				observe: 'datasetName',
 				setOptions: {
 					validate: true
 				}
@@ -98,7 +109,19 @@ $(function () {
 				getVal: function($el, event, options) {
 					return $(event.target).val();
 				}
-			}
+			},
+			'[name=dataset]': {
+				observe: 'dataset',
+				setOptions: {
+					validate: true
+				},
+				events: ['keyup', 'change', 'cut', 'paste', 'rendered', 'stickit'],
+				getVal: function($el, event, options) {
+					var element =  $(event.target);
+					var dataset = { 'id' : element.val(), 'name' : element.find('option:selected').text() }
+					return JSON.stringify(dataset);
+				}
+			},
 		},
 
 
@@ -161,13 +184,6 @@ $(function () {
 				classes			: 'job-settings__name col-xs-12',
 			});
 			
-			this.JobDatasetNameView = new Views.Input({
-				_id 		 	: 'datasetName',
-				title 	 		: 'Dataset name',
-				type			: 'text',
-				classes			: 'job-settings__dataset-name col-xs-12',
-			});
-			
 			this.DashboarTypeView = new Views.Select({
 				_id 		 	: 'dashboardType',
 				title 	 		: 'Dashboard Type',
@@ -176,24 +192,34 @@ $(function () {
 				groupped 		: false,
 				collection 		: Collections.DashboardType
 			});
-
-			this.SalesforceProfilesView = new Views.Select({
-				_id 		 	: 'salesforceProfile',
-				title 	 		: 'Salesforce Profile',
-				classes			: 'job-settings__salesforce-profile col-xs-12 no-label',
+			
+			this.DatasetsView = new Views.Datasets({
+				_id 		 	: 'dataset',
+				title 	 		: 'Datasets',
+				classes			: 'job-settings__dataset col-xs-4',
 				multiple 		: false,
 				groupped 		: false,
-				collection 		: Collections.SalesforceProfiles
+				listenSelects	: [this.SalesforceProfilesView],
+				collection 		: new Backbone.Collection()
 			});
+			
+			this.SalesforceProfilesView = new Views.DependSelect({
+				_id 		 	: 'salesforceProfile',
+				title 	 		: 'Salesforce Profile',
+				classes			: 'job-settings__salesforce-profile col-xs-12',
+				multiple 		: false,
+				groupped 		: false,
+				collection 		: Collections.SalesforceProfiles,
+				dependSelects	: [this.DatasetsView],
+				changeAfterInit : true
+			});
+			
+			
 
 			this.$el.append(this.JobNameView.el)
-					.append(this.JobDatasetNameView.el)
-					.append(this.DashboarTypeView.el);
-
-			$('<div>', {'class':'panel panel-default clearfix'})
-				.append('<div class="panel-heading">Salesforce Profile</div>')
-				.append(this.SalesforceProfilesView.el)
-				.appendTo(this.$el);
+					.append(this.DashboarTypeView.el)
+					.append(this.SalesforceProfilesView.el)
+					.append(this.DatasetsView.el);
 
 			return this;
 		}

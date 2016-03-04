@@ -12,6 +12,8 @@
  */
 package com.ga2sa.actors;
 
+import models.Job;
+
 /**
  * @author SLegostaev
  *
@@ -21,5 +23,6 @@ public interface BackgroundJobInterface {
 	//public void onStart();
 	//public void onStop();
 	//public void onCancel();
-	public void start();
+	public Job getJob();
+	public void start() throws Exception;
 }

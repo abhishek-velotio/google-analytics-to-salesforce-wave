@@ -32,11 +32,11 @@ public class BaseFilter<T> {
 	public static final String DEFAULT_ORDER_BY = "created";
 	public static final OrderType DEFAULT_ORDER_TYPE = OrderType.desc;
 	
-	public Optional<Integer> count;
-	public Optional<Integer> offset;
-	public Optional<String> orderBy;
-	public Optional<OrderType> orderType; 
-	public Optional<Class<T>> objClass;
+	public Optional<Integer> count = Optional.empty();
+	public Optional<Integer> offset = Optional.empty();
+	public Optional<String> orderBy = Optional.empty();
+	public Optional<OrderType> orderType = Optional.empty();
+	public Optional<Class<T>> objClass = Optional.empty();
 	
 	public BaseFilter() {}
 	

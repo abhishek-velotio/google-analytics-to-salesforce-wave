@@ -13,14 +13,18 @@
 
 package controllers.settings;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
 
 import models.SFAccountType;
 import models.SalesforceAnalyticsProfile;
 import models.UserGroup;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import play.Logger;
-import play.Play;
 import play.db.jpa.Transactional;
 import play.libs.F.Callback0;
 import play.libs.Json;
@@ -29,10 +33,16 @@ import play.mvc.Result;
 import play.twirl.api.MimeTypes;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.ga2sa.salesforce.SalesforceSecurity;
 import com.ga2sa.security.Access;
 import com.ga2sa.validators.Validator;
+import com.sforce.dataset.util.DatasetType;
 import com.sforce.dataset.util.DatasetUtils;
-import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.dataset.util.FolderType;
+import com.sforce.ws.ConnectionException;
 /**
  * 
  * Controller class for manage Salesforce profiles.
@@ -51,10 +61,6 @@ public class SalesforceAnalyticsSettings extends Controller {
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
-//				String endpoint = object.accountType == null || object.accountType.equals(SFAccountType.PRODUCTION) 
-//			    		? null : Play.application().configuration().getString("salesforce_endpoint");
-//				PartnerConnection connection = DatasetUtils.login(0, object.getUsername(), object.getPassword(), null, endpoint, null, false);
-//				System.out.println("true");
 				SalesforceAnalyticsProfileDAO.save(object);
 			}
 		});
@@ -72,13 +78,34 @@ public class SalesforceAnalyticsSettings extends Controller {
 		return commonAction(object, new Callback0() {
 			@Override
 			public void invoke() throws Throwable {
-//				String endpoint = object.accountType == null || object.accountType.equals(SFAccountType.PRODUCTION) 
-//			    		? null : Play.application().configuration().getString("salesforce_endpoint");
-//				PartnerConnection connection = DatasetUtils.login(0, object.getUsername(), object.getPassword(), null, endpoint, null, false);
-//				System.out.println("true");
 				SalesforceAnalyticsProfileDAO.update(object);
 			}
 		});
+	}
+	
+	@Transactional
+	public static Result getDatasets(Long profileId) throws ClientProtocolException, MalformedURLException, ConnectionException, URISyntaxException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode datasetsJson = mapper.createArrayNode();
+		SalesforceAnalyticsProfile profile = getProfile(profileId);
+		DatasetUtils.listDatasets(SalesforceSecurity.login(profile), false)
+				.stream()
+				.filter(dataset -> {
+					JsonNode node = Json.toJson(dataset);
+					String folderName = node.path("folder").get("name").asText();
+					return folderName.equals(profile.getApplicationName());
+				})
+				.forEach(dataset -> {
+					ObjectNode node = mapper.createObjectNode();
+					node.put("id", dataset._uid);
+					node.put("name", dataset._alias);
+					datasetsJson.add(node);
+				});
+		return ok(datasetsJson).as(MimeTypes.JAVASCRIPT());
+	}
+	
+	private static SalesforceAnalyticsProfile getProfile(Long profileId) {
+		return  SalesforceAnalyticsProfileDAO.getProfileById(profileId);
 	}
 	
 	private static Result commonAction(SalesforceAnalyticsProfile object, Callback0 callback) {

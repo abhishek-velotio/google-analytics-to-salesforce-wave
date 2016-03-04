@@ -36,7 +36,7 @@ public class DashboardJob extends Job {
 	public DashboardType dashboardType;
 	
 	@NotNull
-	public String datasetName;
+	public String dataset;
 	
 
 }

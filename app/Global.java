@@ -21,6 +21,7 @@ import play.GlobalSettings;
 import play.Logger;
 import akka.actor.ActorRef;
 
+import com.ga2sa.salesforce.DashboardTemplatesManager;
 import com.ga2sa.scheduler.Scheduler;
 import com.ga2sa.security.PasswordManager;
 
@@ -68,6 +69,7 @@ public class Global extends GlobalSettings {
 		Logger.info("Application has been started");
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		createDefaultAdmin();
+		DashboardTemplatesManager.loadTemplates();
 		Scheduler.getInstance().tell("start", ActorRef.noSender());
 	}
 	

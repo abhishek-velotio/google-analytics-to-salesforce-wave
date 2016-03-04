@@ -46,18 +46,7 @@ public class GoogleAnalyticsProfileDAO extends BaseDAO<GoogleAnalyticsProfile> {
 	public static final String FLASH_PROFILE_ID 	= "profile_id";
 	
 	public static List<GoogleAnalyticsProfile> getProfiles() {
-		
-		try {
-			return JPA.withTransaction(new play.libs.F.Function0<List<GoogleAnalyticsProfile>>() {
-				@SuppressWarnings("unchecked")
-				public List<GoogleAnalyticsProfile> apply () {
-					return (List<GoogleAnalyticsProfile>) JPA.em().createNamedQuery("GoogleAnalyticsProfile.findAll").getResultList();
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
+		return findAll(GoogleAnalyticsProfile.class);
 	}
 	
 	public static List<GoogleAnalyticsProfile> getConnectedProfiles() {
@@ -74,30 +63,8 @@ public class GoogleAnalyticsProfileDAO extends BaseDAO<GoogleAnalyticsProfile> {
 		return null;
 	}
 	
-	public static GoogleAnalyticsProfile getProfileByName(String name) {
-		try {
-			return JPA.withTransaction(new play.libs.F.Function0<GoogleAnalyticsProfile>() {
-				public GoogleAnalyticsProfile apply () {
-					return (GoogleAnalyticsProfile) JPA.em().createQuery("select gap from GoogleAnalyticsProfile gap where gap.name = :name", GoogleAnalyticsProfile.class).setParameter("name", name).getSingleResult();
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	public static GoogleAnalyticsProfile getProfileById(Long profileId) {
-		try {
-			return JPA.withTransaction(new play.libs.F.Function0<GoogleAnalyticsProfile>() {
-				public GoogleAnalyticsProfile apply () {
-					return (GoogleAnalyticsProfile) JPA.em().createQuery("select gap from GoogleAnalyticsProfile gap where gap.id = :id", GoogleAnalyticsProfile.class).setParameter("id", profileId).getSingleResult();
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
+		return findById(GoogleAnalyticsProfile.class, profileId);
 	}
 	
 }

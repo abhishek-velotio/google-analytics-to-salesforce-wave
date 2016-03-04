@@ -12,29 +12,11 @@
  */
 package com.ga2sa.scheduler;
 
-import java.io.File;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import models.DatasetJob;
-import models.GoogleAnalyticsReport;
-import models.Job;
 import models.JobStatus;
-import models.dao.GoogleAnalyticsReportDAO;
-import models.dao.JobDAO;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import play.Logger;
 import akka.actor.UntypedActor;
 
 import com.ga2sa.actors.BackgroundJobInterface;
-import com.ga2sa.google.Report;
-import com.ga2sa.salesforce.SalesforceDataManager;
-import com.google.common.io.Files;
 //import org.apache.commons.io.IOUtils;
 
 /**
@@ -52,76 +34,12 @@ public class BackgroundJob extends UntypedActor{
 	 */
 	@Override
 	public void onReceive(Object obj) throws Exception {
-		if (obj instanceof Job) {
-			
-//			DatasetJob job = JobDAO.findById(((Job) obj).id);
-//			
-//			if (job.getStatus().equals(JobStatus.CANCELED)) return;
-//			
-//			Report report = null;
-//			File csvReport = null;
-//			Logger.debug("Job started: " + job.getName());
-//
-//			GoogleAnalyticsReport previousReport = GoogleAnalyticsReportDAO.getReportByJobId(job.id);
-//			try {
-//				if (job.isRepeated()) {
-//					
-//					Integer duration = (job.getRepeatPeriod().equals("week")) ? 7 : 1;
-//					Integer timeUnit = (job.getRepeatPeriod().equals("week") || job.getRepeatPeriod().equals("day") ) ? Calendar.DATE : Calendar.MONTH;
-//						
-//					if (job.needIncludePreviousData() && previousReport != null) {
-//						
-//						Calendar startDateForReport = Calendar.getInstance();
-//						Calendar endDateForReport = Calendar.getInstance();
-//						
-//						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-//						
-//						endDateForReport.setTime(sdf.parse(job.gaEndDate));
-//						startDateForReport.setTime(endDateForReport.getTime());
-//						startDateForReport.add(Calendar.DATE, 1);
-//						
-//						endDateForReport.add(timeUnit, duration);
-//						job.gaStartDate = sdf.format(startDateForReport.getTime());
-//						job.gaEndDate = sdf.format(endDateForReport.getTime());
-//						
-//						report = Report.getReport(job);
-//						csvReport = report.addToCSV(previousReport.data);
-//					
-//					} 
-//				}
-//				
-//				if (csvReport == null)  {
-//					report = Report.getReport(job);
-//					csvReport = report.toCSV();
-//				}
-//			
-//				if (job.isRepeated() && job.needIncludePreviousData() && previousReport != null) {
-//					previousReport.data = Files.toByteArray(csvReport);
-//					GoogleAnalyticsReportDAO.update(previousReport);
-//				} else {
-//					GoogleAnalyticsReportDAO.save(new GoogleAnalyticsReport(job.id, Files.toByteArray(csvReport)));
-//				}
-//				
-//				SalesforceDataManager.uploadData(job.getSalesforceAnalyticsProfile(), csvReport);
-//				job.setStatus(JobStatus.OK);
-//				job.setMessages(report.getData().size() + " rows have been loaded.");
-//				
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				job.setStatus(JobStatus.FAIL);
-//				job.setMessages( StringEscapeUtils.escapeHtml4(e.getMessage()));
-//			}
-//			
-//			job.setEndTime(new Timestamp(new Date().getTime()));
-//			
-//			try {
-//				JobDAO.update(job);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			if (csvReport != null) csvReport.delete();
-		} else if (obj instanceof BackgroundJobInterface) {
-			((BackgroundJobInterface)obj).start();
+		if (obj instanceof BackgroundJobInterface) {
+			BackgroundJobInterface bgJob = (BackgroundJobInterface)obj;
+			if (bgJob.getJob().getStatus().equals(JobStatus.CANCELED) == false) {
+				Logger.debug("background job has been started, job name is " + bgJob.getJob().getName());
+				bgJob.start();
+			}
 		} else {
 			unhandled(obj);
 		}

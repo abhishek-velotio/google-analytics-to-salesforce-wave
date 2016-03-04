@@ -34,63 +34,6 @@ public class JobDAO extends BaseDAO<DatasetJob> {
 		return findById(DatasetJob.class, id);
 	}
 	
-	
-//	public static List<DatasetJob> getJobs() {
-//		try {
-//			return JPA.withTransaction(new play.libs.F.Function0<List<DatasetJob>>() {
-//				@SuppressWarnings({ "unchecked" })
-//				public List<DatasetJob> apply () {
-//					return JPA.em().createNamedQuery("Job.findAll").getResultList();
-//				}
-//			});
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return Collections.emptyList();
-//	}
-	
-//	public static List<DatasetJob> getJobs(final BaseFilter<DatasetJob> filter) {
-//		try {
-//			return JPA.withTransaction(new play.libs.F.Function0<List<Job>>() {
-//				@SuppressWarnings({ "unchecked" })
-//				public List<Job> apply () {
-//					if (filter == null) {
-//						return JPA.em().createNamedQuery("Job.findAll").getResultList();
-//					} else {
-//						CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
-//						CriteriaQuery<Job> cq = cb.createQuery(Job.class);
-//						Root<Job> c = cq.from(Job.class);
-//						cq.select(c);
-//						Path<Job> orderBy = c.get(filter.orderBy.orElse(BaseFilter.DEFAULT_ORDER_BY));
-//						OrderType orderType = filter.orderType.orElse(OrderType.desc);
-//						cq.orderBy(orderType.equals(OrderType.asc) ? cb.asc(orderBy) : cb.desc(orderBy));
-//						return JPA.em().createQuery(cq)
-//								.setFirstResult(filter.offset.orElse(BaseFilter.DEFAULT_OFFSET))
-//								.setMaxResults(filter.count.orElse(BaseFilter.DEFAULT_COUNT)).getResultList();
-//					}
-//				}
-//			});
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return Collections.emptyList();
-//		return getAllByFilter(filter);
-//	}
-//	
-//	public static boolean isExist(Job job) {
-//		try {
-//			return JPA.withTransaction(new play.libs.F.Function0<Boolean>() {
-//				public Boolean apply () {
-//					return JPA.em().createQuery("select j from Job j where j.name = :name", Job.class)
-//							.setParameter("name", job.getName()).getResultList().size() != 0;
-//				}
-//			});
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//	}
-	
 	public static DatasetJob getLastJob() {
 		try {
 			return JPA.withTransaction(new play.libs.F.Function0<DatasetJob>() {

@@ -24,8 +24,6 @@ import models.dao.UserDAO;
 import play.Logger;
 import play.Play;
 import play.cache.Cache;
-import play.core.j.HttpExecutionContext;
-import play.libs.HttpExecution;
 import play.mvc.Http;
 
 import com.ga2sa.google.GoogleConnector;

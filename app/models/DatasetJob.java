@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -96,7 +97,7 @@ public class DatasetJob extends Job {
 	private Boolean includePreviousData;
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="google_analytics_profile_id")
 	@JsonIgnore
 	private GoogleAnalyticsProfile googleAnalyticsProfile;

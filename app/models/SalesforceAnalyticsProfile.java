@@ -20,7 +20,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -38,7 +37,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name="salesforce_analytics_profiles")
-@NamedQuery(name="SalesforceAnalyticsProfile.findAll", query="SELECT s FROM SalesforceAnalyticsProfile s ORDER BY s.id ASC")
 public class SalesforceAnalyticsProfile extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -110,26 +108,5 @@ public class SalesforceAnalyticsProfile extends BaseEntity {
 		this.name = name;
 	}
 	
-//	public List<Job> getJobs() {
-//		return this.jobs;
-//	}
-//
-//	public void setJobs(List<Job> jobs) {
-//		this.jobs = jobs;
-//	}
-//
-//	public Job addJob(Job job) {
-//		getJobs().add(job);
-//		job.setSalesforceAnalyticsProfile(this);
-//
-//		return job;
-//	}
-//
-//	public Job removeJob(Job job) {
-//		getJobs().remove(job);
-//		job.setSalesforceAnalyticsProfile(null);
-//
-//		return job;
-//	}
 
 }

@@ -35,7 +35,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 //@JsonFilter("myFilter")
 @Entity
 @Table(name="google_analytics_profiles")
-@NamedQuery(name="GoogleAnalyticsProfile.findAll", query="SELECT g FROM GoogleAnalyticsProfile g ORDER BY g.id ASC")
 public class GoogleAnalyticsProfile extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 

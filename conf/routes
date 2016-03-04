@@ -2,8 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET	 /test	controllers.TestController.index()
-
 # Home page
 GET     /                           				controllers.Application.index()
 
@@ -71,7 +69,7 @@ PUT		/google/profile/:id							controllers.settings.GoogleAnalyticsSettings.upda
 POST	/salesforce/profile							controllers.settings.SalesforceAnalyticsSettings.add()
 DELETE	/salesforce/profile/:id						controllers.settings.SalesforceAnalyticsSettings.delete(id)
 PUT		/salesforce/profile/:id						controllers.settings.SalesforceAnalyticsSettings.update(id)
-
+GET		/salesforce/profile/:id/datasets			controllers.settings.SalesforceAnalyticsSettings.getDatasets(id : Long)		
 
 # Tokens
 GET 	/google_signin								controllers.Authorization.googleSignIn()

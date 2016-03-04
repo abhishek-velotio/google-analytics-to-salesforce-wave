@@ -49,7 +49,6 @@ public class DashboardJobController extends Controller {
 	public static Result create() {
 		JsonNode requestData = request().body().asJson();
 		DashboardJob job = Json.fromJson(requestData, DashboardJob.class);
-
 		job.setSalesforceAnalyticsProfile(SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("salesforceProfile").textValue())));
 		job.setUser(ApplicationSecurity.getCurrentUser());
 		job.setStatus(JobStatus.PENDING);
@@ -59,7 +58,7 @@ public class DashboardJobController extends Controller {
 		if (validateResult.isEmpty()) {
 			try {
 				DashboardJobDAO.save(job);
-				//startBGjob(job);
+				startBGjob(job);
 				return ok(Json.toJson(job)).as(MimeTypes.JAVASCRIPT());
 			} catch (Exception e) {
 				Logger.debug(e.getMessage());

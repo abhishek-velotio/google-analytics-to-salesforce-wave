@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Map;
 
-import models.DashboardJob;
 import models.DatasetJob;
 import models.Job;
 import models.JobStatus;
@@ -59,7 +58,6 @@ public class JobsManager extends Controller {
 		
 		JsonNode requestData = request().body().asJson();
 		DatasetJob job = Json.fromJson(requestData, DatasetJob.class);
-		
 		job.setGoogleAnalyticsProfile(GoogleAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("googleProfile").textValue())));
 		job.setSalesforceAnalyticsProfile(SalesforceAnalyticsProfileDAO.getProfileById(Long.valueOf(requestData.get("salesforceProfile").textValue())));
 		job.setUser(ApplicationSecurity.getCurrentUser());
@@ -67,11 +65,13 @@ public class JobsManager extends Controller {
 		job.setMessages("Job has pending status");
 		if (job.getStartTime() == null) job.setStartTime(Timestamp.from(Instant.now()));
 		
-//		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
+		//		if (!requestData.get("repeatPeriod").isNull()) job.setRepeatPeriod(requestData.get("repeatPeriod").asText());
 //		if (!requestData.get("includePreviousData").isNull()) job.setIncludePreviousData(requestData.get("includePreviousData").asBoolean());
 		
 		Map<String, String> validateResult = Validator.validate(job);
 		if (validateResult.isEmpty()) {
+			
+			
 			try {
 				JobDAO.save(job);
 				Scheduler.getInstance().tell(job, ActorRef.noSender());

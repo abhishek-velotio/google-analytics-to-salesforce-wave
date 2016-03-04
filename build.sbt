@@ -10,6 +10,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
+  javaWs,
   javaCore, 
   javaJdbc, 
   javaJpa.exclude("org.hibernate.javax.persistence", "hibernate-jpa-2.0-api"), 
@@ -19,8 +20,7 @@ libraryDependencies ++= Seq(
   "com.google.api-client" 	% "google-api-client" 					% "1.19.1",
   "com.google.apis" 		% "google-api-services-analytics" 		% "v3-rev111-1.19.1",
   "com.google.apis" 		% "google-api-services-oauth2" 			% "v2-rev86-1.19.1",
-  "org.eclipse.persistence" % "eclipselink" 						% "2.6.0",
-  //"org.hibernate" 			% "hibernate-entitymanager" 			% "4.3.8.Final",
+  "org.eclipse.persistence" % "eclipselink" 						% "2.6.2",
   "org.hibernate" 			% "hibernate-validator" 				% "5.1.3.Final",
   "com.edulify" 			%% "play-hikaricp" 						% "2.0.4",
   "javax.el" 				% "javax.el-api" 						% "3.0.0",

@@ -14,7 +14,6 @@ package models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 
@@ -25,7 +24,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="google_analytics_reports")
-@NamedQuery(name="GoogleAnalyticsReport.findAll", query="SELECT g FROM GoogleAnalyticsReport g")
 public class GoogleAnalyticsReport extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 

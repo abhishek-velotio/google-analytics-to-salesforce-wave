@@ -13,9 +13,11 @@
 
 package models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -61,13 +63,13 @@ public abstract class Job extends BaseEntity {
 	
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="salesforce_analytics_profile_id")
 	@JsonIgnore
 	private SalesforceAnalyticsProfile salesforceAnalyticsProfile;
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="executed_by")
 	private User user;
 

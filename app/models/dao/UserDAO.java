@@ -31,21 +31,6 @@ import com.ga2sa.security.ApplicationSecurity;
  */
 public class UserDAO extends BaseDAO<User> {
 	
-	@SuppressWarnings("unchecked")
-	public static List<User> getUsers() {
-		try {
-			return JPA.withTransaction(new play.libs.F.Function0<List<User>>() {
-				public List<User> apply () {
-					return (List<User>) JPA.em().createNamedQuery("User.findAll").getResultList();
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-			return null;
-		}
-	
-	}
-	
 	public static List<User> getUserWithoutCurrent() {
 		User currentUser = ApplicationSecurity.getCurrentUser();
 		try {
@@ -82,23 +67,7 @@ public class UserDAO extends BaseDAO<User> {
 	}
 	
 	public static User getUserById(Long userId) {
-				
-		try {
-			return JPA.withTransaction(new play.libs.F.Function0<User>() {
-				public User apply () {
-					try {
-						return JPA.em().createQuery("select u from User u where u.id = :user_id", User.class)
-								.setParameter("user_id", userId).getSingleResult();
-					} catch (NoResultException e) {
-						Logger.info(String.format("User not found by id %s", userId));
-					}
-					return null;
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
+		return findById(User.class, userId);
 	}
 
 }
