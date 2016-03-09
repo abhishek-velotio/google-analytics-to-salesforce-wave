@@ -17,5 +17,5 @@ package models;
  *
  */
 public enum DashboardType {
-	Location, Market_Segment, Site_Visite, Overview, User_Type, Source_Data, Site_Content;
+	Location, Market_Segment, Site_Visit, Overview, User_Type, Source, Site_Content;
 }
