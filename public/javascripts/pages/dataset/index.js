@@ -22,7 +22,7 @@ $(function () {
 	/* MODEL */
 	
 	Models.JobSettings = Backbone.Model.extend({
-		urlRoot : '/job',
+		urlRoot : '/dataset/job',
 		defaults : {
 			name : "",
 			googleProfile : null,
@@ -331,7 +331,6 @@ $(function () {
 				events: ['change', 'prechange', 'rendered', 'stickit'],
 				getVal: function($el, event, options) {
 					if (event.type == 'change') $(event.target).trigger('prechange');
-console.log(event.type);
 					return $(event.target).val();
 				}
 			},
@@ -770,7 +769,7 @@ console.log('------------- MODEL CHANGED --------------');
 		cancel : function() {
 			$.ajax({
 				method : 'post',
-				url : "/job/cancel/" + this.model.get('id'),
+				url : "/dataset/job/cancel/" + this.model.get('id'),
 				context: this
 			}).done(function (data) {
 				this.model.set(data);

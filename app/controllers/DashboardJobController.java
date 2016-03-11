@@ -59,13 +59,13 @@ public class DashboardJobController extends Controller {
 			try {
 				DashboardJobDAO.save(job);
 				startBGjob(job);
-				return ok(Json.toJson(job)).as(MimeTypes.JAVASCRIPT());
+				return ok(Json.toJson(job));
 			} catch (Exception e) {
 				Logger.debug(e.getMessage());
 				validateResult.put("error", e.getMessage());
 			}
 		}
-		return badRequest(Json.toJson(validateResult)).as(MimeTypes.JAVASCRIPT());
+		return badRequest(Json.toJson(validateResult));
 	}
 
 	private static void startBGjob(DashboardJob job) {
@@ -101,6 +101,6 @@ public class DashboardJobController extends Controller {
 	
 	public static Result jobs(Integer count, Integer page, String orderBy, String orderType) {
 		BaseFilter<DashboardJob> filter = new BaseFilter<DashboardJob>(count, page, orderBy, orderType == null ? null : OrderType.valueOf(orderType), DashboardJob.class);
-		return ok(Json.toJson(DashboardJobDAO.getAllByFilter(filter))).as(MimeTypes.JAVASCRIPT());
+		return ok(Json.toJson(DashboardJobDAO.getAllByFilter(filter)));
 	}
 }

@@ -13,16 +13,13 @@
 
 package controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import models.DashboardType;
 import models.dao.SalesforceAnalyticsProfileDAO;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ga2sa.salesforce.DashboardTemplatesManager;
 import com.ga2sa.security.Access;
 import com.ga2sa.utils.JsonUtil;
 /**
@@ -35,7 +32,6 @@ import com.ga2sa.utils.JsonUtil;
 @Access
 public class DashboardTabController extends Controller {
 	
-	private static Map<String, JsonNode> params = new HashMap<String, JsonNode>();
 	
 	/**
 	 * get all data for creation jobs, insert these data to json and return into page
@@ -44,16 +40,16 @@ public class DashboardTabController extends Controller {
 	 */
 	
 	public static Result index() {
-		params.clear();
-		
-//		JsonNode googleProfiles = Json.toJson(GoogleAnalyticsProfileDAO.getConnectedProfiles());
+		return ok(views.html.pages.dashboard.index.render());
+	}
+	
+	public static Result getSalesforceProfiles() {
 		JsonNode salesforceProfiles = Json.toJson(SalesforceAnalyticsProfileDAO.getProfiles());
-		JsonNode dashboardType = Json.toJson(DashboardType.values());
-
-//		params.put("googleProfiles", JsonUtil.excludeFields(googleProfiles, GoogleAnalyticsProfileDAO.privateFields));
-		params.put("salesforceProfiles", JsonUtil.excludeFields(salesforceProfiles, SalesforceAnalyticsProfileDAO.privateFields));
-		params.put("dashboardType", dashboardType);
-		return ok(views.html.pages.dashboard.index.render(params));
+		return ok(JsonUtil.excludeFields(salesforceProfiles, SalesforceAnalyticsProfileDAO.privateFields));
+	}
+	
+	public static Result getTemplates() {
+		return ok(Json.toJson(DashboardTemplatesManager.getAllTemplates()));
 	}
 
 }

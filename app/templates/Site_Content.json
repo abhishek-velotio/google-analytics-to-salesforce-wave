@@ -59,6 +59,10 @@
                         "measures": [
                             [
                                 "sum", 
+                                "Pageviews"
+                            ], 
+                            [
+                                "sum", 
                                 "Entrances"
                             ], 
                             [

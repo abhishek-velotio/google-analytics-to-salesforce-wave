@@ -17,6 +17,8 @@ GET		/signout									controllers.Authorization.ga2saSignOut()
 # Dashboard
 
 GET		/dashboard									controllers.DashboardTabController.index()
+GET		/dashboard/templates						controllers.DashboardTabController.getTemplates()
+GET		/dashboard/salesforce_profiles				controllers.DashboardTabController.getSalesforceProfiles()
 
 # Dataset
 
@@ -24,18 +26,18 @@ GET		/dataset									controllers.DatasetTabController.index()
 
 # Dataset Job
 
-POST	/job										controllers.JobsManager.create()
-DELETE	/job/:id									controllers.JobsManager.delete(id : Long)
-POST	/job/cancel/:id								controllers.JobsManager.cancel(id : Long)
-GET		/jobs										controllers.JobsManager.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)		
-GET		/jobs/count									controllers.JobsManager.countJobs()
+POST	/dataset/job										controllers.JobsManager.create()
+DELETE	/dataset/job/:id									controllers.JobsManager.delete(id : Long)
+POST	/dataset/job/cancel/:id								controllers.JobsManager.cancel(id : Long)
+GET		/dataset/jobs										controllers.JobsManager.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)		
+GET		/dataset/jobs/count									controllers.JobsManager.countJobs()
 
 # Dashboard Job
 
-GET		/dashboard_jobs								controllers.DashboardJobController.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)	
-POST	/dashboard_job								controllers.DashboardJobController.create()
-DELETE	/dashboard_job/:id							controllers.DashboardJobController.delete(id : Long)
-POST	/dashboard_job/cancel/:id					controllers.DashboardJobController.cancel(id : Long)
+GET		/dashboard/jobs								controllers.DashboardJobController.jobs(count : Integer ?= null, page : Integer ?= 1, orderBy : String ?= null, orderType : String ?= null)	
+POST	/dashboard/job								controllers.DashboardJobController.create()
+DELETE	/dashboard/job/:id							controllers.DashboardJobController.delete(id : Long)
+POST	/dashboard/job/cancel/:id					controllers.DashboardJobController.cancel(id : Long)
 
 # Settings
 

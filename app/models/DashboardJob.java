@@ -12,6 +12,7 @@
  */
 package models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -36,7 +37,7 @@ public class DashboardJob extends Job {
 	public DashboardType dashboardType;
 	
 	@NotNull
-	public String dataset;
-	
+	@Column(nullable = false, length = 32000)
+	public String datasets;
 
 }

@@ -1,1 +1,287 @@
-{"label":"Market Segment Dashboard (Flex)","name":"Market_Segment_Dashboard_Flex","state":{"gridLayouts":[{"name":"desktop","pages":[{"widgets":[{"colspan":6,"column":0,"name":"valuestable_2","row":16,"rowspan":3},{"colspan":6,"column":6,"name":"valuestable_3","row":16,"rowspan":3},{"colspan":6,"column":0,"name":"chart_1","row":1,"rowspan":15,"widgetStyle":{"borderEdges":[]}},{"colspan":6,"column":6,"name":"chart_2","row":1,"rowspan":15,"widgetStyle":{"borderEdges":[]}},{"colspan":6,"column":3,"name":"text_1","row":0,"rowspan":1,"widgetStyle":{"borderEdges":[]}}]}],"selectors":[],"version":1,"widgetStyle":{"borderEdges":[]}}],"layouts":[],"steps":{"In_Market_Segment_3":{"datasets":[{"id":"0Fbj0000000CwQHCA0","name":"MarketSegmentDataInMarket"}],"isFacet":true,"isGlobal":false,"query":{"query":{"measures":[["sum","Pageviews"]],"groups":["In_Market_Segment"],"aggregateFilters":[[["sum","Pageviews"],[[1000]],">"]],"order":[[-1,{"ascending":false}]]},"version":-1},"selectMode":"single","type":"aggregate","useGlobal":true,"visualizationParameters":{"visualizationType":"hbar"}},"lens_4":{"datasets":[{"id":"0Fbj0000000CwQHCA0","name":"MarketSegmentDataInMarket"}],"isFacet":true,"isGlobal":false,"query":{"query":{"values":["Sessions","Users","Pageviews","In_Market_Segment"]},"version":-1},"selectMode":"single","type":"grain","useGlobal":true,"visualizationParameters":{"visualizationType":"valuestable"}},"Affinity_Category_reach_4":{"datasets":[{"id":"0Fbj0000000CwQ7CAK","name":"MarketSegmentDataAffinity"}],"isFacet":true,"isGlobal":false,"query":{"query":{"measures":[["sum","Pageviews"]],"groups":["Affinity_Category_reach"],"aggregateFilters":[[["sum","Pageviews"],[[5000]],">"]],"order":[[-1,{"ascending":false}]]},"version":-1},"selectMode":"single","type":"aggregate","useGlobal":true,"visualizationParameters":{"visualizationType":"hbar"}},"lens_2":{"datasets":[{"id":"0Fbj0000000CwQHCA0","name":"MarketSegmentDataInMarket"}],"isFacet":true,"isGlobal":false,"query":{"query":{"values":["Sessions","Users","Pageviews","In_Market_Segment"]},"version":-1},"selectMode":"single","type":"grain","useGlobal":true,"visualizationParameters":{"visualizationType":"valuestable"}}},"widgets":{"text_1":{"parameters":{"text":"Market Segment"},"position":{"x":0,"y":0},"type":"text"},"valuestable_2":{"parameters":{"step":"lens_2","totals":true},"position":{"x":0,"y":0},"type":"valuestable"},"valuestable_3":{"parameters":{"step":"lens_4"},"position":{"x":0,"y":0},"type":"valuestable"},"chart_2":{"parameters":{"legend":false,"step":"Affinity_Category_reach_4","visualizationType":"hbar"},"position":{"x":0,"y":0},"type":"chart"},"chart_1":{"parameters":{"legend":false,"step":"In_Market_Segment_3","visualizationType":"hbar"},"position":{"x":0,"y":0},"type":"chart"}}},"description":""}
+{
+    "description": "", 
+    "label": "Market Segment Dashboard (Flex)", 
+    "name": "Market_Segment_Dashboard_Flex", 
+    "state": {
+        "gridLayouts": [
+            {
+                "name": "desktop", 
+                "pages": [
+                    {
+                        "widgets": [
+                            {
+                                "colspan": 6, 
+                                "column": 0, 
+                                "name": "valuestable_2", 
+                                "row": 16, 
+                                "rowspan": 3
+                            }, 
+                            {
+                                "colspan": 6, 
+                                "column": 6, 
+                                "name": "valuestable_3", 
+                                "row": 16, 
+                                "rowspan": 3
+                            }, 
+                            {
+                                "colspan": 6, 
+                                "column": 0, 
+                                "name": "chart_1", 
+                                "row": 1, 
+                                "rowspan": 15, 
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            }, 
+                            {
+                                "colspan": 6, 
+                                "column": 6, 
+                                "name": "chart_2", 
+                                "row": 1, 
+                                "rowspan": 15, 
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            }, 
+                            {
+                                "colspan": 6, 
+                                "column": 3, 
+                                "name": "text_1", 
+                                "row": 0, 
+                                "rowspan": 1, 
+                                "widgetStyle": {
+                                    "borderEdges": []
+                                }
+                            }
+                        ]
+                    }
+                ], 
+                "selectors": [], 
+                "version": 1, 
+                "widgetStyle": {
+                    "borderEdges": []
+                }
+            }
+        ], 
+        "layouts": [], 
+        "steps": {
+            "Affinity_Category_reach_4": {
+                "datasets": [
+                    {
+                        "id": "0Fbj0000000CwQ7CAK", 
+                        "name": "MarketSegmentDataAffinity"
+                    }
+                ], 
+                "isFacet": true, 
+                "isGlobal": false, 
+                "query": {
+                    "query": {
+                        "aggregateFilters": [
+                            [
+                                [
+                                    "sum", 
+                                    "Pageviews"
+                                ], 
+                                [
+                                    [
+                                        5000
+                                    ]
+                                ], 
+                                ">"
+                            ]
+                        ], 
+                        "groups": [
+                            "Affinity_Category_reach"
+                        ], 
+                        "measures": [
+                            [
+                                "sum", 
+                                "Pageviews"
+                            ]
+                        ], 
+                        "order": [
+                            [
+                                -1, 
+                                {
+                                    "ascending": false
+                                }
+                            ]
+                        ]
+                    }, 
+                    "version": -1
+                }, 
+                "selectMode": "single", 
+                "type": "aggregate", 
+                "useGlobal": true, 
+                "visualizationParameters": {
+                    "visualizationType": "hbar"
+                }
+            }, 
+            "In_Market_Segment_3": {
+                "datasets": [
+                    {
+                        "id": "0Fbj0000000CwQHCA0", 
+                        "name": "MarketSegmentDataInMarket"
+                    }
+                ], 
+                "isFacet": true, 
+                "isGlobal": false, 
+                "query": {
+                    "query": {
+                        "aggregateFilters": [
+                            [
+                                [
+                                    "sum", 
+                                    "Pageviews"
+                                ], 
+                                [
+                                    [
+                                        1000
+                                    ]
+                                ], 
+                                ">"
+                            ]
+                        ], 
+                        "groups": [
+                            "In_Market_Segment"
+                        ], 
+                        "measures": [
+                            [
+                                "sum", 
+                                "Pageviews"
+                            ]
+                        ], 
+                        "order": [
+                            [
+                                -1, 
+                                {
+                                    "ascending": false
+                                }
+                            ]
+                        ]
+                    }, 
+                    "version": -1
+                }, 
+                "selectMode": "single", 
+                "type": "aggregate", 
+                "useGlobal": true, 
+                "visualizationParameters": {
+                    "visualizationType": "hbar"
+                }
+            }, 
+            "lens_2": {
+                "datasets": [
+                    {
+                        "id": "0Fbj0000000CwQHCA0", 
+                        "name": "MarketSegmentDataInMarket"
+                    }
+                ], 
+                "isFacet": true, 
+                "isGlobal": false, 
+                "query": {
+                    "query": {
+                        "values": [
+                            "Sessions", 
+                            "Users", 
+                            "Pageviews", 
+                            "Date", 
+                            "In_Market_Segment"
+                        ]
+                    }, 
+                    "version": -1
+                }, 
+                "selectMode": "single", 
+                "type": "grain", 
+                "useGlobal": true, 
+                "visualizationParameters": {
+                    "visualizationType": "valuestable"
+                }
+            }, 
+            "lens_4": {
+                "datasets": [
+                    {
+                        "id": "0Fbj0000000CwQHCA0", 
+                        "name": "MarketSegmentDataInMarket"
+                    }
+                ], 
+                "isFacet": true, 
+                "isGlobal": false, 
+                "query": {
+                    "query": {
+                        "values": [
+                            "Sessions", 
+                            "Users", 
+                            "Pageviews", 
+                            "Date", 
+                            "In_Market_Segment"
+                        ]
+                    }, 
+                    "version": -1
+                }, 
+                "selectMode": "single", 
+                "type": "grain", 
+                "useGlobal": true, 
+                "visualizationParameters": {
+                    "visualizationType": "valuestable"
+                }
+            }
+        }, 
+        "widgets": {
+            "chart_1": {
+                "parameters": {
+                    "legend": false, 
+                    "step": "In_Market_Segment_3", 
+                    "visualizationType": "hbar"
+                }, 
+                "position": {
+                    "x": 0, 
+                    "y": 0
+                }, 
+                "type": "chart"
+            }, 
+            "chart_2": {
+                "parameters": {
+                    "legend": false, 
+                    "step": "Affinity_Category_reach_4", 
+                    "visualizationType": "hbar"
+                }, 
+                "position": {
+                    "x": 0, 
+                    "y": 0
+                }, 
+                "type": "chart"
+            }, 
+            "text_1": {
+                "parameters": {
+                    "text": "Market Segment"
+                }, 
+                "position": {
+                    "x": 0, 
+                    "y": 0
+                }, 
+                "type": "text"
+            }, 
+            "valuestable_2": {
+                "parameters": {
+                    "step": "lens_2", 
+                    "totals": true
+                }, 
+                "position": {
+                    "x": 0, 
+                    "y": 0
+                }, 
+                "type": "valuestable"
+            }, 
+            "valuestable_3": {
+                "parameters": {
+                    "step": "lens_4"
+                }, 
+                "position": {
+                    "x": 0, 
+                    "y": 0
+                }, 
+                "type": "valuestable"
+            }
+        }
+    }
+}

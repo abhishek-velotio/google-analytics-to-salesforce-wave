@@ -14,6 +14,7 @@ package com.ga2sa.actors;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import models.DashboardJob;
 import models.Job;
@@ -28,8 +29,10 @@ import play.libs.Json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.ga2sa.salesforce.DashboardDataset;
 import com.ga2sa.salesforce.DashboardTemplatesManager;
 import com.ga2sa.salesforce.SalesforceDataManager;
 
@@ -71,13 +74,12 @@ public class DashboardBGJob implements BackgroundJobInterface {
 	private JsonNode getDashboardJson() throws JsonProcessingException, IOException {
 		ObjectNode dashboardJson = DashboardTemplatesManager.getTemplate(job.dashboardType);
 		dashboardJson.put("label", job.getName());
-		List<JsonNode> datasets = dashboardJson.findValues("datasets");
-		JsonNode datasetJsonNode = Json.parse(job.dataset);
-		if (datasets != null) {
-			datasets.forEach(datasetNode -> {
-				((ObjectNode)((ArrayNode)datasetNode).get(0)).put("id", datasetJsonNode.get("id").asText()).put("name", datasetJsonNode.get("name").asText());
-			});
-		}
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> dashboardDatasets = mapper.readValue(job.datasets, Map.class);
+		dashboardDatasets.forEach((key, value) -> {
+			ObjectNode step = (ObjectNode) dashboardJson.findPath(key);
+			step.put("datasets", Json.toJson(value).get("datasets"));
+		});
 		return dashboardJson;
 	}
 	

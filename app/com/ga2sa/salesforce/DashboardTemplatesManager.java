@@ -14,19 +14,22 @@ package com.ga2sa.salesforce;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
+import models.DashboardType;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import models.DashboardType;
 import play.Logger;
-import play.libs.Json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
@@ -36,20 +39,28 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class DashboardTemplatesManager {
 	
 	private static ObjectMapper mapper = new ObjectMapper();
-	private static Map<DashboardType, ObjectNode> templates;
+	private static Map<DashboardType, DashboardTemplate> templates;
+	
+	static {
+		loadTemplates();
+	}
 	
 	public static ObjectNode getTemplate(DashboardType dashboardType) {
-		if (templates == null) loadTemplates();
-		return templates.get(dashboardType);
+		return templates.get(dashboardType).objectNode;
+	}
+	
+	public static Collection<DashboardTemplate> getAllTemplates() {
+		return templates.values();
 	}
 	
 	public static void loadTemplates() {
-		templates = new HashMap<DashboardType, ObjectNode>();
+		templates = new TreeMap<DashboardType, DashboardTemplate>();
 		Arrays.stream(DashboardType.values()).forEach(dashboartType -> templates.put(dashboartType, loadJson(dashboartType)));
 
 	}
 	
-	private static ObjectNode loadJson(DashboardType type) {
+	private static DashboardTemplate loadJson(DashboardType type) {
+		DashboardTemplate dashboardTemplate = new DashboardTemplate(type);
 		try {
 			File file = new File("app/templates/" + type.name() + ".json");
 			ObjectNode objNode = (ObjectNode) mapper.readTree(file);
@@ -61,12 +72,25 @@ public class DashboardTemplatesManager {
 				String queryString = StringEscapeUtils.escapeHtml4(queryObject.toString());
 				((ObjectNode)queryNode).put("query", queryString).put("version", 36);
 			});
+			dashboardTemplate.objectNode = objNode;
+			dashboardTemplate.steps = getSteps(objNode);
 			
-			
-			return objNode;
 		} catch (IOException e) {
 			Logger.debug(e.getMessage(), e);
 		}
-		return null;
+		return dashboardTemplate;
+	}
+	
+	private static List<DashboardStep> getSteps(ObjectNode objNode) {
+		List<DashboardStep> steps = new ArrayList<DashboardStep>();
+		objNode.findValue("steps").fields().forEachRemaining(field -> {
+			DashboardStep step = new DashboardStep(field.getKey());
+			step.datasets = new ArrayList<DashboardDataset>();
+			ArrayNode datasetsNode = (ArrayNode)field.getValue().get("datasets");
+			datasetsNode.forEach(datasetNode -> step.datasets.add(new DashboardDataset(datasetNode.get("id").textValue(), datasetNode.get("name").textValue())));
+			steps.add(step);
+		});
+		
+		return steps;
 	}
 }

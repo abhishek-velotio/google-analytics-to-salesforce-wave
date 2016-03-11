@@ -1,7 +1,3 @@
-@import play.libs.Json;
-@import com.fasterxml.jackson.databind.JsonNode;
-
-@(params: Map[String, JsonNode])
 @main("Dashboard") {
 	<header class="header">
 		@components.topMenu("dashboard")
@@ -33,18 +29,18 @@
 			// job and jobs list
 			
 			Models.Job = Backbone.Model.extend({
-				urlRoot : '/dashboard_job'
+				urlRoot : '/dashboard/job'
 			});
 			
 			Collections.Jobs = new Backbone.Collection([], {
 				model : Models.Job
 			});
-			Collections.Jobs.url = '/dashboard_jobs';
-			Collections.Jobs.fetch({reset: true});
+			
+			Collections.Jobs.url = '/dashboard/jobs';
+			Collections.Jobs.fetch({ reset	: true });
 
 			
 			// salesforce profiles list
-			
 			Models.SalesforceProfile = Backbone.Model.extend({
 				urlRoot : '/salesforce/profile'
 			});
@@ -53,12 +49,17 @@
 				model : Models.SalesforceProfile
 			});
 			
-			Collections.SalesforceProfiles.reset(@Html(Json.stringify(params.get("salesforceProfiles"))));
+			Collections.SalesforceProfiles.url = '/dashboard/salesforce_profiles';
+			Collections.SalesforceProfiles.fetch({
+				reset 	: true
+			});
 			
 			//dashboard type model
-			Collections.DashboardType = new Backbone.Collection([]);
-			var dashboardTypeValues = @Html(Json.stringify(params.get("dashboardType")));
-			Collections.DashboardType.reset($.map(dashboardTypeValues, function(val, i) { return {id : val, name : val.replace('_', ' ') } } ));
+			Collections.DashboardTypes = new Backbone.Collection([], {});
+			Collections.DashboardTypes.fetch({
+				url 	: '/dashboard/templates',
+				reset	: true
+			});
 
 		});
 	

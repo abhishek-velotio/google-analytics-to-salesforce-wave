@@ -1,13 +1,10 @@
+
 <script type="text/template" id="job">
 	<td class='job__id table__cell'> 
 		<%= id %> 
 	</td>
 	<td class='job__name table__cell'> 
 		<%= name %> 
-	</td>
-
-	<td class='job__dataset-name table__cell'> 
-		<%= JSON.parse(dataset).name %>
 	</td>
 
 	<td class='job__dashboard-type table__cell'> 
@@ -26,4 +23,10 @@
 		<% if (status === 'PENDING') { %> <button class='job__cancel-btn btn btn-sm btn-info'>Cancel</button> <% } %>
 		<% if (status !== 'PENDING') { %> <button class='job__delete-btn btn btn-sm btn-danger'>Delete</button>  <% } %>
 	</td>	
+</script>
+
+<script type="text/template" id="dashboardSteps">
+	<div id="<%= id %>" name="<%= id %>" class="panel panel-default clearfix">
+		<div class="panel-heading">Datasets</div>
+	</div>
 </script>
