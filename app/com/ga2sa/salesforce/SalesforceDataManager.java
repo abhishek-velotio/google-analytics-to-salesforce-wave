@@ -45,6 +45,9 @@ public class SalesforceDataManager {
 	    final String password = profile.getPassword();
 	    final String token = null;
 	    final String sessionId = null;
+	    final String schemaFileString = null;
+	    final String notificationLevel = null;
+	    final String notificationEmail = null;
 	    final String endpoint = profile.accountType == null || profile.accountType.equals(SFAccountType.PRODUCTION) 
 	    		? null : Play.application().configuration().getString("salesforce_endpoint");
 	    //String action = null;
@@ -58,7 +61,7 @@ public class SalesforceDataManager {
 	    
 	    try {
 	    	PartnerConnection partnerConnection = DatasetUtils.login(0, username, password, token, endpoint, sessionId, true);
-	    	DatasetLoader.uploadDataset(inputFile, uploadFormat, codingErrorAction, fileCharset, dataset, app, datasetLabel, Operation, useBulkAPI, partnerConnection, System.out);
+	    	DatasetLoader.uploadDataset(inputFile, schemaFileString, uploadFormat, codingErrorAction, fileCharset, dataset, app, datasetLabel, Operation, useBulkAPI, partnerConnection, notificationLevel, notificationEmail, System.out);
 	    } catch (ConnectionException | MalformedURLException | DatasetLoaderException e) {
 	    	throw new Exception(e.getMessage());
 	    }
