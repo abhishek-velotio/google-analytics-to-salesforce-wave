@@ -28,8 +28,8 @@ libraryDependencies ++= Seq(
   //"org.apache.openjpa" 		% "openjpa-persistence" 				% "2.3.0",
   "org.mindrot"				% "jbcrypt" 							% "0.3m",
   //datasetutil dependencies
-  "com.force.api" 			% "force-wsc" 							% "32.0.0",
-  "com.force.api"			% "force-partner-api" 					% "32.0.0",
+  "com.force.api" 			% "force-wsc" 							% "41.0.0",
+  "com.force.api"			% "force-partner-api" 					% "41.0.0",
   "commons-io" 				% "commons-io" 							% "2.4",
   "org.slf4j" 				% "slf4j-log4j12" 						% "1.7.12",
   "org.apache.commons" 		% "commons-compress" 					% "1.9",
