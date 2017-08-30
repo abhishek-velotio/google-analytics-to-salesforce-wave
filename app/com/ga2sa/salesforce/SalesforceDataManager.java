@@ -12,21 +12,20 @@
  */
 package com.ga2sa.salesforce;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.nio.charset.Charset;
-import java.nio.charset.CodingErrorAction;
-
-import play.Play;
-import models.SFAccountType;
-import models.SalesforceAnalyticsProfile;
-
 import com.google.common.io.Files;
 import com.sforce.dataset.loader.DatasetLoader;
 import com.sforce.dataset.loader.DatasetLoaderException;
 import com.sforce.dataset.util.DatasetUtils;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
+import models.SFAccountType;
+import models.SalesforceAnalyticsProfile;
+import play.Play;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.nio.charset.Charset;
+import java.nio.charset.CodingErrorAction;
 /**
  * 
  * 
@@ -46,8 +45,8 @@ public class SalesforceDataManager {
 	    final String token = null;
 	    final String sessionId = null;
 	    final String schemaFileString = null;
-	    final String notificationLevel = null;
-	    final String notificationEmail = null;
+	    final String notificationLevel = 'Never';
+	    final String notificationEmail = 'abc@abc.com';
 	    final String endpoint = profile.accountType == null || profile.accountType.equals(SFAccountType.PRODUCTION) 
 	    		? null : Play.application().configuration().getString("salesforce_endpoint");
 	    //String action = null;
