@@ -45,8 +45,8 @@ public class SalesforceDataManager {
 	    final String token = null;
 	    final String sessionId = null;
 	    final String schemaFileString = null;
-	    final String notificationLevel = 'Never';
-	    final String notificationEmail = 'abc@abc.com';
+	    final String notificationLevel = "Never";
+	    final String notificationEmail = "abc@abc.com";
 	    final String endpoint = profile.accountType == null || profile.accountType.equals(SFAccountType.PRODUCTION) 
 	    		? null : Play.application().configuration().getString("salesforce_endpoint");
 	    //String action = null;
