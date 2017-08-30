@@ -44,7 +44,7 @@ public class SalesforceDataManager {
 	    final String password = profile.getPassword();
 	    final String token = null;
 	    final String sessionId = null;
-	    final String schemaFileString = report.getAbsolutePath().replace(".csv", "_schema.json");
+	    final String schemaFileString = null;
 	    final String notificationLevel = "Never";
 	    final String notificationEmail = "abc@abc.com";
 	    final String endpoint = profile.accountType == null || profile.accountType.equals(SFAccountType.PRODUCTION) 
